@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Position, Player, HandHistory, Street } from '../types/poker';
+import { Player, HandHistory, Street } from '../types/poker';
 import PlayerInput from './PlayerInput';
 import StreetActions from './StreetActions';
 

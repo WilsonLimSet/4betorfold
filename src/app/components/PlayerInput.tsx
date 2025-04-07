@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Position, PlayerType, Player, Card } from '../types/poker';
+import { Position, Player, Card } from '../types/poker';
 import CardSelector from './CardSelector';
 
 interface PlayerInputProps {
