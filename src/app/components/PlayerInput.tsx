@@ -11,7 +11,6 @@ interface PlayerInputProps {
 }
 
 const positions: Position[] = ['BTN', 'SB', 'BB', 'UTG', 'MP', 'CO'];
-const playerTypes: PlayerType[] = ['LAG', 'TAG', 'Fish', 'Nit', 'Calling Station', 'Unknown', 'Custom'];
 
 export default function PlayerInput({ player, onUpdate, onRemove }: PlayerInputProps) {
   // Track selected cards locally so we can preserve state during rendering

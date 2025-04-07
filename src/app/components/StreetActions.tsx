@@ -23,27 +23,29 @@ export default function StreetActions({ streetName, players, street, onUpdate, p
     
     if (street.board && street.board.length > 0) {
       const cards = [...street.board];
-      while (cards.length < numCards) {
-        cards.push(null as any);
+      const result: (Card | null)[] = cards;
+      while (result.length < numCards) {
+        result.push(null);
       }
-      return cards.slice(0, numCards);
+      return result.slice(0, numCards);
     }
     
-    return Array(numCards).fill(null);
+    return new Array(numCards).fill(null) as (Card | null)[];
   });
   
-  // Update local state when props change
+  // Update local state when props change, but only when selectedCards array actually changes
   useEffect(() => {
     const numCards = streetName === 'Flop' ? 3 : 1;
     
     if (street.board && street.board.length > 0) {
       const cards = [...street.board];
-      while (cards.length < numCards) {
-        cards.push(null as any);
+      const result: (Card | null)[] = cards;
+      while (result.length < numCards) {
+        result.push(null);
       }
-      setBoardCards(cards.slice(0, numCards));
+      setBoardCards(result.slice(0, numCards));
     } else {
-      setBoardCards(Array(numCards).fill(null));
+      setBoardCards(new Array(numCards).fill(null) as (Card | null)[]);
     }
   }, [street.board, streetName]);
   
