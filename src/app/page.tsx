@@ -4,10 +4,10 @@ import HandRecorder from '@/app/components/HandRecorder';
 
 export default function Home() {
   return (
-    <main className="min-h-screen py-8" style={{ backgroundColor: 'rgb(243, 244, 246)' }}>
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-center mb-8" style={{ color: 'rgb(31, 41, 55)' }}>
-          Poker Hand Recorder
+    <main className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold text-center text-gray-900 mb-12">
+          4Bet or Fold <span className="text-red-600">♥</span> <span className="text-red-600">♦</span> <span className="text-black">♣</span> <span className="text-black">♠</span>
         </h1>
         <HandRecorder />
       </div>

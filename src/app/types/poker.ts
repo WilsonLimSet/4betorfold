@@ -1,4 +1,4 @@
-export type Position = 'BTN' | 'SB' | 'BB' | 'UTG' | 'MP' | 'CO';
+export type Position = 'BTN' | 'SB' | 'BB' | 'UTG' | 'UTG+1' | 'UTG+2' | 'LJ' | 'HJ' | 'CO';
 export type Card = {
   rank: string;
   suit: 'hearts' | 'diamonds' | 'clubs' | 'spades';
@@ -20,11 +20,14 @@ export type Player = {
   playerType: PlayerType;
   notes?: string;
   isHero: boolean;
+  showdownAction?: 'show' | 'muck';
 };
+
+export type ActionType = 'bet' | 'call' | 'raise' | 'fold' | 'check' | 'showdown' | 'all-in';
 
 export type Action = {
   player: string;
-  type: 'bet' | 'call' | 'raise' | 'fold' | 'check';
+  type: ActionType;
   amount?: number;
 };
 
@@ -42,4 +45,13 @@ export type HandHistory = {
   turn?: Street;
   river?: Street;
   pot: number;
-}; 
+};
+
+export type CardValue = 'A' | 'K' | 'Q' | 'J' | 'T' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2';
+export type CardSuit = 'h' | 'd' | 'c' | 's';
+export type PokerStreet = 'preflop' | 'flop' | 'turn' | 'river';
+
+export interface Stakes {
+  sb: number;
+  bb: number;
+} 

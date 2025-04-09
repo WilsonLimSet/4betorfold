@@ -8,11 +8,15 @@ interface PlayerInputProps {
   player: Player;
   onUpdate: (updatedPlayer: Player) => void;
   onRemove: () => void;
+  showVillainCards?: boolean;
+  takenPositions: Position[];
+  allPlayers: Player[];
+  usedCards: Card[];
 }
 
-const positions: Position[] = ['BTN', 'SB', 'BB', 'UTG', 'MP', 'CO'];
+const positions: Position[] = ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO'];
 
-export default function PlayerInput({ player, onUpdate, onRemove }: PlayerInputProps) {
+export default function PlayerInput({ player, onUpdate, onRemove, showVillainCards = false, takenPositions = [], allPlayers = [], usedCards = [] }: PlayerInputProps) {
   // Track selected cards locally so we can preserve state during rendering
   const [selectedCards, setSelectedCards] = useState<(Card | null)[]>(
     player.holeCards ? [...player.holeCards] : [null, null]
@@ -45,16 +49,27 @@ export default function PlayerInput({ player, onUpdate, onRemove }: PlayerInputP
     }
   };
 
+  // Get available positions based on whether this is hero or villain
+  const getAvailablePositions = () => {
+    if (player.isHero) {
+      // Hero can take any position that's not taken by other players
+      return positions.filter(pos => !takenPositions.includes(pos) || pos === player.position);
+    } else {
+      // Villains can't take hero's position or other villains' positions
+      return positions.filter(pos => !takenPositions.includes(pos) || pos === player.position);
+    }
+  };
+
   return (
     <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-semibold text-gray-800">
+        <h4 className="text-xl font-bold text-gray-900">
           {player.isHero ? 'Hero' : 'Villain'}
         </h4>
-        {!player.isHero && (
+        {!player.isHero && allPlayers.filter((p: Player) => !p.isHero).length > 1 && (
           <button
             onClick={onRemove}
-            className="text-red-500 hover:text-red-700 font-medium"
+            className="text-red-600 hover:text-red-800 font-semibold text-base"
             type="button"
           >
             Remove
@@ -64,29 +79,36 @@ export default function PlayerInput({ player, onUpdate, onRemove }: PlayerInputP
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
+          <label className="block text-base font-semibold text-gray-900 mb-2">
             Position
           </label>
           <select
             value={player.position}
             onChange={(e) => onUpdate({ ...player, position: e.target.value as Position })}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base"
+            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-lg font-medium text-gray-900 bg-white"
           >
-            {positions.map((pos) => (
-              <option key={pos} value={pos}>{pos}</option>
+            {getAvailablePositions().map((pos) => (
+              <option key={pos} value={pos} className="text-lg">{pos}</option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Stack (BB)
+          <label className="block text-base font-semibold text-gray-900 mb-2">
+            Stack
           </label>
           <input
-            type="number"
+            type="text"
             value={player.stack}
-            onChange={(e) => onUpdate({ ...player, stack: Number(e.target.value) })}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base"
+            onChange={(e) => {
+              const value = e.target.value;
+              // Allow empty string or valid numbers
+              if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                onUpdate({ ...player, stack: value === '' ? 0 : Number(value) });
+              }
+            }}
+            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-lg font-medium text-gray-900"
+            placeholder="Enter stack size"
           />
         </div>
       </div>
@@ -110,13 +132,13 @@ export default function PlayerInput({ player, onUpdate, onRemove }: PlayerInputP
 
       {player.playerType === 'Custom' && (
         <div className="mt-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
+          <label className="block text-base font-semibold text-gray-900 mb-2">
             Notes
           </label>
           <textarea
             value={player.notes || ''}
             onChange={(e) => onUpdate({ ...player, notes: e.target.value })}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base"
+            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base text-gray-900"
             rows={2}
           />
         </div>
@@ -124,13 +146,38 @@ export default function PlayerInput({ player, onUpdate, onRemove }: PlayerInputP
 
       {player.isHero && (
         <div className="mt-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Hole Cards (select 2)
+          <label className="block text-base font-semibold text-gray-900 mb-2">
+            Hole Cards (required)
           </label>
           <CardSelector
             selectedCards={selectedCards}
             maxCards={2}
             onCardSelect={handleCardSelect}
+            usedCards={usedCards}
+          />
+        </div>
+      )}
+
+      {!player.isHero && showVillainCards && (
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-base font-semibold text-gray-900">
+              Hole Cards (optional)
+            </label>
+            {player.holeCards && (
+              <button
+                onClick={() => onUpdate({ ...player, holeCards: undefined })}
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Clear Cards
+              </button>
+            )}
+          </div>
+          <CardSelector
+            selectedCards={selectedCards}
+            maxCards={2}
+            onCardSelect={handleCardSelect}
+            usedCards={usedCards}
           />
         </div>
       )}
