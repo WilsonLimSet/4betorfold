@@ -213,7 +213,7 @@ export default function StreetActions({
         }
       }
     }
-  }, [street.actions, players, streetName, previousStreet, blinds, isStreetComplete, straddleAmount]);
+  }, [street, street.actions, players, streetName, previousStreet, blinds, isStreetComplete, straddleAmount]);
   
   // Update action amount when action type changes
   useEffect(() => {

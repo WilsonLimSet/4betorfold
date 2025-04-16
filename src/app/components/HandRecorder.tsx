@@ -94,7 +94,7 @@ export const HandRecorder: React.FC = () => {
       }
     ];
     updatePlayersAndHistory(initialPlayers);
-  }, [stakes.bb]); // Only run on initial load and when blinds change
+  }, [stakes.bb, updatePlayersAndHistory]); // Add updatePlayersAndHistory to dependency array
 
   // Update stakes and adjust stacks for cash games
   const handleStakeChange = (sb: number, bb: number) => {
