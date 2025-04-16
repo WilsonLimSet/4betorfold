@@ -16,7 +16,6 @@ export type PlayerType =
 export type Player = {
   position: Position;
   stack: number;
-  initialStack?: number;
   holeCards?: [Card, Card];
   playerType: PlayerType;
   notes?: string;

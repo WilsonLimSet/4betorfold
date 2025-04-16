@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Position, Player, HandHistory, Street, Card, Stakes, PokerStreet } from '../types/poker';
 import PlayerInput from './PlayerInput';
 import StreetActions from './StreetActions';
@@ -58,7 +58,6 @@ export const HandRecorder: React.FC = () => {
       const newPlayer: Player = {
         position: availablePosition,
         stack: getDefaultStack(stakes.bb),
-        initialStack: getDefaultStack(stakes.bb),
         playerType: 'Unknown',
         isHero: false,
       };
@@ -69,11 +68,11 @@ export const HandRecorder: React.FC = () => {
     }
   };
 
-  // Function to update both players and hand history - wrapped in useCallback
-  const updatePlayersAndHistory = useCallback((newPlayers: Player[]) => {
+  // Function to update both players and hand history
+  const updatePlayersAndHistory = (newPlayers: Player[]) => {
     setPlayers(newPlayers);
     setHandHistory(prev => ({ ...prev, players: newPlayers }));
-  }, []);  // Empty dependency array as it doesn't depend on any props or state
+  };
 
   // Initialize players with correct stack sizes
   useEffect(() => {
@@ -81,20 +80,19 @@ export const HandRecorder: React.FC = () => {
       {
         position: 'BTN' as Position,
         stack: getDefaultStack(stakes.bb),
-        initialStack: getDefaultStack(stakes.bb),
         playerType: 'Unknown',
         isHero: true,
       },
       {
         position: 'BB' as Position,
         stack: getDefaultStack(stakes.bb),
-        initialStack: getDefaultStack(stakes.bb),
         playerType: 'Unknown',
         isHero: false,
       }
     ];
     updatePlayersAndHistory(initialPlayers);
-  }, [stakes.bb, updatePlayersAndHistory]); // Add updatePlayersAndHistory to dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stakes.bb]); // Assuming players should NOT reset every time they change elsewhere
 
   // Update stakes and adjust stacks for cash games
   const handleStakeChange = (sb: number, bb: number) => {
@@ -102,8 +100,7 @@ export const HandRecorder: React.FC = () => {
     if (isCashGame) {
       const newPlayers = players.map(p => ({
         ...p,
-        stack: getDefaultStack(bb),
-        initialStack: getDefaultStack(bb)
+        stack: getDefaultStack(bb)
       }));
       updatePlayersAndHistory(newPlayers);
     }
@@ -114,12 +111,11 @@ export const HandRecorder: React.FC = () => {
     if (isCashGame && players.length > 0) {
       const newPlayers = players.map(p => ({
         ...p,
-        stack: getDefaultStack(stakes.bb),
-        initialStack: getDefaultStack(stakes.bb)
+        stack: getDefaultStack(stakes.bb)
       }));
       updatePlayersAndHistory(newPlayers);
     }
-  }, [straddle, isCashGame, stakes.bb, players, updatePlayersAndHistory]); // Update when straddle, game type, or players change
+  }, [straddle, isCashGame, stakes.bb]); // Keep players dependency removed based on prior logic
 
   const updatePlayer = (index: number, updatedPlayer: Player) => {
     // Ensure we can't remove the hero
@@ -128,7 +124,7 @@ export const HandRecorder: React.FC = () => {
     }
 
     const newPlayers = [...players];
-    newPlayers[index] = { ...updatedPlayer, initialStack: updatedPlayer.initialStack || players[index].initialStack || updatedPlayer.stack };
+    newPlayers[index] = updatedPlayer;
     setPlayers(newPlayers);
     setHandHistory(prev => ({ ...prev, players: newPlayers }));
   };
@@ -146,94 +142,75 @@ export const HandRecorder: React.FC = () => {
   };
 
   const updateStreet = (streetName: PokerStreet, street: Street) => {
-    setHandHistory(prevHistory => {
-      // Create the next history state with the updated street
-      const newHistory = {
-        ...prevHistory,
-        [streetName]: street
-      };
-
-      // Calculate new stacks based on all actions in newHistory
-      // Use players from prevHistory to access potentially more accurate initialStack
-      const newPlayersWithUpdatedStacks = prevHistory.players.map(p => {
-        const initialStack = p.initialStack || getDefaultStack(stakes.bb); // Use stored initial stack or default
-        let totalContributed = 0;
-        (['preflop', 'flop', 'turn', 'river'] as PokerStreet[]).forEach(sName => {
-          const sData = newHistory[sName] as Street;
-          if (sData?.actions) {
-             // Use getPlayerContributions to find the total amount this player put in during this street
-             const contributions = getPlayerContributions(sData.actions);
-             totalContributed += contributions.get(p.position) || 0;
-          }
-        });
-
-        const currentStack = Math.max(0, initialStack - totalContributed); // Ensure stack doesn't go below 0
-
-        return { 
-          ...p, 
-          stack: currentStack,
-          initialStack: initialStack // Ensure initialStack is preserved
-         };
-      });
-
-      // Update the players array within the new history object
-      newHistory.players = newPlayersWithUpdatedStacks;
-
-      // Also update the separate players state used by PlayerInput etc.
-      // Use a functional update for setPlayers to ensure it uses the latest state
-      setPlayers(currentPlayers => {
-         // Merge updates: Use positions to match players
-         return currentPlayers.map(cp => {
-           const updatedPlayer = newPlayersWithUpdatedStacks.find(up => up.position === cp.position);
-           return updatedPlayer ? updatedPlayer : cp;
-         });
-      });
-
-      return newHistory;
-    });
+    setHandHistory(prev => ({
+      ...prev,
+      [streetName]: street
+    }));
   };
 
-  // Recalculate pots directly for preview display
-  const calculatePotData = () => {
-    const pots = {
-      preflop: 0,
-      flop: 0,
-      turn: 0,
-      river: 0,
-      total: 0,
-    };
-    let currentPot = stakes.sb + stakes.bb + (straddle ? straddleAmount : 0);
+  const calculatePotForStreet = (streetName: PokerStreet): number => {
+    // New approach: Calculate pot entering each street
+    let potEnteringFlop = stakes.sb + stakes.bb + (straddle ? straddleAmount : 0);
+    const preflopActions = handHistory.preflop?.actions;
+    if(preflopActions && preflopActions.length > 0) {
+        const preflopContributions = getPlayerContributions(preflopActions);
+        for(const amount of preflopContributions.values()){ potEnteringFlop += amount; }
+    }
+
+    let potEnteringTurn = potEnteringFlop;
+    const flopActions = handHistory.flop?.actions;
+     if(flopActions && flopActions.length > 0) {
+        const flopContributions = getPlayerContributions(flopActions);
+        for(const amount of flopContributions.values()){ potEnteringTurn += amount; }
+    }
+
+    let potEnteringRiver = potEnteringTurn;
+    const turnActions = handHistory.turn?.actions;
+    if(turnActions && turnActions.length > 0) {
+        const turnContributions = getPlayerContributions(turnActions);
+        for(const amount of turnContributions.values()){ potEnteringRiver += amount; }
+    }
     
-    const preflopContributions = getPlayerContributions(handHistory.preflop?.actions || []);
-    currentPot += Array.from(preflopContributions.values()).reduce((sum, amount) => sum + amount, 0);
-    pots.preflop = currentPot;
-
-    if (handHistory.flop?.board) {
-        const flopContributions = getPlayerContributions(handHistory.flop?.actions || []);
-        currentPot += Array.from(flopContributions.values()).reduce((sum, amount) => sum + amount, 0);
-        pots.flop = currentPot;
-    } else {
-        pots.flop = pots.preflop; // If no flop, pot carries over
+    // Now, return the correct pot value based on the street requested
+    if (streetName === 'preflop') return potEnteringFlop; // Pot size *after* preflop actions
+    if (streetName === 'flop') return potEnteringTurn;    // Pot size *after* flop actions
+    if (streetName === 'turn') return potEnteringRiver;   // Pot size *after* turn actions
+    if (streetName === 'river') {
+        // Calculate final pot after river actions
+        let finalPot = potEnteringRiver;
+         const riverActions = handHistory.river?.actions;
+        if(riverActions && riverActions.length > 0) {
+            const riverContributions = getPlayerContributions(riverActions);
+            for(const amount of riverContributions.values()){ finalPot += amount; }
+        }
+        return finalPot;
     }
 
-    if (handHistory.turn?.board) {
-        const turnContributions = getPlayerContributions(handHistory.turn?.actions || []);
-        currentPot += Array.from(turnContributions.values()).reduce((sum, amount) => sum + amount, 0);
-        pots.turn = currentPot;
-    } else {
-         pots.turn = pots.flop; // If no turn, pot carries over
-    }
+    return 0; // Should not happen
+  };
 
-    if (handHistory.river?.board) {
-        const riverContributions = getPlayerContributions(handHistory.river?.actions || []);
-        currentPot += Array.from(riverContributions.values()).reduce((sum, amount) => sum + amount, 0);
-        pots.river = currentPot;
-    } else {
-         pots.river = pots.turn; // If no river, pot carries over
-    }
+  // NEW: Helper to calculate effective stack at the START of a given street
+  const calculateEffectiveStackAtStreetStart = (playerPosition: string, targetStreetName: PokerStreet): number => {
+    const player = players.find(p => p.position === playerPosition);
+    if (!player) return 0;
 
-    pots.total = currentPot;
-    return pots;
+    let effectiveStack = player.stack;
+    const streetOrder: PokerStreet[] = ['preflop', 'flop', 'turn', 'river'];
+    const targetStreetIndex = streetOrder.indexOf(targetStreetName);
+
+    // Subtract actions from all streets *before* the target street
+    for (let i = 0; i < targetStreetIndex; i++) {
+      const streetNameToProcess = streetOrder[i];
+      const streetData = handHistory[streetNameToProcess];
+      if (streetData?.actions) {
+        for (const action of streetData.actions) {
+          if (action.player === playerPosition && action.amount) {
+            effectiveStack -= action.amount;
+          }
+        }
+      }
+    }
+    return Math.max(0, effectiveStack);
   };
 
   const handleCopy = () => {
@@ -301,12 +278,12 @@ export const HandRecorder: React.FC = () => {
   };
 
   // Determine if all active players are all-in
-  const isAllPlayersAllIn = () => {
+  const isAllPlayersAllIn = (players: Player[], street: Street, previousStreet?: Street): boolean => {
     // Get non-folded players
     const activePlayers = players.filter(player => {
       // Check if player has folded in any previous street
       const hasFolded = ['preflop', 'flop', 'turn', 'river'].some(streetName => {
-        const streetData = handHistory[streetName as keyof HandHistory] as Street;
+        const streetData = streetName === 'preflop' ? previousStreet : street;
         return streetData?.actions?.some(
           action => action.player === player.position && action.type === 'fold'
         );
@@ -316,7 +293,7 @@ export const HandRecorder: React.FC = () => {
     
     // Check if all active players have performed an all-in action
     const allInPlayers = ['preflop', 'flop', 'turn', 'river'].reduce((allIn, streetName) => {
-      const streetData = handHistory[streetName as keyof HandHistory] as Street;
+      const streetData = streetName === 'preflop' ? previousStreet : street;
       streetData?.actions?.forEach(action => {
         if (action.type === 'all-in') {
           allIn.add(action.player);
@@ -336,10 +313,15 @@ export const HandRecorder: React.FC = () => {
     return result;
   };
 
+  // Calculate all-in concluded states *before* passing props
+  const preflopAllInConcluded = isAllPlayersAllIn(players, handHistory.preflop || { actions: [] });
+  const flopAllInConcluded = isAllPlayersAllIn(players, handHistory.flop || { actions: [] }, handHistory.preflop || { actions: [] });
+  const turnAllInConcluded = isAllPlayersAllIn(players, handHistory.turn || { actions: [] }, handHistory.flop || { actions: [] });
+
   // Check if we should show a showdown (all-in situation or river completed)
   const shouldShowShowdown = () => {
     const riverComplete = handHistory.river?.actions && handHistory.river.actions.length > 0;
-    return isAllPlayersAllIn() || riverComplete;
+    return isAllPlayersAllIn(players, handHistory.river || { actions: [] }, handHistory.turn || { actions: [] }) || riverComplete;
   };
 
   return (
@@ -453,29 +435,33 @@ export const HandRecorder: React.FC = () => {
               <StreetActions
                 streetName="Preflop"
                 players={players}
-                street={handHistory.preflop}
+                street={handHistory.preflop || { actions: [] }}
                 onUpdate={(street) => updateStreet('preflop', street)}
                 usedCards={getUsedCards('preflop')}
+                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
                 straddleAmount={straddle ? straddleAmount : 0}
                 blinds={stakes}
               />
               
               {/* Pass the pre-calculated pot from preflop */}
+              {/* Also pass whether actions should be disabled due to prior all-in */}
               <StreetActions
                 streetName="Flop"
                 players={players}
                 street={handHistory.flop || { actions: [] }}
                 onUpdate={(street) => updateStreet('flop', street)}
-                previousStreet={handHistory.preflop}
+                previousStreet={handHistory.preflop || { actions: [] }}
                 usedCards={getUsedCards('flop')}
-                allPlayersAllIn={isAllPlayersAllIn()}
+                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                allPlayersAllIn={preflopAllInConcluded}
+                actionsDisabledDueToAllIn={preflopAllInConcluded}
                 previousCards={{ flop: handHistory.flop?.board }}
                 blinds={stakes}
                 straddleAmount={straddle ? straddleAmount : 0}
-                preflopPot={calculatePotData().preflop}
               />
               
               {/* Pass the pre-calculated pots from preflop and flop */}
+              {/* Also pass whether actions should be disabled due to prior all-in */}
               <StreetActions
                 streetName="Turn"
                 players={players}
@@ -483,18 +469,21 @@ export const HandRecorder: React.FC = () => {
                 onUpdate={(street) => updateStreet('turn', street)}
                 previousStreet={handHistory.flop || { actions: [] }}
                 usedCards={getUsedCards('turn')}
-                allPlayersAllIn={isAllPlayersAllIn()}
+                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                allPlayersAllIn={flopAllInConcluded}
+                actionsDisabledDueToAllIn={flopAllInConcluded}
                 previousCards={{ 
                   flop: handHistory.flop?.board,
                   turn: handHistory.turn?.board
                 }}
                 blinds={stakes}
                 straddleAmount={straddle ? straddleAmount : 0}
-                preflopPot={calculatePotData().preflop}
-                flopPot={calculatePotData().flop}
+                preflopPot={calculatePotForStreet('preflop')}
+                flopPot={calculatePotForStreet('flop')}
               />
               
               {/* Pass the pre-calculated pots from all previous streets */}
+              {/* Also pass whether actions should be disabled due to prior all-in */}
               <StreetActions
                 streetName="River"
                 players={players}
@@ -502,16 +491,18 @@ export const HandRecorder: React.FC = () => {
                 onUpdate={(street) => updateStreet('river', street)}
                 previousStreet={handHistory.turn || { actions: [] }}
                 usedCards={getUsedCards('river')}
-                allPlayersAllIn={isAllPlayersAllIn()}
+                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                allPlayersAllIn={turnAllInConcluded}
+                actionsDisabledDueToAllIn={turnAllInConcluded}
                 previousCards={{ 
                   flop: handHistory.flop?.board,
                   turn: handHistory.turn?.board
                 }}
                 blinds={stakes}
                 straddleAmount={straddle ? straddleAmount : 0}
-                preflopPot={calculatePotData().preflop}
-                flopPot={calculatePotData().flop}
-                turnPot={calculatePotData().turn}
+                preflopPot={calculatePotForStreet('preflop')}
+                flopPot={calculatePotForStreet('flop')}
+                turnPot={calculatePotForStreet('turn')}
               />
             </div>
 
@@ -549,9 +540,9 @@ export const HandRecorder: React.FC = () => {
                 {(handDate || handLocation) && <div className="mt-2"></div>}
               </div>
             )}
-            <div className="font-semibold text-lg">Blinds: ${stakes.sb}/${stakes.bb}</div>
+            <div className="font-semibold text-base">Blinds: ${stakes.sb}/${stakes.bb}</div>
             {straddle && (
-              <div className="font-semibold text-lg">Straddle: ${straddleAmount}</div>
+              <div className="font-semibold text-base">Straddle: ${straddleAmount}</div>
             )}
             <div className="mt-1">
               <span className="font-semibold">Hero:</span> {players.find(p => p.isHero)?.position} 
@@ -580,129 +571,124 @@ export const HandRecorder: React.FC = () => {
             <div className="mt-1">
               <span className="font-semibold">Villain{players.filter(p => !p.isHero).length > 1 ? 's' : ''}:</span> {players.filter(p => !p.isHero).map(p => p.position).join(', ')}
             </div>
-            <div className="mt-1"><span className="font-semibold">Effective Stack:</span> ${Math.min(...players.map(p => p.initialStack || p.stack))}</div>
+            <div className="mt-1"><span className="font-semibold">Effective Stack:</span> ${Math.min(...players.map(p => p.stack))}</div>
             
-            {(() => {
-              const pots = calculatePotData(); // Calculate all pots once
-              return (
-                <>
-                  {handHistory.preflop.actions.length > 0 && (
-                    <div className="mt-4">
-                      <div className="font-semibold">Preflop ({useDollars ? '$' : ''}{pots.preflop}{!useDollars ? 'BB' : ''}):</div>
-                      <div className="pl-4">
-                        {handHistory.preflop.actions.map((action, idx) => (
-                          <div key={idx} className="ml-4 -indent-4">
-                            {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
-                            {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
-                          </div>
-                        ))}
-                      </div>
+            {handHistory.preflop.actions.length > 0 && (
+              <div className="mt-4">
+                <div className="font-semibold">Preflop ({useDollars ? '$' : ''}{calculatePotForStreet('preflop')}{!useDollars ? 'BB' : ''}):</div>
+                <div className="pl-4">
+                  {handHistory.preflop.actions.map((action, idx) => (
+                    <div key={idx} className="ml-4 -indent-4">
+                      {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
+                      {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
-                  )}
-                  
-                  {handHistory.flop?.board && handHistory.flop.board.length > 0 && (
-                    <div className="mt-4">
-                      <div className="font-semibold">
-                        Flop ({useDollars ? '$' : ''}{pots.flop}{!useDollars ? 'BB' : ''}): {' '}
-                        {handHistory.flop.board.map((card, idx) => (
-                          <span key={idx} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
-                            {card.rank}
-                            {card.suit === 'hearts' ? '♥' : 
-                             card.suit === 'diamonds' ? '♦' : 
-                             card.suit === 'clubs' ? '♣' : '♠'} 
-                          </span>
-                        ))}
-                      </div>
-                      <div className="pl-4">
-                        {handHistory.flop.actions?.map((action, idx) => (
-                          <div key={idx} className="ml-4 -indent-4">
-                            {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
-                            {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
-                          </div>
-                        ))}
-                      </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {handHistory.flop?.board && handHistory.flop.board.length > 0 && (
+              <div className="mt-4">
+                <div className="font-semibold">
+                  Flop ({useDollars ? '$' : ''}{calculatePotForStreet('flop')}{!useDollars ? 'BB' : ''}): {' '}
+                  {handHistory.flop.board.map((card, idx) => (
+                    <span key={idx} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
+                      {card.rank}
+                      {card.suit === 'hearts' ? '♥' : 
+                       card.suit === 'diamonds' ? '♦' : 
+                       card.suit === 'clubs' ? '♣' : '♠'} 
+                    </span>
+                  ))}
+                </div>
+                <div className="pl-4">
+                  {handHistory.flop.actions.map((action, idx) => (
+                    <div key={idx} className="ml-4 -indent-4">
+                      {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
+                      {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
-                  )}
-                  
-                  {handHistory.turn?.board && handHistory.turn.board.length > 0 && (
-                    <div className="mt-4">
-                      <div className="font-semibold">
-                        Turn ({useDollars ? '$' : ''}{pots.turn}{!useDollars ? 'BB' : ''}): {' '}
-                        {handHistory.flop?.board && handHistory.flop.board.map((card, idx) => (
-                          <span key={`flop-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
-                            {card.rank}
-                            {card.suit === 'hearts' ? '♥' : 
-                             card.suit === 'diamonds' ? '♦' : 
-                             card.suit === 'clubs' ? '♣' : '♠'} 
-                          </span>
-                        ))}
-                        {" "}
-                        {handHistory.turn.board.map((card, idx) => (
-                          <span key={`turn-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
-                            {card.rank}
-                            {card.suit === 'hearts' ? '♥' : 
-                             card.suit === 'diamonds' ? '♦' : 
-                             card.suit === 'clubs' ? '♣' : '♠'}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="pl-4">
-                        {handHistory.turn.actions?.map((action, idx) => (
-                          <div key={idx} className="ml-4 -indent-4">
-                            {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
-                            {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
-                          </div>
-                        ))}
-                      </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {handHistory.turn?.board && handHistory.turn.board.length > 0 && (
+              <div className="mt-4">
+                <div className="font-semibold">
+                  Turn ({useDollars ? '$' : ''}{calculatePotForStreet('turn')}{!useDollars ? 'BB' : ''}): {' '}
+                  {/* Show flop cards first */}
+                  {handHistory.flop?.board && handHistory.flop.board.map((card, idx) => (
+                    <span key={`flop-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
+                      {card.rank}
+                      {card.suit === 'hearts' ? '♥' : 
+                       card.suit === 'diamonds' ? '♦' : 
+                       card.suit === 'clubs' ? '♣' : '♠'} 
+                    </span>
+                  ))}
+                  {" "} {/* Add space before turn card */}
+                  {/* Turn card */}
+                  <span className={handHistory.turn.board[0].suit === 'hearts' || 
+                                handHistory.turn.board[0].suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
+                    {handHistory.turn.board[0].rank}
+                    {handHistory.turn.board[0].suit === 'hearts' ? '♥' : 
+                     handHistory.turn.board[0].suit === 'diamonds' ? '♦' : 
+                     handHistory.turn.board[0].suit === 'clubs' ? '♣' : '♠'}
+                  </span>
+                </div>
+                <div className="pl-4">
+                  {handHistory.turn.actions.map((action, idx) => (
+                    <div key={idx} className="ml-4 -indent-4">
+                      {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
+                      {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
-                  )}
-                  
-                  {handHistory.river?.board && handHistory.river.board.length > 0 && (
-                    <div className="mt-4">
-                      <div className="font-semibold">
-                        River ({useDollars ? '$' : ''}{pots.river}{!useDollars ? 'BB' : ''}): {' '}
-                        {handHistory.flop?.board && handHistory.flop.board.map((card, idx) => (
-                          <span key={`flop-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
-                            {card.rank}
-                            {card.suit === 'hearts' ? '♥' : 
-                             card.suit === 'diamonds' ? '♦' : 
-                             card.suit === 'clubs' ? '♣' : '♠'} 
-                          </span>
-                        ))}
-                        {" "}
-                        {handHistory.turn?.board && handHistory.turn.board.map((card, idx) => (
-                          <span key={`turn-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
-                            {card.rank}
-                            {card.suit === 'hearts' ? '♥' : 
-                             card.suit === 'diamonds' ? '♦' : 
-                             card.suit === 'clubs' ? '♣' : '♠'}
-                          </span>
-                        ))}
-                        {" "}
-                        {handHistory.river.board.map((card, idx) => (
-                          <span key={`river-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
-                            {card.rank}
-                            {card.suit === 'hearts' ? '♥' : 
-                             card.suit === 'diamonds' ? '♦' : 
-                             card.suit === 'clubs' ? '♣' : '♠'}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="pl-4">
-                        {handHistory.river.actions?.map((action, idx) => (
-                          <div key={idx} className="ml-4 -indent-4">
-                            {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
-                            {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
-                          </div>
-                        ))}
-                      </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {handHistory.river?.board && handHistory.river.board.length > 0 && (
+              <div className="mt-4">
+                <div className="font-semibold">
+                  River ({useDollars ? '$' : ''}{calculatePotForStreet('river')}{!useDollars ? 'BB' : ''}): {' '}
+                  {/* All previous cards */}
+                  {handHistory.flop?.board && handHistory.flop.board.map((card, idx) => (
+                    <span key={`flop-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
+                      {card.rank}
+                      {card.suit === 'hearts' ? '♥' : 
+                       card.suit === 'diamonds' ? '♦' : 
+                       card.suit === 'clubs' ? '♣' : '♠'} 
+                    </span>
+                  ))}
+                  {" "} {/* Add space before turn card */}
+                  {handHistory.turn?.board && handHistory.turn.board.map((card, idx) => (
+                    <span key={`turn-${idx}`} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
+                      {card.rank}
+                      {card.suit === 'hearts' ? '♥' : 
+                       card.suit === 'diamonds' ? '♦' : 
+                       card.suit === 'clubs' ? '♣' : '♠'} 
+                    </span>
+                  ))}
+                  {" "} {/* Add space before river card */}
+                  {/* River card */}
+                  <span className={handHistory.river.board[0].suit === 'hearts' || 
+                                handHistory.river.board[0].suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
+                    {handHistory.river.board[0].rank}
+                    {handHistory.river.board[0].suit === 'hearts' ? '♥' : 
+                     handHistory.river.board[0].suit === 'diamonds' ? '♦' : 
+                     handHistory.river.board[0].suit === 'clubs' ? '♣' : '♠'}
+                  </span>
+                </div>
+                <div className="pl-4">
+                  {handHistory.river.actions.map((action, idx) => (
+                    <div key={idx} className="ml-4 -indent-4">
+                      {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
+                      {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
-                  )}
-                  
-                  <div className="mt-4 font-semibold">Total pot: {useDollars ? '$' : ''}{pots.total}{!useDollars ? 'BB' : ''}</div>
-                </>
-              );
-            })()}
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <div className="mt-4 font-semibold">Total pot: {useDollars ? '$' : ''}{calculatePotForStreet('river')}{!useDollars ? 'BB' : ''}</div>
             
             {/* Show showdown when river is complete or players are all-in */}
             {shouldShowShowdown() && (

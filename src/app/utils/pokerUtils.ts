@@ -77,27 +77,29 @@ export function getMinRaise(
  */
 export function getEffectiveStack(playerPosition: string, players: Player[], street: Street | undefined, previousStreet: Street | undefined): number {
   const player = players.find(p => p.position === playerPosition);
-  if (!player || !street) return 0;
+  if (!player) return 0; // If player not found, return 0
 
-  let effectiveStack = player.stack;
+  let effectiveStack = player.stack; // Start with initial stack
 
+  // Subtract actions from the previous street if it exists
   if (previousStreet?.actions) {
     for (const action of previousStreet.actions) {
-      if (action.player === player.position) {
-        effectiveStack -= action.amount || 0;
+      if (action.player === playerPosition && action.amount) {
+        effectiveStack -= action.amount;
       }
     }
   }
 
-  if (street.actions) {
+  // Subtract actions from the current street if it exists
+  if (street?.actions) { // Check if street itself is defined
     for (const action of street.actions) {
-      if (action.player === player.position) {
-        effectiveStack -= action.amount || 0;
+      if (action.player === playerPosition && action.amount) {
+        effectiveStack -= action.amount;
       }
     }
   }
 
-  return effectiveStack;
+  return Math.max(0, effectiveStack); // Ensure stack doesn't go below zero
 }
 
 /**
@@ -211,20 +213,15 @@ export function isAllPlayersAllIn(
  * Checks if the action for the street is complete
  */
 export function isActionComplete(players: Player[], street: Street, previousStreet?: Street): boolean {
-  // If all players are all-in, action is complete
-  if (isAllPlayersAllIn(players, street, previousStreet)) {
-    return true;
-  }
-  
-  // Get players who can still act
-  const actingPlayers = getActingPlayers(players, street, previousStreet);
-  if (actingPlayers.length === 0) return true;
-  
-  // If no actions yet, action is not complete
+  // If no actions yet, action is DEFINITELY not complete
   if (!street.actions || street.actions.length === 0) {
     return false;
   }
 
+  // Get players who can still act
+  const actingPlayers = getActingPlayers(players, street, previousStreet);
+  if (actingPlayers.length === 0) return true;
+  
   // Check if there was a bet/raise/all-in in the street
   const hasAggressiveAction = street.actions.some(
     action => action.type === 'bet' || action.type === 'raise' || action.type === 'all-in'
@@ -467,6 +464,10 @@ export function isStreetComplete(street: Street, activePlayers: string[]): boole
   }
 
   // Check if all active players have acted after the last aggressive action
+  // const lastAggressor = street.actions[lastAggressiveActionIndex].player; // Removed unused variable
+  // const aggressorIndex = activePlayers.indexOf(lastAggressor);
+  
+  // Count how many players need to act after the aggressor
   const playersNeededToAct = activePlayers.length - 1;
   
   // Count how many active players have acted after the last aggressive action
