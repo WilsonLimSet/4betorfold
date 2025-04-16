@@ -61,7 +61,7 @@ export default function PlayerInput({ player, onUpdate, onRemove, showVillainCar
   };
 
   return (
-    <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm w-full">
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-xl font-bold text-gray-900">
           {player.isHero ? 'Hero' : 'Villain'}
@@ -145,8 +145,8 @@ export default function PlayerInput({ player, onUpdate, onRemove, showVillainCar
       )}
 
       {player.isHero && (
-        <div className="mt-4">
-          <label className="block text-base font-semibold text-gray-900 mb-2">
+        <div className="mt-4 -mx-4 sm:-mx-2 md:mx-0">
+          <label className="block text-base font-semibold text-gray-900 mb-2 px-4 sm:px-2 md:px-0">
             Hole Cards (required)
           </label>
           <CardSelector
@@ -159,8 +159,8 @@ export default function PlayerInput({ player, onUpdate, onRemove, showVillainCar
       )}
 
       {!player.isHero && showVillainCards && (
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
+        <div className="mt-4 -mx-4 sm:-mx-2 md:mx-0">
+          <div className="flex items-center justify-between mb-2 px-4 sm:px-2 md:px-0">
             <label className="block text-base font-semibold text-gray-900">
               Hole Cards (optional)
             </label>

@@ -17,6 +17,12 @@ module.exports = {
           black: '#111827', // gray-900
         }
       },
+      screens: {
+        'xs': '480px',
+      },
+      fontFamily: {
+        inter: ['var(--font-inter)'],
+      },
     },
   },
   plugins: [

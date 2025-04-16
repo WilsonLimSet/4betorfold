@@ -61,9 +61,12 @@ export default function CardSelector({ selectedCards, maxCards, onCardSelect, us
       card => card?.rank === rank && card?.suit === suit
     );
     
-    // Check if card is used in another street, but allow unselecting if it's our card
-    const isUsed = usedCards.some(card => card.rank === rank && card.suit === suit);
-    if (isUsed && !isAlreadySelected) return;
+    // If already selected, always allow unselecting
+    // If not selected, only allow selecting if not used elsewhere
+    if (!isAlreadySelected) {
+      const isUsed = usedCards.some(card => card.rank === rank && card.suit === suit);
+      if (isUsed) return; // Don't allow selecting used cards
+    }
     
     const updatedCards: (Card | null)[] = [...localCards];
     
@@ -105,14 +108,19 @@ export default function CardSelector({ selectedCards, maxCards, onCardSelect, us
     return usedCards.some(card => card.rank === rank && card.suit === suit);
   };
   
+  // Generate a flat list of all possible cards for easier grid layout
+  const allCards = ranks.flatMap(rank => 
+    suits.map(suit => ({ rank, suit: suit.name, symbol: suit.symbol, color: suit.color }))
+  );
+
   return (
-    <div>
-      {/* Selected Cards Display */}
-      <div className="flex gap-2 mb-4">
+    <div className="card-selector w-full">
+      {/* Selected Cards Display - made responsive for mobile */}
+      <div className="flex flex-wrap justify-center sm:justify-start gap-1 mb-2">
         {localCards.map((card, index) => (
           <div
             key={index}
-            className="w-14 h-20 flex items-center justify-center rounded-lg border-2 text-xl font-bold bg-white shadow-sm"
+            className="w-12 h-16 sm:w-16 sm:h-24 flex items-center justify-center rounded-lg border-2 text-xl sm:text-2xl font-bold bg-white shadow-sm"
             style={{
               borderColor: card ? 'rgb(37, 99, 235)' : 'rgb(229, 231, 235)'
             }}
@@ -123,7 +131,7 @@ export default function CardSelector({ selectedCards, maxCards, onCardSelect, us
       </div>
       
       {/* Card Grid */}
-      <div className="bg-white p-4 border rounded-lg shadow-sm" style={{ borderColor: 'rgb(229, 231, 235)' }}>
+      <div className="bg-white p-0 sm:p-2 md:p-4 border rounded-lg shadow-sm w-full" style={{ borderColor: 'rgb(229, 231, 235)' }}>
         {/* Desktop/Laptop View: Suits as rows, Ranks as columns */}
         <div className="hidden md:block space-y-2">
           {suits.map(suit => (
@@ -138,13 +146,13 @@ export default function CardSelector({ selectedCards, maxCards, onCardSelect, us
                     key={`${rank}-${suit.name}`}
                     type="button"
                     onClick={(e) => handleCardClick(e, rank, suit.name)}
-                    className={`flex-1 h-10 flex items-center justify-center border-2 rounded-md transition-all text-sm
+                    className={`flex-1 h-14 flex items-center justify-center border-2 rounded-md transition-all text-lg
                       ${isSelected ? 'bg-blue-50 border-blue-600' : 'bg-white border-gray-200'}
                       ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:border-blue-400 hover:bg-blue-50'}
                       ${isUsed && !isSelected ? 'bg-gray-100' : ''}`}
                     disabled={isDisabled}
                   >
-                    <span style={{ color: suit.color }}>
+                    <span style={{ color: suit.color }} className="font-medium">
                       {rank}{suit.symbol}
                     </span>
                   </button>
@@ -154,34 +162,30 @@ export default function CardSelector({ selectedCards, maxCards, onCardSelect, us
           ))}
         </div>
 
-        {/* Mobile View: Ranks as columns, Suits stacked vertically */}
-        <div className="grid grid-cols-7 gap-2 md:hidden">
-          {ranks.map(rank => (
-            <div key={rank} className="flex flex-col gap-1">
-              {suits.map(suit => {
-                const isSelected = isCardSelected(rank, suit.name);
-                const isUsed = isCardUsed(rank, suit.name);
-                const isDisabled = isUsed && !isSelected;
-                
-                return (
-                  <button
-                    key={`${rank}-${suit.name}`}
-                    type="button"
-                    onClick={(e) => handleCardClick(e, rank, suit.name)}
-                    className={`w-10 h-10 flex items-center justify-center border-2 rounded-md transition-all
-                      ${isSelected ? 'bg-blue-50 border-blue-600' : 'bg-white border-gray-200'}
-                      ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:border-blue-400 hover:bg-blue-50'}
-                      ${isUsed && !isSelected ? 'bg-gray-100' : ''}`}
-                    disabled={isDisabled}
-                  >
-                    <span className="text-lg" style={{ color: suit.color }}>
-                      {rank}{suit.symbol}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          ))}
+        {/* Mobile View: Simple 8-column grid for smaller cards */}
+        <div className="grid grid-cols-8 xs:grid-cols-8 sm:grid-cols-8 gap-0.5 md:hidden w-full overflow-visible">
+          {allCards.map(card => {
+            const isSelected = isCardSelected(card.rank, card.suit);
+            const isUsed = isCardUsed(card.rank, card.suit);
+            const isDisabled = isUsed && !isSelected;
+            
+            return (
+              <button
+                key={`${card.rank}-${card.suit}`}
+                type="button"
+                onClick={(e) => handleCardClick(e, card.rank, card.suit)}
+                className={`w-full aspect-square min-h-[36px] flex items-center justify-center border rounded-md 
+                  ${isSelected ? 'bg-blue-50 border-blue-600 border-2' : 'bg-white border-gray-100'}
+                  ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}
+                  ${isUsed && !isSelected ? 'bg-gray-100' : ''}`}
+                disabled={isDisabled}
+              >
+                <span className="text-base sm:text-lg font-medium" style={{ color: card.color }}>
+                  {card.rank}{card.symbol}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

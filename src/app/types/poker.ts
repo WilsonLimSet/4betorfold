@@ -16,6 +16,7 @@ export type PlayerType =
 export type Player = {
   position: Position;
   stack: number;
+  initialStack?: number;
   holeCards?: [Card, Card];
   playerType: PlayerType;
   notes?: string;
@@ -46,6 +47,9 @@ export type HandHistory = {
   river?: Street;
   pot: number;
 };
+
+// Add Hand type alias for HandHistory
+export type Hand = HandHistory;
 
 export type CardValue = 'A' | 'K' | 'Q' | 'J' | 'T' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2';
 export type CardSuit = 'h' | 'd' | 'c' | 's';
