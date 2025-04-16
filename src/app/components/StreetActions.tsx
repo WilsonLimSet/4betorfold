@@ -104,7 +104,12 @@ export default function StreetActions({
     }
     // We might need to set it back to false if an action is deleted, handled by the 'Edit Street' button for now.
 
-  }, [street.actions, players, previousStreet, isStreetComplete]);
+  }, [
+      JSON.stringify(street.actions), // Stringify complex object
+      JSON.stringify(players), // Stringify complex object
+      JSON.stringify(previousStreet?.actions), // Stringify complex object (optional chaining handles undefined)
+      isStreetComplete
+     ]);
   
   // Auto-select next player to act
   useEffect(() => {
@@ -193,7 +198,15 @@ export default function StreetActions({
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [street.actions, players, previousStreet, streetName, isStreetComplete, blinds, straddleAmount]);
+  }, [
+      JSON.stringify(street.actions), // Stringify complex object
+      JSON.stringify(players), // Stringify complex object
+      JSON.stringify(previousStreet?.actions), // Stringify complex object
+      streetName, 
+      isStreetComplete, 
+      blinds, 
+      straddleAmount
+     ]);
   
   // Validate and handle bet amount changes
   const handleAmountChange = (value: string) => {

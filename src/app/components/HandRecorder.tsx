@@ -91,7 +91,7 @@ export const HandRecorder: React.FC = () => {
       }
     ];
     updatePlayersAndHistory(initialPlayers);
-  }, [stakes.bb, players]); // Added players dependency
+  }, [stakes.bb]); // REMOVED players dependency
 
   // Update stakes and adjust stacks for cash games
   const handleStakeChange = (sb: number, bb: number) => {
