@@ -91,8 +91,7 @@ export const HandRecorder: React.FC = () => {
       }
     ];
     updatePlayersAndHistory(initialPlayers);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stakes.bb]); // Assuming players should NOT reset every time they change elsewhere
+  }, [stakes.bb, players]); // Added players dependency
 
   // Update stakes and adjust stacks for cash games
   const handleStakeChange = (sb: number, bb: number) => {
@@ -115,7 +114,7 @@ export const HandRecorder: React.FC = () => {
       }));
       updatePlayersAndHistory(newPlayers);
     }
-  }, [straddle, isCashGame, stakes.bb]); // Keep players dependency removed based on prior logic
+  }, [straddle, isCashGame, stakes.bb]);
 
   const updatePlayer = (index: number, updatedPlayer: Player) => {
     // Ensure we can't remove the hero
