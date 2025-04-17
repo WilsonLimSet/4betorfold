@@ -258,32 +258,16 @@ export default class PokerGameState {
   }
 
   /**
-   * Get active players who haven't folded or gone all-in
+   * Get active players (not folded)
    */
   getActivePlayers(streetName: PokerStreet): Player[] {
-    
-    
-    return this.players.filter(player => {
-      // Check if player has folded
-      if (this.hasPlayerFolded(player.position, streetName)) {
-        return false;
-      }
-      
-      // Check if player is all-in
-      if (this.isPlayerAllIn(player.position, streetName)) {
-        return false;
-      }
-      
-      return true;
-    });
+    return this.players.filter(player => !this.hasPlayerFolded(player.position, streetName));
   }
 
   /**
-   * Get players who still need to act
+   * Get players who can still act (not folded or all-in)
    */
   getActingPlayers(streetName: PokerStreet): Player[] {
-    const street = this.getStreet(streetName);
-    
     return this.players.filter(player => {
       // Skip players who have folded
       if (this.hasPlayerFolded(player.position, streetName)) {
@@ -292,11 +276,6 @@ export default class PokerGameState {
       
       // Skip players who are all-in
       if (this.isPlayerAllIn(player.position, streetName)) {
-        return false;
-      }
-      
-      // Skip players who have already acted in this street
-      if (street.actions?.some(a => a.player === player.position)) {
         return false;
       }
       
@@ -412,18 +391,66 @@ export default class PokerGameState {
    */
   isAllPlayersAllIn(streetName: PokerStreet): boolean {
     // Get active players (not folded)
-    const activePlayers = this.getActivePlayers(streetName);
+    const activePlayers = this.players.filter(p => !this.hasPlayerFolded(p.position, streetName));
     
     // If there's only one active player, they're not all-in
     if (activePlayers.length <= 1) return false;
     
-    // Check if all active players except one are all-in
+    // Get the street actions
+    const street = this.getStreet(streetName);
+    
+    // Check if we have an all-in action followed by calls from all remaining players
+    if (street.actions && street.actions.length > 0) {
+      // Find the most recent all-in action
+      const reversedActions = [...street.actions].reverse();
+      const lastAllInIndex = reversedActions.findIndex(a => a.type === 'all-in');
+      
+      if (lastAllInIndex !== -1) {
+        const allInActionIndex = street.actions.length - 1 - lastAllInIndex;
+        // Get the all-in player
+        const allInPlayer = street.actions[allInActionIndex].player;
+        const allInAmount = street.actions[allInActionIndex].amount || 0;
+        
+        // For each active player other than the all-in player
+        for (const player of activePlayers) {
+          if (player.position === allInPlayer) continue;
+          
+          // Skip players who are all-in from a previous street
+          const previousStreet = this.getPreviousStreet(streetName);
+          if (previousStreet && this.isPlayerAllIn(player.position, previousStreet)) {
+            continue;
+          }
+          
+          // Check if this player has already folded
+          if (this.hasPlayerFolded(player.position, streetName)) {
+            continue;
+          }
+          
+          // Check if this player has responded to the all-in by either calling or folding
+          const actedAfterAllIn = street.actions.slice(allInActionIndex + 1).some(action => 
+            action.player === player.position && 
+            (action.type === 'call' || action.type === 'fold' || 
+             (action.type === 'all-in' && action.amount === allInAmount))
+          );
+          
+          // If any player hasn't acted after all-in, then not all players are all-in yet
+          if (!actedAfterAllIn) {
+            return false;
+          }
+        }
+        
+        // If we get here, all active players have responded to the all-in
+        return true;
+      }
+    }
+    
+    // Check if all active players except one are all-in (original logic as fallback)
     const allInCount = activePlayers.filter(player => 
       this.isPlayerAllIn(player.position, streetName)
     ).length;
     
     // All players are all-in if everyone except at most one player is all-in
-    return allInCount >= activePlayers.length - 1;
+    return allInCount >= activePlayers.length - 1 && this.isStreetComplete(streetName);
   }
 
   /**
@@ -672,7 +699,7 @@ export default class PokerGameState {
   }
 
   /**
-   * Get the next player to act based on the street and player positions
+   * Get the next player to act based on the street
    */
   getNextActingPlayer(streetName: PokerStreet): string | null {
     const street = this.getStreet(streetName);
@@ -683,7 +710,7 @@ export default class PokerGameState {
     if (!street.actions || street.actions.length === 0) {
       return activePlayers[0].position;
     }
-
+    
     // Find the last player who acted
     const lastAction = street.actions[street.actions.length - 1];
     const lastPlayerIndex = activePlayers.findIndex(p => p.position === lastAction.player);

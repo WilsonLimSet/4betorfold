@@ -512,7 +512,7 @@ export const HandRecorder: React.FC = () => {
                     </button>
                     <button
                       onClick={goToNextStage}
-                      disabled={!handHistory.flop?.board || handHistory.flop.board.length !== 3}
+                      disabled={(!handHistory.flop?.board || handHistory.flop.board.length !== 3) && !gameState.isAllPlayersAllIn('flop')}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                       Next: Turn
@@ -552,7 +552,7 @@ export const HandRecorder: React.FC = () => {
                     </button>
                     <button
                       onClick={goToNextStage}
-                      disabled={!handHistory.turn?.board || handHistory.turn.board.length !== 1}
+                      disabled={(!handHistory.turn?.board || handHistory.turn.board.length !== 1) && !gameState.isAllPlayersAllIn('turn')}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                       Next: River
