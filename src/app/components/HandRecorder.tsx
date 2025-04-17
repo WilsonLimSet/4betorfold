@@ -1,14 +1,19 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Position, Player, HandHistory, Street, Card, Stakes, PokerStreet } from '../types/poker';
+import { Position, Player, HandHistory, Street, Stakes, PokerStreet } from '../types/poker';
 import PlayerInput from './PlayerInput';
 import StreetActions from './StreetActions';
 import StakeSelector from './StakeSelector';
-import { getPlayerContributions } from '../utils/pokerUtils';
+import PokerGameState from '@/app/utils/pokerGameState';
 
 // Define positions array
 const positions: Position[] = ['BTN', 'SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO'];
+
+// Create a dummy game state for initialization
+const createDefaultGameState = () => {
+  return new PokerGameState();
+};
 
 export const HandRecorder: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -33,6 +38,10 @@ export const HandRecorder: React.FC = () => {
 
   const [straddle, setStraddle] = useState<boolean>(false);
   const straddleAmount = straddle ? stakes.bb * 2 : 0; // Straddle is 2x the BB
+
+  const [activeStage, setActiveStage] = useState<'preflop' | 'flop' | 'turn' | 'river'>('preflop');
+
+  const [gameState, setGameState] = useState<PokerGameState>(createDefaultGameState());
 
   // Add toggleDollars function to use the setUseDollars function
   const toggleDollars = () => {
@@ -91,7 +100,7 @@ export const HandRecorder: React.FC = () => {
       }
     ];
     updatePlayersAndHistory(initialPlayers);
-  }, [stakes.bb]); // REMOVED players dependency
+  }, [stakes.bb]); // Remove players dependency
 
   // Update stakes and adjust stacks for cash games
   const handleStakeChange = (sb: number, bb: number) => {
@@ -141,75 +150,21 @@ export const HandRecorder: React.FC = () => {
   };
 
   const updateStreet = (streetName: PokerStreet, street: Street) => {
-    setHandHistory(prev => ({
-      ...prev,
-      [streetName]: street
-    }));
+    const newHandHistory = { ...handHistory };
+    newHandHistory[streetName] = street;
+    setHandHistory(newHandHistory);
+    
+    // Also update the game state
+    gameState.updateStreet(streetName, street);
   };
 
   const calculatePotForStreet = (streetName: PokerStreet): number => {
-    // New approach: Calculate pot entering each street
-    let potEnteringFlop = stakes.sb + stakes.bb + (straddle ? straddleAmount : 0);
-    const preflopActions = handHistory.preflop?.actions;
-    if(preflopActions && preflopActions.length > 0) {
-        const preflopContributions = getPlayerContributions(preflopActions);
-        for(const amount of preflopContributions.values()){ potEnteringFlop += amount; }
-    }
-
-    let potEnteringTurn = potEnteringFlop;
-    const flopActions = handHistory.flop?.actions;
-     if(flopActions && flopActions.length > 0) {
-        const flopContributions = getPlayerContributions(flopActions);
-        for(const amount of flopContributions.values()){ potEnteringTurn += amount; }
-    }
-
-    let potEnteringRiver = potEnteringTurn;
-    const turnActions = handHistory.turn?.actions;
-    if(turnActions && turnActions.length > 0) {
-        const turnContributions = getPlayerContributions(turnActions);
-        for(const amount of turnContributions.values()){ potEnteringRiver += amount; }
-    }
-    
-    // Now, return the correct pot value based on the street requested
-    if (streetName === 'preflop') return potEnteringFlop; // Pot size *after* preflop actions
-    if (streetName === 'flop') return potEnteringTurn;    // Pot size *after* flop actions
-    if (streetName === 'turn') return potEnteringRiver;   // Pot size *after* turn actions
-    if (streetName === 'river') {
-        // Calculate final pot after river actions
-        let finalPot = potEnteringRiver;
-         const riverActions = handHistory.river?.actions;
-        if(riverActions && riverActions.length > 0) {
-            const riverContributions = getPlayerContributions(riverActions);
-            for(const amount of riverContributions.values()){ finalPot += amount; }
-        }
-        return finalPot;
-    }
-
-    return 0; // Should not happen
+    return gameState.calculateDisplayPot(streetName);
   };
 
   // NEW: Helper to calculate effective stack at the START of a given street
   const calculateEffectiveStackAtStreetStart = (playerPosition: string, targetStreetName: PokerStreet): number => {
-    const player = players.find(p => p.position === playerPosition);
-    if (!player) return 0;
-
-    let effectiveStack = player.stack;
-    const streetOrder: PokerStreet[] = ['preflop', 'flop', 'turn', 'river'];
-    const targetStreetIndex = streetOrder.indexOf(targetStreetName);
-
-    // Subtract actions from all streets *before* the target street
-    for (let i = 0; i < targetStreetIndex; i++) {
-      const streetNameToProcess = streetOrder[i];
-      const streetData = handHistory[streetNameToProcess];
-      if (streetData?.actions) {
-        for (const action of streetData.actions) {
-          if (action.player === playerPosition && action.amount) {
-            effectiveStack -= action.amount;
-          }
-        }
-      }
-    }
-    return Math.max(0, effectiveStack);
+    return gameState.getEffectiveStack(playerPosition, targetStreetName);
   };
 
   const handleCopy = () => {
@@ -248,80 +203,100 @@ export const HandRecorder: React.FC = () => {
     }
   };
 
-  const getUsedCards = (currentStreet: PokerStreet): Card[] => {
-    const usedCards: Card[] = [];
-    
-    // Add all players' hole cards if they exist
-    players.forEach(player => {
-      if (player.holeCards) {
-        usedCards.push(...player.holeCards);
-      }
-    });
-    
-    // Add board cards from previous streets
-    if (currentStreet !== 'preflop') {
-      if (handHistory.flop?.board) {
-        usedCards.push(...handHistory.flop.board);
-      }
-      
-      if (currentStreet !== 'flop' && handHistory.turn?.board) {
-        usedCards.push(...handHistory.turn.board);
-      }
-      
-      if (currentStreet !== 'flop' && currentStreet !== 'turn' && handHistory.river?.board) {
-        usedCards.push(...handHistory.river.board);
-      }
+  // Function to determine if we should show the showdown section in the preview
+  const shouldShowShowdown = () => {
+    // Show showdown if there's an all-in on any street
+    if (gameState.isAllPlayersAllIn('preflop') || 
+        gameState.isAllPlayersAllIn('flop') || 
+        gameState.isAllPlayersAllIn('turn') || 
+        gameState.isAllPlayersAllIn('river')) {
+      return true;
     }
     
-    return usedCards;
+    // Show showdown if the river street itself is complete
+    if (gameState.isStreetComplete('river')) {
+        return true;
+    }
+    
+    return false;
   };
 
-  // Determine if all active players are all-in
-  const isAllPlayersAllIn = (players: Player[], street: Street, previousStreet?: Street): boolean => {
-    // Get non-folded players
-    const activePlayers = players.filter(player => {
-      // Check if player has folded in any previous street
-      const hasFolded = ['preflop', 'flop', 'turn', 'river'].some(streetName => {
-        const streetData = streetName === 'preflop' ? previousStreet : street;
-        return streetData?.actions?.some(
-          action => action.player === player.position && action.type === 'fold'
-        );
-      });
-      return !hasFolded;
+  // Updated function to handle stage transitions (River is final)
+  const goToNextStage = () => {
+    // Check if there's an all-in on the current street
+    // If so, we stay on the current street but the UI should reflect completion
+    if (gameState.isAllPlayersAllIn(activeStage as PokerStreet)) {
+      // No state change needed, action UI should disable via StreetActions props
+      return; 
+    }
+    
+    // Normal progression
+    if (activeStage === 'preflop') setActiveStage('flop');
+    else if (activeStage === 'flop') setActiveStage('turn');
+    else if (activeStage === 'turn') setActiveStage('river');
+    // No transition from river needed
+  };
+
+  // Updated function to handle previous stage navigation
+  const goToPreviousStage = () => {
+    // Normal navigation
+    if (activeStage === 'river') setActiveStage('turn');
+    else if (activeStage === 'turn') setActiveStage('flop');
+    else if (activeStage === 'flop') setActiveStage('preflop');
+  };
+
+  const resetHand = () => {
+    // Generate a new UUID for the hand
+    const newHandId = crypto.randomUUID();
+    
+    // Reset hand history while preserving players' positions and stacks
+    setHandHistory({
+      id: newHandId,
+      date: new Date(),
+      players: players.map(player => ({
+        ...player,
+        holeCards: undefined
+      })),
+      preflop: { actions: [] },
+      flop: { actions: [] },
+      turn: { actions: [] },
+      river: { actions: [] },
+      pot: 0
     });
     
-    // Check if all active players have performed an all-in action
-    const allInPlayers = ['preflop', 'flop', 'turn', 'river'].reduce((allIn, streetName) => {
-      const streetData = streetName === 'preflop' ? previousStreet : street;
-      streetData?.actions?.forEach(action => {
-        if (action.type === 'all-in') {
-          allIn.add(action.player);
-        }
-      });
-      return allIn;
-    }, new Set<string>());
+    // Reset to preflop stage
+    setActiveStage('preflop');
     
-    // We need at least two active players and either:
-    // 1. All active players are all-in, or
-    // 2. One player is all-in and there's only one other active player
-    const result = activePlayers.length > 0 && 
-           ((activePlayers.every(player => allInPlayers.has(player.position)) &&
-           allInPlayers.size >= Math.min(2, activePlayers.length)) || 
-           (allInPlayers.size === 1 && activePlayers.length === 2));
-    
-    return result;
+    // Reset date and location if needed
+    // Uncomment if you want to clear these too
+    // setHandDate('');
+    // setHandLocation('');
   };
 
-  // Calculate all-in concluded states *before* passing props
-  const preflopAllInConcluded = isAllPlayersAllIn(players, handHistory.preflop || { actions: [] });
-  const flopAllInConcluded = isAllPlayersAllIn(players, handHistory.flop || { actions: [] }, handHistory.preflop || { actions: [] });
-  const turnAllInConcluded = isAllPlayersAllIn(players, handHistory.turn || { actions: [] }, handHistory.flop || { actions: [] });
-
-  // Check if we should show a showdown (all-in situation or river completed)
-  const shouldShowShowdown = () => {
-    const riverComplete = handHistory.river?.actions && handHistory.river.actions.length > 0;
-    return isAllPlayersAllIn(players, handHistory.river || { actions: [] }, handHistory.turn || { actions: [] }) || riverComplete;
-  };
+  // Update game state when hand history changes
+  useEffect(() => {
+    if (players.length === 0) return;
+    
+    const newGameState = new PokerGameState(
+      players,
+      { sb: stakes.sb, bb: stakes.bb },
+      straddle ? straddleAmount : 0
+    );
+    
+    // Load existing hand data into the game state - Handle undefined safely
+    const streets: PokerStreet[] = ['preflop', 'flop', 'turn', 'river'];
+    streets.forEach(streetName => {
+      const street = handHistory[streetName];
+      if (street && street.actions) { // Check if street and actions exist
+        newGameState.updateStreet(streetName, {
+          actions: street.actions,
+          board: street.board
+        });
+      }
+    });
+    
+    setGameState(newGameState);
+  }, [players, stakes, straddle, straddleAmount, handHistory]);
 
   return (
     <div className="max-w-6xl mx-auto p-1 sm:p-2 md:p-4">
@@ -353,7 +328,7 @@ export const HandRecorder: React.FC = () => {
                   type="text"
                   value={handLocation}
                   onChange={(e) => setHandLocation(e.target.value)}
-                  placeholder="e.g., Aria Casino, Las Vegas"
+                  placeholder="e.g., Hustler Casino"
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900"
                 />
               </div>
@@ -380,22 +355,36 @@ export const HandRecorder: React.FC = () => {
               />
             </div>
 
-            {/* Straddle Section */}
+            {/* Straddle and Display Amounts Section */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgb(31, 41, 55)' }}>Straddle</h3>
-              <div className="flex items-center">
-                <label className="inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={straddle}
-                    onChange={() => setStraddle(!straddle)}
-                    className="sr-only peer"
-                  />
-                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-lg font-medium text-gray-900">
-                    {straddle ? `$${straddleAmount} (2x BB)` : 'Off'}
-                  </span>
-                </label>
+              <div className="flex items-center gap-8"> {/* Increased gap */}
+                {/* Straddle Toggle */}
+                <div>
+                  <h3 className="text-xl font-semibold mb-2" style={{ color: 'rgb(31, 41, 55)' }}>Straddle</h3>
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={straddle}
+                      onChange={() => setStraddle(!straddle)}
+                      className="sr-only peer"
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <span className="ml-3 text-lg font-medium text-gray-900">
+                      {straddle ? `$${straddleAmount} (2x BB)` : 'Off'}
+                    </span>
+                  </label>
+                </div>
+
+                {/* Display Amounts Toggle */}
+                <div>
+                  <h3 className="text-xl font-semibold mb-2 invisible">Display</h3> {/* Invisible placeholder for alignment */}
+                  <button
+                    onClick={toggleDollars}
+                    className="px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded hover:bg-blue-50 text-m"
+                  >
+                    Show amounts in: {useDollars ? 'BB' : '$'}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -423,7 +412,7 @@ export const HandRecorder: React.FC = () => {
                     showVillainCards={true}
                     takenPositions={getTakenPositions(index)}
                     allPlayers={players}
-                    usedCards={getUsedCards('preflop')}
+                    usedCards={gameState.getUsedCards('preflop')}
                   />
                 ))}
               </div>
@@ -431,87 +420,180 @@ export const HandRecorder: React.FC = () => {
 
             {/* Street Actions */}
             <div className="space-y-6">
-              <StreetActions
-                streetName="Preflop"
-                players={players}
-                street={handHistory.preflop || { actions: [] }}
-                onUpdate={(street) => updateStreet('preflop', street)}
-                usedCards={getUsedCards('preflop')}
-                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
-                straddleAmount={straddle ? straddleAmount : 0}
-                blinds={stakes}
-              />
-              
-              {/* Pass the pre-calculated pot from preflop */}
-              {/* Also pass whether actions should be disabled due to prior all-in */}
-              <StreetActions
-                streetName="Flop"
-                players={players}
-                street={handHistory.flop || { actions: [] }}
-                onUpdate={(street) => updateStreet('flop', street)}
-                previousStreet={handHistory.preflop || { actions: [] }}
-                usedCards={getUsedCards('flop')}
-                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
-                allPlayersAllIn={preflopAllInConcluded}
-                actionsDisabledDueToAllIn={preflopAllInConcluded}
-                previousCards={{ flop: handHistory.flop?.board }}
-                blinds={stakes}
-                straddleAmount={straddle ? straddleAmount : 0}
-              />
-              
-              {/* Pass the pre-calculated pots from preflop and flop */}
-              {/* Also pass whether actions should be disabled due to prior all-in */}
-              <StreetActions
-                streetName="Turn"
-                players={players}
-                street={handHistory.turn || { actions: [] }}
-                onUpdate={(street) => updateStreet('turn', street)}
-                previousStreet={handHistory.flop || { actions: [] }}
-                usedCards={getUsedCards('turn')}
-                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
-                allPlayersAllIn={flopAllInConcluded}
-                actionsDisabledDueToAllIn={flopAllInConcluded}
-                previousCards={{ 
-                  flop: handHistory.flop?.board,
-                  turn: handHistory.turn?.board
-                }}
-                blinds={stakes}
-                straddleAmount={straddle ? straddleAmount : 0}
-                preflopPot={calculatePotForStreet('preflop')}
-                flopPot={calculatePotForStreet('flop')}
-              />
-              
-              {/* Pass the pre-calculated pots from all previous streets */}
-              {/* Also pass whether actions should be disabled due to prior all-in */}
-              <StreetActions
-                streetName="River"
-                players={players}
-                street={handHistory.river || { actions: [] }}
-                onUpdate={(street) => updateStreet('river', street)}
-                previousStreet={handHistory.turn || { actions: [] }}
-                usedCards={getUsedCards('river')}
-                calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
-                allPlayersAllIn={turnAllInConcluded}
-                actionsDisabledDueToAllIn={turnAllInConcluded}
-                previousCards={{ 
-                  flop: handHistory.flop?.board,
-                  turn: handHistory.turn?.board
-                }}
-                blinds={stakes}
-                straddleAmount={straddle ? straddleAmount : 0}
-                preflopPot={calculatePotForStreet('preflop')}
-                flopPot={calculatePotForStreet('flop')}
-                turnPot={calculatePotForStreet('turn')}
-              />
-            </div>
+              {/* Street Navigation Tabs */}
+              <div className="flex w-full border-b border-gray-200 mb-4">
+                <button
+                  onClick={() => setActiveStage('preflop')}
+                  className={`px-4 py-2 text-base font-medium ${activeStage === 'preflop' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  Preflop
+                </button>
+                <button
+                  onClick={() => setActiveStage('flop')}
+                  className={`px-4 py-2 text-base font-medium ${activeStage === 'flop' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+                  disabled={!handHistory.preflop?.actions || handHistory.preflop.actions.length === 0}
+                >
+                  Flop
+                </button>
+                <button
+                  onClick={() => setActiveStage('turn')}
+                  className={`px-4 py-2 text-base font-medium ${activeStage === 'turn' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+                  disabled={!handHistory.flop?.board || !handHistory.flop.board.length}
+                >
+                  Turn
+                </button>
+                <button
+                  onClick={() => setActiveStage('river')}
+                  className={`px-4 py-2 text-base font-medium ${activeStage === 'river' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
+                  disabled={!handHistory.turn?.board || !handHistory.turn.board.length}
+                >
+                  River
+                </button>
+              </div>
 
-            <div className="flex gap-4">
-              <button
-                onClick={toggleDollars}
-                className="px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded hover:bg-blue-50"
-              >
-                Show amounts in: {useDollars ? 'BB' : '$'}
-              </button>
+              {/* Active Stage Component */}
+              {activeStage === 'preflop' && (
+                <div>
+                  <StreetActions
+                    streetName="Preflop"
+                    players={players}
+                    street={handHistory.preflop}
+                    gameState={gameState}
+                    onUpdate={(street) => updateStreet('preflop', street)}
+                    usedCards={gameState.getUsedCards('preflop')}
+                    calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                    allPlayersAllIn={false}
+                    actionsDisabledDueToAllIn={false}
+                    blinds={stakes}
+                    straddleAmount={straddle ? straddleAmount : 0}
+                  />
+                  <div className="flex justify-between mt-4">
+                    <button
+                      onClick={goToPreviousStage}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={goToNextStage}
+                      disabled={!handHistory.preflop?.actions || handHistory.preflop.actions.length === 0}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                      Next: Flop
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {activeStage === 'flop' && (
+                <div>
+                  <StreetActions
+                    streetName="Flop"
+                    players={players}
+                    street={handHistory.flop || { actions: [] }}
+                    gameState={gameState}
+                    onUpdate={(street) => updateStreet('flop', street)}
+                    previousStreet={handHistory.preflop}
+                    usedCards={gameState.getUsedCards('flop')}
+                    calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                    allPlayersAllIn={gameState.isAllPlayersAllIn('preflop')}
+                    actionsDisabledDueToAllIn={gameState.isAllPlayersAllIn('preflop')}
+                    previousCards={{ flop: handHistory.flop?.board }}
+                    blinds={stakes}
+                    straddleAmount={straddle ? straddleAmount : 0}
+                    preflopPot={calculatePotForStreet('preflop')}
+                  />
+                  <div className="flex justify-between mt-4">
+                    <button
+                      onClick={goToPreviousStage}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={goToNextStage}
+                      disabled={!handHistory.flop?.board || handHistory.flop.board.length !== 3}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                      Next: Turn
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {activeStage === 'turn' && (
+                <div>
+                  <StreetActions
+                    streetName="Turn"
+                    players={players}
+                    street={handHistory.turn || { actions: [] }}
+                    gameState={gameState}
+                    onUpdate={(street) => updateStreet('turn', street)}
+                    previousStreet={handHistory.flop}
+                    usedCards={gameState.getUsedCards('turn')}
+                    calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                    allPlayersAllIn={gameState.isAllPlayersAllIn('preflop') || gameState.isAllPlayersAllIn('flop')}
+                    actionsDisabledDueToAllIn={gameState.isAllPlayersAllIn('preflop') || gameState.isAllPlayersAllIn('flop')}
+                    previousCards={{
+                      flop: handHistory.flop?.board,
+                      turn: handHistory.turn?.board
+                    }}
+                    blinds={stakes}
+                    straddleAmount={straddle ? straddleAmount : 0}
+                    preflopPot={calculatePotForStreet('preflop')}
+                    flopPot={calculatePotForStreet('flop')}
+                  />
+                  <div className="flex justify-between mt-4">
+                    <button
+                      onClick={goToPreviousStage}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={goToNextStage}
+                      disabled={!handHistory.turn?.board || handHistory.turn.board.length !== 1}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                      Next: River
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {activeStage === 'river' && (
+                <div>
+                  <StreetActions
+                    streetName="River"
+                    players={players}
+                    street={handHistory.river || { actions: [] }}
+                    gameState={gameState}
+                    onUpdate={(street) => updateStreet('river', street)}
+                    previousStreet={handHistory.turn}
+                    usedCards={gameState.getUsedCards('river')}
+                    calculateEffectiveStack={calculateEffectiveStackAtStreetStart}
+                    allPlayersAllIn={gameState.isAllPlayersAllIn('preflop') || gameState.isAllPlayersAllIn('flop') || gameState.isAllPlayersAllIn('turn')}
+                    actionsDisabledDueToAllIn={gameState.isAllPlayersAllIn('preflop') || gameState.isAllPlayersAllIn('flop') || gameState.isAllPlayersAllIn('turn')}
+                    previousCards={{
+                      flop: handHistory.flop?.board,
+                      turn: handHistory.turn?.board
+                    }}
+                    blinds={stakes}
+                    straddleAmount={straddle ? straddleAmount : 0}
+                    preflopPot={calculatePotForStreet('preflop')}
+                    flopPot={calculatePotForStreet('flop')}
+                    turnPot={calculatePotForStreet('turn')}
+                  />
+                  <div className="flex justify-between mt-4">
+                    <button
+                      onClick={goToPreviousStage}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -521,6 +603,12 @@ export const HandRecorder: React.FC = () => {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Hand History</h2>
             <div className="flex items-center gap-4">
+              <button
+                onClick={resetHand}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-blue-500 text-blue-500 hover:bg-blue-50 transition-colors"
+              >
+                <span>New Hand</span>
+              </button>
               <button
                 onClick={handleCopy}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
@@ -687,7 +775,7 @@ export const HandRecorder: React.FC = () => {
               </div>
             )}
             
-            <div className="mt-4 font-semibold">Total pot: {useDollars ? '$' : ''}{calculatePotForStreet('river')}{!useDollars ? 'BB' : ''}</div>
+            <div className="mt-4 font-semibold">Total pot: {useDollars ? '$' : ''}{gameState.calculateTotalPot('river')}{!useDollars ? 'BB' : ''}</div>
             
             {/* Show showdown when river is complete or players are all-in */}
             {shouldShowShowdown() && (
