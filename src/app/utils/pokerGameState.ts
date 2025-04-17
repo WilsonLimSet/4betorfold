@@ -4,7 +4,7 @@ import { Action, Player, Street, Position, PokerStreet, ActionType, Card } from 
  * PokerGameState class manages the state of a poker hand
  * This centralizes all game logic and provides a clean API for components
  */
-export class PokerGameState {
+export default class PokerGameState {
   private players: Player[];
   private streets: Record<PokerStreet, Street>;
   private blinds: { sb: number; bb: number };
@@ -15,7 +15,7 @@ export class PokerGameState {
   ] as const;
 
   constructor(
-    players: Player[], 
+    players: Player[] = [], 
     blinds: { sb: number; bb: number } = { sb: 1, bb: 2 },
     straddleAmount: number = 0
   ) {
@@ -258,32 +258,16 @@ export class PokerGameState {
   }
 
   /**
-   * Get active players who haven't folded or gone all-in
+   * Get active players (not folded)
    */
   getActivePlayers(streetName: PokerStreet): Player[] {
-    
-    
-    return this.players.filter(player => {
-      // Check if player has folded
-      if (this.hasPlayerFolded(player.position, streetName)) {
-        return false;
-      }
-      
-      // Check if player is all-in
-      if (this.isPlayerAllIn(player.position, streetName)) {
-        return false;
-      }
-      
-      return true;
-    });
+    return this.players.filter(player => !this.hasPlayerFolded(player.position, streetName));
   }
 
   /**
-   * Get players who still need to act
+   * Get players who can still act (not folded or all-in)
    */
   getActingPlayers(streetName: PokerStreet): Player[] {
-    const street = this.getStreet(streetName);
-    
     return this.players.filter(player => {
       // Skip players who have folded
       if (this.hasPlayerFolded(player.position, streetName)) {
@@ -292,11 +276,6 @@ export class PokerGameState {
       
       // Skip players who are all-in
       if (this.isPlayerAllIn(player.position, streetName)) {
-        return false;
-      }
-      
-      // Skip players who have already acted in this street
-      if (street.actions?.some(a => a.player === player.position)) {
         return false;
       }
       
@@ -412,18 +391,66 @@ export class PokerGameState {
    */
   isAllPlayersAllIn(streetName: PokerStreet): boolean {
     // Get active players (not folded)
-    const activePlayers = this.getActivePlayers(streetName);
+    const activePlayers = this.players.filter(p => !this.hasPlayerFolded(p.position, streetName));
     
     // If there's only one active player, they're not all-in
     if (activePlayers.length <= 1) return false;
     
-    // Check if all active players except one are all-in
+    // Get the street actions
+    const street = this.getStreet(streetName);
+    
+    // Check if we have an all-in action followed by calls from all remaining players
+    if (street.actions && street.actions.length > 0) {
+      // Find the most recent all-in action
+      const reversedActions = [...street.actions].reverse();
+      const lastAllInIndex = reversedActions.findIndex(a => a.type === 'all-in');
+      
+      if (lastAllInIndex !== -1) {
+        const allInActionIndex = street.actions.length - 1 - lastAllInIndex;
+        // Get the all-in player
+        const allInPlayer = street.actions[allInActionIndex].player;
+        const allInAmount = street.actions[allInActionIndex].amount || 0;
+        
+        // For each active player other than the all-in player
+        for (const player of activePlayers) {
+          if (player.position === allInPlayer) continue;
+          
+          // Skip players who are all-in from a previous street
+          const previousStreet = this.getPreviousStreet(streetName);
+          if (previousStreet && this.isPlayerAllIn(player.position, previousStreet)) {
+            continue;
+          }
+          
+          // Check if this player has already folded
+          if (this.hasPlayerFolded(player.position, streetName)) {
+            continue;
+          }
+          
+          // Check if this player has responded to the all-in by either calling or folding
+          const actedAfterAllIn = street.actions.slice(allInActionIndex + 1).some(action => 
+            action.player === player.position && 
+            (action.type === 'call' || action.type === 'fold' || 
+             (action.type === 'all-in' && action.amount === allInAmount))
+          );
+          
+          // If any player hasn't acted after all-in, then not all players are all-in yet
+          if (!actedAfterAllIn) {
+            return false;
+          }
+        }
+        
+        // If we get here, all active players have responded to the all-in
+        return true;
+      }
+    }
+    
+    // Check if all active players except one are all-in (original logic as fallback)
     const allInCount = activePlayers.filter(player => 
       this.isPlayerAllIn(player.position, streetName)
     ).length;
     
     // All players are all-in if everyone except at most one player is all-in
-    return allInCount >= activePlayers.length - 1;
+    return allInCount >= activePlayers.length - 1 && this.isStreetComplete(streetName);
   }
 
   /**
@@ -543,74 +570,117 @@ export class PokerGameState {
    */
   isStreetComplete(streetName: PokerStreet): boolean {
     const street = this.getStreet(streetName);
-    
-    // If all players are all-in, action is complete
-    if (this.isAllPlayersAllIn(streetName)) {
+    const activePlayers = this.players.filter(p => !this.hasPlayerFolded(p.position, streetName)); // Players still in the hand
+
+    // If <= 1 player left, street is complete
+    if (activePlayers.length <= 1) {
       return true;
     }
-    
-    // Get players who can still act
-    const actingPlayers = this.getActingPlayers(streetName);
-    if (actingPlayers.length === 0) return true;
-    
-    // If no actions yet, action is not complete
-    if (!street.actions || street.actions.length === 0) {
-      return false;
+
+    // Check if all remaining players are effectively all-in or folded
+    const playersEffectivelyAllInOrFolded = activePlayers.every(player => {
+      const effStack = this.getEffectiveStack(player.position, streetName);
+      // Need to also consider if they were all-in on a *previous* street
+      return effStack <= 0 || this.isPlayerAllIn(player.position, streetName); 
+    });
+    if (playersEffectivelyAllInOrFolded) {
+      return true;
     }
 
-    // Check if there was a bet/raise/all-in in the street
-    const hasAggressiveAction = street.actions.some(
-      action => action.type === 'bet' || action.type === 'raise' || action.type === 'all-in'
-    );
+    // --- Preflop Specific Logic --- 
+    if (streetName === 'preflop') {
+        const actions = street.actions || [];
+        const bbPlayer = this.players.find(p => p.position === 'BB');
+        const straddlerPos = this.straddleAmount > 0 ? this.getPlayerByPosition('UTG')?.position : null; // Assuming UTG straddle for now
+        const closingPlayerPos = straddlerPos || bbPlayer?.position;
+        const closingAmount = this.straddleAmount > 0 ? this.straddleAmount : this.blinds.bb;
 
-    if (hasAggressiveAction) {
-      // Find the index of the last aggressive action
-      let lastAggressiveActionIndex = -1;
-      for (let i = street.actions.length - 1; i >= 0; i--) {
-        const action = street.actions[i];
-        if (action.type === 'bet' || action.type === 'raise' || action.type === 'all-in') {
-          lastAggressiveActionIndex = i;
-          break;
+        // If no actions, not complete unless maybe BB/Straddle is all-in pre
+        if (actions.length === 0) return false; 
+
+        const highestContribution = Math.max(0, ...Array.from(this.getPlayerContributions(streetName).values()));
+        const lastAction = actions[actions.length - 1];
+
+        // Check if a raise occurred beyond the initial blind/straddle
+        const raiseOccurred = highestContribution > closingAmount;
+
+        if (!raiseOccurred) {
+            // No raise beyond blind/straddle. Complete ONLY if last action is closingPlayer checking.
+            return lastAction.player === closingPlayerPos && lastAction.type === 'check';
+        } else {
+            // Raise occurred. Action must close based on last aggressor.
+            // Fall through to the general aggressive action logic below.
         }
-      }
+    }
+    // --- End Preflop Specific Logic ---
 
-      // Get the last aggressive action
-      const lastAggressiveAction = street.actions[lastAggressiveActionIndex];
+    // --- General Logic (Postflop & Preflop Raises) --- 
+    const playerContributions = this.getPlayerContributions(streetName);
+    const highestContribution = Math.max(0, ...Array.from(playerContributions.values()));
 
-      // After an aggressive action, each player must either:
-      // 1. Act after this aggressive action
-      // 2. Have already folded
-      // 3. Be the player who made the aggressive action
-      
-      // Track who has acted after the aggressive action
-      const playersWhoActedAfter = new Set<string>();
-      
-      // Check for actions after the aggressive action
-      for (let i = lastAggressiveActionIndex + 1; i < street.actions.length; i++) {
-        playersWhoActedAfter.add(street.actions[i].player);
-      }
-      
-      // Check if all active players have either acted after the last aggressive
-      // action or are the player who made that aggressive action
-      for (const player of actingPlayers) {
-        if (player.position === lastAggressiveAction.player) {
-          // Player who made the aggressive action - no need to act again
-          continue;
-        }
+    // Find the last *voluntary* aggressive action (Bet, Raise, or All-in that increases commitment)
+    let lastAggressorIndex = -1;
+    let lastAggressiveAction: Action | null = null;
+    for (let i = (street.actions?.length ?? 0) - 1; i >= 0; i--) {
+        const action = street.actions![i];
+        const playerCurrentContribution = this.getPlayerContributions(streetName).get(action.player) || 0;
+        const actionAmount = action.amount ?? 0;
         
-        if (!playersWhoActedAfter.has(player.position)) {
-          // Found a player who needs to act
-          return false;
+        // Check if action is Bet/Raise, or an All-in that increases the bet
+        const isVoluntaryAggression = action.type === 'bet' || 
+                                    action.type === 'raise' || 
+                                    (action.type === 'all-in' && actionAmount > playerCurrentContribution);
+                                    
+        if (isVoluntaryAggression) {
+            lastAggressorIndex = i;
+            lastAggressiveAction = action;
+            break;
         }
-      }
-      
-      // All players have acted appropriately after the last aggressive action
-      return true;
+    }
+    
+    // CASE 1: No voluntary aggressive action this street (e.g., postflop check-around)
+    if (!lastAggressiveAction) {
+        // Street completes if number of actions >= number of active players
+        // (Everyone has had a chance to act - check or fold)
+        const numActions = street.actions?.length ?? 0;
+        return numActions >= activePlayers.length;
     }
 
-    // If no aggressive actions, check if all players have acted
-    const playersWhoHaveActed = new Set(street.actions.map(action => action.player));
-    return actingPlayers.every(player => playersWhoHaveActed.has(player.position));
+    // CASE 2: Voluntary aggressive action occurred
+    // Street completes if all other active players have acted *after* the last aggressor
+    // and have either matched the highest contribution or folded/are all-in.
+    for (const player of activePlayers) {
+        const playerPos = player.position;
+        
+        // Skip the last aggressor themselves for this check
+        if (playerPos === lastAggressiveAction.player) {
+            continue;
+        }
+
+        const playerContribution = playerContributions.get(playerPos) || 0;
+        const playerIsEffectivelyAllIn = this.getEffectiveStack(playerPos, streetName) <= 0 || this.isPlayerAllIn(playerPos, streetName);
+        const playerHasFolded = this.hasPlayerFolded(playerPos, streetName);
+        
+        // Find if player acted after the last aggressor
+        let actedAfterAggressor = false;
+        for (let i = lastAggressorIndex + 1; i < (street.actions?.length ?? 0); i++) {
+            if (street.actions![i].player === playerPos) {
+                actedAfterAggressor = true;
+                break;
+            }
+        }
+
+        // If player hasn't folded and isn't all-in, they MUST have acted after the aggressor 
+        // AND matched the highest contribution.
+        if (!playerHasFolded && !playerIsEffectivelyAllIn) {
+            if (!actedAfterAggressor || playerContribution < highestContribution) {
+                return false; // Not complete
+            }
+        }
+    }
+
+    // If we reach here, the action has been closed correctly after the last aggression.
+    return true; 
   }
 
   /**
@@ -629,7 +699,7 @@ export class PokerGameState {
   }
 
   /**
-   * Get the next player to act based on the street and player positions
+   * Get the next player to act based on the street
    */
   getNextActingPlayer(streetName: PokerStreet): string | null {
     const street = this.getStreet(streetName);
@@ -640,7 +710,7 @@ export class PokerGameState {
     if (!street.actions || street.actions.length === 0) {
       return activePlayers[0].position;
     }
-
+    
     // Find the last player who acted
     const lastAction = street.actions[street.actions.length - 1];
     const lastPlayerIndex = activePlayers.findIndex(p => p.position === lastAction.player);
@@ -664,5 +734,144 @@ export class PokerGameState {
     const positions = PokerGameState.VALID_POSITIONS;
     const currentIndex = positions.indexOf(currentPosition);
     return positions[(currentIndex + 1) % positions.length];
+  }
+
+  /**
+   * Calculate pot for a specific street (for display purposes)
+   */
+  calculateDisplayPot(streetName: PokerStreet): number {
+    // For "pot entering street" display
+    if (streetName === 'preflop') {
+      // Start with blinds + straddle
+      let pot = this.blinds.sb + this.blinds.bb + this.straddleAmount;
+      
+      // Add preflop action contributions
+      const preflopStreet = this.getStreet('preflop');
+      if (preflopStreet.actions && preflopStreet.actions.length > 0) {
+        const contributions = new Map<string, number>();
+        
+        // Track forced bets
+        contributions.set('SB', this.blinds.sb);
+        contributions.set('BB', this.blinds.bb);
+        if (this.straddleAmount > 0) {
+          contributions.set('UTG', this.straddleAmount);
+        }
+        
+        // Process actions
+        for (const action of preflopStreet.actions) {
+          // Skip folds and checks as they don't contribute to pot size calculation here
+          if (action.type === 'fold' || action.type === 'check') continue; 
+          
+          // Ensure amount exists for betting/calling/raising actions
+          if (action.amount !== undefined && action.amount >= 0) {
+            const currentContribution = contributions.get(action.player) || 0;
+            // The amount to add is the difference between this action's amount 
+            // and what the player had already contributed.
+            // Use action.amount directly, as it represents the total bet/call/raise amount TO.
+            const totalContributionTarget = action.amount; 
+            
+            // Only update if this action increases their contribution
+            if (totalContributionTarget > currentContribution) {
+                contributions.set(action.player, totalContributionTarget);
+            }
+          }
+        }
+        
+        // Recalculate total pot by summing final contributions
+        pot = 0;
+        for (const amount of contributions.values()) {
+          pot += amount;
+        }
+      }
+      
+      return pot;
+    } else {
+      // For postflop streets, return the pot carried over from previous street
+      const previousStreet = this.getPreviousStreet(streetName);
+      if (!previousStreet) return 0;
+      
+      // Calculate pot from previous street
+      return this.calculateTotalPot(previousStreet);
+    }
+  }
+
+  /**
+   * Get cards that are already in use (for card selection)
+   */
+  getUsedCards(currentStreet: PokerStreet): Card[] {
+    const usedCards: Card[] = [];
+    
+    // Add players' hole cards
+    for (const player of this.players) {
+      if (player.holeCards) {
+        usedCards.push(...player.holeCards);
+      }
+    }
+    
+    // Add board cards from streets up to the current one
+    const streets: PokerStreet[] = ['preflop', 'flop', 'turn', 'river'];
+    const currentIndex = streets.indexOf(currentStreet);
+    
+    for (let i = 0; i <= currentIndex; i++) {
+      if (i === 0) continue; // Skip preflop as it has no board
+      
+      const streetName = streets[i];
+      const streetData = this.getStreet(streetName);
+      
+      if (streetData.board && streetData.board.length > 0) {
+        usedCards.push(...streetData.board);
+      }
+    }
+    
+    return usedCards;
+  }
+  
+  /**
+   * Get a display-friendly description of the blinds/straddle state
+   */
+  getBlindInfo(): string {
+    let result = `Small Blind: $${this.blinds.sb}, Big Blind: $${this.blinds.bb}`;
+    if (this.straddleAmount > 0) {
+      result += `, Straddle: $${this.straddleAmount}`;
+    }
+    return result;
+  }
+  
+  /**
+   * Convert amounts from BB to $ or vice versa
+   */
+  formatAmount(amount: number, useDollars: boolean): string {
+    if (useDollars) {
+      return `$${amount}`;
+    }
+    return `${amount / this.blinds.bb}BB`;
+  }
+
+  // Add conversion utility to PokerGameState
+  convertStreetNameToPokerStreet(streetName: 'Preflop' | 'Flop' | 'Turn' | 'River'): PokerStreet {
+    return streetName.toLowerCase() as PokerStreet;
+  }
+
+  // Add method to get all used cards
+  getAllUsedCards(): Card[] {
+    const usedCards: Card[] = [];
+    
+    // Add player hole cards
+    for (const player of this.players) {
+      if (player.holeCards) {
+        usedCards.push(...player.holeCards);
+      }
+    }
+    
+    // Add board cards
+    const streets: PokerStreet[] = ['flop', 'turn', 'river'];
+    for (const streetName of streets) {
+      const street = this.getStreet(streetName);
+      if (street.board) {
+        usedCards.push(...street.board);
+      }
+    }
+    
+    return usedCards;
   }
 } 

@@ -1,26 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Street, Card, Player, Action, ActionType, PokerStreet } from '../types/poker';
+import { Street, Card, Player, Action, ActionType, PokerStreet, Position } from '../types/poker';
 import CardSelector from './CardSelector';
-import {
-  getCurrentBetToCall,
-  getMinBet,
-  getMinRaise,
-  isPlayerAllIn,
-  getActivePlayers,
-  getActingPlayers,
-  getNextActingPlayer,
-  isAllPlayersAllIn,
-  isActionComplete,
-  getBetLimits,
-  getPlayerContributions
-} from '@/app/utils/pokerUtils';
+import PokerGameState from '@/app/utils/pokerGameState';
 
 interface StreetActionsProps {
   streetName: 'Preflop' | 'Flop' | 'Turn' | 'River';
   players: Player[];
   street: Street;
+  gameState: PokerGameState;
   onUpdate: (street: Street) => void;
   previousStreet?: Street;
   usedCards?: Card[];
@@ -42,6 +31,7 @@ export default function StreetActions({
   streetName, 
   players, 
   street, 
+  gameState,
   onUpdate, 
   previousStreet, 
   usedCards = [], 
@@ -49,32 +39,27 @@ export default function StreetActions({
   previousCards = {},
   straddleAmount = 0,
   blinds = { sb: 1, bb: 2 },
-  preflopPot = 0,
-  flopPot = 0,
-  turnPot = 0,
   actionsDisabledDueToAllIn = false,
   calculateEffectiveStack
 }: StreetActionsProps) {
+  const [selectedPlayer, setSelectedPlayer] = useState<string>('');
+  const [boardCards, setBoardCards] = useState<(Card | null)[]>(() => {
+    // Initialize board cards based on street
+    if (streetName === 'Flop') {
+      return street.board ? [...street.board, null, null] : [null, null, null];
+    } else if (streetName === 'Turn') {
+      return street.board ? [street.board[0]] : [null];
+    } else if (streetName === 'River') {
+      return street.board ? [street.board[0]] : [null];
+    }
+    return [];
+  });
   const [actionType, setActionType] = useState<ActionType>('bet');
   const [actionAmount, setActionAmount] = useState<string>('');
-  const [selectedPlayer, setSelectedPlayer] = useState<string>(players[0]?.position || '');
   const [isStreetComplete, setIsStreetComplete] = useState(false);
   
-  // Local state for board cards to ensure UI consistency
-  const [boardCards, setBoardCards] = useState<(Card | null)[]>(() => {
-    const numCards = streetName === 'Flop' ? 3 : 1;
-    
-    if (street.board && street.board.length > 0) {
-      const cards = [...street.board];
-      const result: (Card | null)[] = cards;
-      while (result.length < numCards) {
-        result.push(null);
-      }
-      return result.slice(0, numCards);
-    }
-    
-    return new Array(numCards).fill(null) as (Card | null)[];
-  });
+  // Convert streetName to the format used in PokerGameState
+  const currentPokerStreet = streetName.toLowerCase() as PokerStreet;
   
   // Update local state when props change
   useEffect(() => {
@@ -92,24 +77,12 @@ export default function StreetActions({
     }
   }, [street.board, streetName, street]);
   
-  // Update street completion status when actions change
+  // Update street completion status when actions or gameState changes
   useEffect(() => {
-    const isComplete = isActionComplete(players, street, previousStreet);
-    // const isAllIn = isAllPlayersAllIn(players, street, previousStreet, allPlayersAllIn);
-    
-    // Street is complete if the action sequence dictates it.
-    // The all-in state across the whole hand is handled separately.
-    if (isComplete && !isStreetComplete) {
-      setIsStreetComplete(true);
-    }
-    // We might need to set it back to false if an action is deleted, handled by the 'Edit Street' button for now.
-
-  }, [
-      JSON.stringify(street.actions), // Stringify complex object
-      JSON.stringify(players), // Stringify complex object
-      JSON.stringify(previousStreet?.actions), // Stringify complex object (optional chaining handles undefined)
-      isStreetComplete
-     ]);
+    // Use the centralized game state logic to determine completion
+    const complete = gameState.isStreetComplete(currentPokerStreet);
+    setIsStreetComplete(complete);
+  }, [gameState, currentPokerStreet, street.actions]); // Depend on gameState, currentPokerStreet, and actions
   
   // Auto-select next player to act
   useEffect(() => {
@@ -117,7 +90,7 @@ export default function StreetActions({
     if (isStreetComplete) return;
     
     // Get acting players - who still need to make decisions
-    const actingPlayers = getActingPlayers(players, street, previousStreet);
+    const actingPlayers = gameState.getActingPlayers(currentPokerStreet);
     if (actingPlayers.length === 0) return;
     
     // If there's an all-in action, make sure other players get to respond
@@ -135,7 +108,7 @@ export default function StreetActions({
           const nextPlayer = playersWhoHaventActedOnAllIn[0].position;
           setSelectedPlayer(nextPlayer);
           // Set the default amount to the call amount, but don't force the action type
-          const currentBet = getCurrentBetToCall(street);
+          const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
           setActionAmount(currentBet.toString()); 
           // Set default action type to Fold when responding to all-in
           setActionType('fold');
@@ -145,7 +118,7 @@ export default function StreetActions({
     }
     
     // Normal next player logic...
-    const nextPlayer = getNextActingPlayer(players, street);
+    const nextPlayer = gameState.getNextActingPlayer(currentPokerStreet);
     if (nextPlayer) {
       setSelectedPlayer(nextPlayer);
       
@@ -154,26 +127,26 @@ export default function StreetActions({
         const lastAction = street.actions[street.actions.length - 1];
         if (lastAction.type === 'bet' || lastAction.type === 'raise' || lastAction.type === 'all-in') {
           // Force update the action amount for calls
-          const currentBet = getCurrentBetToCall(street);
+          const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
           setActionAmount(currentBet.toString());
           // Clear any previous errors
           // setError(''); // Removed setError call
         } else if (lastAction.type === 'check' || lastAction.type === 'call') {
           // Default to minimum bet on turn and later streets, call on preflop
           if (streetName === 'Preflop') {
-            const currentBet = getCurrentBetToCall(street);
+            const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
             setActionAmount(currentBet.toString());
           } else {
-            const minBet = getMinBet(streetName, street, blinds, straddleAmount);
+            const minBet = gameState.getMinBet(currentPokerStreet);
             setActionAmount(minBet.toString());
           }
         } else {
           // Default to minimum bet on turn and later streets, call on preflop
           if (streetName === 'Preflop') {
-            const currentBet = getCurrentBetToCall(street);
+            const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
             setActionAmount(currentBet.toString());
           } else {
-            const minBet = getMinBet(streetName, street, blinds, straddleAmount);
+            const minBet = gameState.getMinBet(currentPokerStreet);
             setActionAmount(minBet.toString());
           }
         }
@@ -181,7 +154,7 @@ export default function StreetActions({
         // First action
         if (streetName === 'Preflop') {
           // In preflop, default to minimum bet
-          const minBet = getMinBet(streetName, street, blinds, straddleAmount);
+          const minBet = gameState.getMinBet(currentPokerStreet);
           setActionAmount(minBet.toString());
           
           // If there's a straddle, also show the option to call the straddle
@@ -192,7 +165,7 @@ export default function StreetActions({
           }
         } else {
           // On turn and later streets, default to minimum bet
-          const minBet = getMinBet(streetName, street, blinds, straddleAmount);
+          const minBet = gameState.getMinBet(currentPokerStreet);
           setActionAmount(minBet.toString());
         }
       }
@@ -201,7 +174,7 @@ export default function StreetActions({
   }, [
       JSON.stringify(street.actions), // Stringify complex object
       JSON.stringify(players), // Stringify complex object
-      JSON.stringify(previousStreet?.actions), // Stringify complex object
+      JSON.stringify(previousStreet?.actions), // Stringify complex object (optional chaining handles undefined)
       streetName, 
       isStreetComplete, 
       blinds, 
@@ -224,15 +197,10 @@ export default function StreetActions({
     if (!player) return;
 
     // Get min and max limits
-    const { min, max } = getBetLimits(
-      actionType,
+    const { min, max } = gameState.getBetLimits(
+      actionType as ActionType,
       selectedPlayer,
-      players,
-      street,
-      streetName,
-      previousStreet,
-      blinds,
-      straddleAmount
+      currentPokerStreet
     );
 
     // For 'bet' or 'raise' actions, validate against min and max limits
@@ -276,7 +244,7 @@ export default function StreetActions({
     // Handle different action types
     switch (actionType) {
       case 'call':
-        const currentBet = getCurrentBetToCall(street);
+        const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
         finalAmount = Math.min(currentBet, effectiveStack);
         // If calling would use the entire stack, treat as all-in
         if (finalAmount >= effectiveStack) {
@@ -297,11 +265,10 @@ export default function StreetActions({
           return;
         }
 
-        // For bet, use minimum bet
-        // For raise, use minimum raise
+        // Calculate min bet amount
         const minAmount = actionType === 'bet' 
-          ? getMinBet(streetName, street, blinds, straddleAmount)
-          : getMinRaise(street, blinds, straddleAmount);
+          ? gameState.getMinBet(currentPokerStreet)
+          : gameState.getMinRaise(currentPokerStreet);
           
         if (amount < minAmount) {
           // setError(`Minimum ${actionType} amount is $${minAmount}`); // Removed setError call
@@ -349,7 +316,7 @@ export default function StreetActions({
     // After adding the action (especially if it was an all-in), update the UI
     setTimeout(() => {
       // Get active players who haven't acted yet
-      const playersToAct = getActingPlayers(players, updatedStreet, previousStreet);
+      const playersToAct = gameState.getActingPlayers(currentPokerStreet);
       
       // Special handling if the action was all-in
       if (isActuallyAllIn || newAction.type === 'all-in') {
@@ -373,7 +340,7 @@ export default function StreetActions({
         }
       } else {
         // Normal action - select next player to act if available
-        const nextPlayer = getNextActingPlayer(players, updatedStreet);
+        const nextPlayer = gameState.getNextActingPlayer(currentPokerStreet);
         if (nextPlayer) {
           setSelectedPlayer(nextPlayer);
           
@@ -384,7 +351,7 @@ export default function StreetActions({
           } else {
             if (streetName === 'Preflop') {
               setActionType('call');
-              const currentBet = getCurrentBetToCall(updatedStreet);
+              const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
               setActionAmount(currentBet.toString());
             } else {
               setActionType('check');
@@ -408,97 +375,26 @@ export default function StreetActions({
     });
   };
 
-  // Helper function to check if a specific player needs to respond to an all-in
+  // Use gameState methods directly
   const needsToRespondToAllIn = (playerPosition: string): boolean => {
-    // Find the most recent all-in action across current and previous streets
-    let lastAllInAction: Action | null = null;
-    let lastAllInIndex = -1;
-    let lastAllInStreet: 'current' | 'previous' | null = null;
-
-    // Check current street first
-    if (street.actions) {
-      for (let i = street.actions.length - 1; i >= 0; i--) {
-        if (street.actions[i].type === 'all-in') {
-          lastAllInAction = street.actions[i];
-          lastAllInIndex = i;
-          lastAllInStreet = 'current';
-          break;
-        }
-      }
-    }
-
-    // If no all-in on current, check previous (if it exists)
-    if (!lastAllInAction && previousStreet?.actions) {
-      for (let i = previousStreet.actions.length - 1; i >= 0; i--) {
-        if (previousStreet.actions[i].type === 'all-in') {
-          lastAllInAction = previousStreet.actions[i];
-          lastAllInIndex = i;
-          lastAllInStreet = 'previous';
-          break;
-        }
-      }
-    }
-
-    // No response needed if no all-in action found anywhere relevant
-    if (!lastAllInAction || lastAllInStreet === null) {
-      return false;
-    }
-
-    const lastAllInPlayer = lastAllInAction.player;
-
-    // Skip the player who went all-in
-    if (playerPosition === lastAllInPlayer) return false;
-
-    // Skip players who are already all-in (checks both streets)
-    if (isPlayerAllIn(playerPosition, street, previousStreet)) return false;
-
-    // Skip players who have folded (checks both streets)
-    const hasFolded = street.actions?.some(a => a.player === playerPosition && a.type === 'fold') ||
-                     (previousStreet?.actions?.some(a => a.player === playerPosition && a.type === 'fold') ?? false);
-    if (hasFolded) return false;
-
-    // Check if this player has acted *since* the last all-in
-    let hasActedSinceAllIn = false;
-    if (lastAllInStreet === 'previous') {
-        // Check actions *after* all-in on previous street
-        if(previousStreet?.actions) {
-            hasActedSinceAllIn = previousStreet.actions
-                .slice(lastAllInIndex + 1)
-                .some(action => action.player === playerPosition);
-        }
-        // *Also* check if they took *any* action on the current street
-        if (!hasActedSinceAllIn && street.actions) {
-            hasActedSinceAllIn = street.actions.some(action => action.player === playerPosition);
-        }
-    } else if (lastAllInStreet === 'current' && street.actions) {
-        // Check actions *after* all-in on current street
-        hasActedSinceAllIn = street.actions
-            .slice(lastAllInIndex + 1)
-            .some(action => action.player === playerPosition);
-    }
-
-    // Player needs to respond if they haven't acted since the last all-in
-    return !hasActedSinceAllIn;
+    return gameState.needsToRespondToAllIn(
+      playerPosition, 
+      streetName.toLowerCase() as PokerStreet
+    );
+  };
+  
+  const calculateCurrentPot = () => {
+    return gameState.calculateDisplayPot(streetName.toLowerCase() as PokerStreet);
   };
 
   // Helper function to check if any player needs to respond to an all-in
   const playersNeedToRespondToAllIn = (): boolean => {
-    // No responses needed if there are no all-in actions in the current street
-    if (!street.actions || !street.actions.some(a => a.type === 'all-in')) {
-      return false;
-    }
-    
-    // Get active players (not folded and not all-in)
-    const activePlayers = getActingPlayers(players, street, previousStreet);
-    
-    // Get active players who still need to respond to the all-in
-    return activePlayers.some(player => needsToRespondToAllIn(player.position));
+    return gameState.playersNeedToRespondToAllIn(streetName.toLowerCase() as PokerStreet);
   };
 
   // Get the list of players who need to respond to an all-in
   const getPlayersWhoNeedToRespondToAllIn = (): Player[] => {
-    return getActingPlayers(players, street, previousStreet)
-      .filter(player => needsToRespondToAllIn(player.position));
+    return gameState.getPlayersWhoNeedToRespondToAllIn(streetName.toLowerCase() as PokerStreet);
   };
 
   // Show straddle in the UI if present
@@ -510,16 +406,12 @@ export default function StreetActions({
     return result;
   };
 
-  // Check if all players were all-in on previous street (preflop)
-  //const allPlayersWereAllIn = streetName !== 'Preflop' && previousStreet && isAllPlayersAllIn(players, previousStreet, undefined, allPlayersAllIn);
-
-  // Check if all players were all-in on previous street
+  // Check if all players were all-in on previous street using gameState
   const isPreviousStreetAllIn = previousStreet && 
-    isAllPlayersAllIn(players, previousStreet, undefined, allPlayersAllIn) && 
-    // Check if there were enough actions on the previous street to indicate everyone is all-in
-    (previousStreet.actions?.some(a => a.type === 'all-in') || 
-     (previousStreet.actions && previousStreet.actions.length > 0 && 
-      getActingPlayers(players, previousStreet).length === 0));
+    (allPlayersAllIn || 
+    (previousStreet.actions && gameState.isAllPlayersAllIn(streetName.toLowerCase() === 'flop' ? 'preflop' : 
+                                                          streetName.toLowerCase() === 'turn' ? 'flop' : 
+                                                          streetName.toLowerCase() === 'river' ? 'turn' : 'preflop')));
   
   // Hide action UI on postflop streets if all players were all-in on previous street
   // BUT keep UI visible if there are players who need to respond to an all-in on current street
@@ -527,37 +419,6 @@ export default function StreetActions({
                            isPreviousStreetAllIn && 
                            street.actions && street.actions.length === 0 && // Only hide if no actions have been taken yet
                            !playersNeedToRespondToAllIn(); // Don't hide if players need to respond to all-in
-
-  // Calculate the pot for the current street DISPLAY
-  const calculateCurrentPot = () => {
-    // For preflop, calculate based on blinds, straddle, and actions
-    if (streetName === 'Preflop') {
-      let currentPot = blinds.sb + blinds.bb;
-      if (straddleAmount > 0) {
-        currentPot += straddleAmount;
-      }
-      const playerContributions = getPlayerContributions(street.actions);
-      for (const amount of playerContributions.values()) {
-        currentPot += amount;
-      }
-      return currentPot;
-    }
-    
-    // For postflop streets, display the pot *entering* this street,
-    // which is passed via props from the parent.
-    if (streetName === 'Flop') {
-      return preflopPot || 0; // Display pot AFTER preflop actions
-    }
-    if (streetName === 'Turn') {
-      return flopPot || 0; // Display pot AFTER flop actions
-    }
-    if (streetName === 'River') {
-      return turnPot || 0; // Display pot AFTER turn actions
-    }
-    
-    // Fallback
-    return 0;
-  };
 
   // Force BB to be selectable when BTN is all-in during preflop
   useEffect(() => {
@@ -567,7 +428,7 @@ export default function StreetActions({
       
       // Check if BB is in players list and hasn't folded
       const bbPlayer = players.find(p => p.position === 'BB');
-      if (bbPlayer && !isPlayerAllIn('BB', street, previousStreet)) {
+      if (bbPlayer && !gameState.isPlayerAllIn('BB', currentPokerStreet)) {
         // Force BB as selected player with call action
         setSelectedPlayer('BB');
         setActionType('call');
@@ -596,11 +457,14 @@ export default function StreetActions({
     if (!anyAllInsInPreviousStreet) return false;
 
     // Get active players from previous street
-    const activePreviousPlayers = getActivePlayers(players, previousStreet);
+    const previousStreet_pokerStreet = streetName.toLowerCase() === 'flop' ? 'preflop' : 
+                                      streetName.toLowerCase() === 'turn' ? 'flop' : 
+                                      streetName.toLowerCase() === 'river' ? 'turn' : 'preflop';
+    const activePreviousPlayers = gameState.getActivePlayers(previousStreet_pokerStreet);
     
     // Check if all active players are all-in
     const allActivePlayersAllIn = activePreviousPlayers.every(p => 
-      isPlayerAllIn(p.position, previousStreet)
+      gameState.isPlayerAllIn(p.position, previousStreet_pokerStreet)
     );
 
     return allActivePlayersAllIn;
@@ -615,6 +479,156 @@ export default function StreetActions({
     return street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') || streetName === 'Preflop';
   };
 
+  // Fix the getPlayersInActionOrder function
+  const getPlayersInActionOrder = (): Player[] => {
+    // Filter out players already folded or all-in
+    const activePlayers = gameState.getActivePlayers(currentPokerStreet);
+    
+    // Special case: If a player goes all-in, other players need to respond
+    const hasAllIn = street.actions?.some(action => action.type === 'all-in');
+    
+    if (hasAllIn) {
+      // Find players who need to respond to all-in
+      return activePlayers.filter(player => {
+        // Skip players who are already all-in
+        if (street.actions?.some(
+          action => action.player === player.position && action.type === 'all-in'
+        )) {
+          return false;
+        }
+        
+        // Skip players who have already acted after the last all-in
+        const lastAllInIndex = [...(street.actions || [])].reverse().findIndex(
+          action => action.type === 'all-in'
+        );
+        
+        if (lastAllInIndex !== -1) {
+          const realIndex = street.actions!.length - 1 - lastAllInIndex;
+          const hasActedAfterAllIn = street.actions!.slice(realIndex + 1).some(
+            action => action.player === player.position
+          );
+          
+          return !hasActedAfterAllIn;
+        }
+        
+        return true;
+      }).sort((a, b) => {
+        // Sort by position order appropriate for the street
+        const positionOrder = streetName === 'Preflop' 
+          ? ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB'] 
+          : ['SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN'];
+        
+        return positionOrder.indexOf(a.position as Position) - 
+               positionOrder.indexOf(b.position as Position);
+      });
+    }
+    
+    // Standard sorting for non-all-in cases
+    return activePlayers.sort((a, b) => {
+      // Sort by position order appropriate for the street
+      const positionOrder = streetName === 'Preflop' 
+        ? ['UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN', 'SB', 'BB'] 
+        : ['SB', 'BB', 'UTG', 'UTG+1', 'UTG+2', 'LJ', 'HJ', 'CO', 'BTN'];
+      
+      return positionOrder.indexOf(a.position as Position) - 
+             positionOrder.indexOf(b.position as Position);
+    });
+  };
+
+  // Now fix the stack display in the player selection dropdown to show effective remaining stack
+  // This calculates the actual stack size after previous actions
+  const getEffectiveRemainingStack = (playerPosition: string): number => {
+    return gameState.getEffectiveStack(playerPosition, currentPokerStreet);
+  };
+
+  // If all players are all-in, show a clear message and disable action entry
+  if (actionsDisabledDueToAllIn) {
+    return (
+      <div className="w-full space-y-4 pt-4 pb-4 border-t border-gray-200 rounded-b-xl">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-bold" style={{ color: 'rgb(31, 41, 55)' }}>
+            {streetName}
+          </h3>
+          <span className="text-base font-medium text-gray-900">
+            Pot entering street: ${calculateCurrentPot()}
+          </span>
+        </div>
+        
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-lg">
+          <p className="font-medium">All players were all-in on a previous street.</p>
+          {streetName !== 'Preflop' && (
+            <p className="mt-2">Add board cards for this street.</p>
+          )}
+        </div>
+        
+        {/* Still show the card selector for board cards */}
+        {streetName !== 'Preflop' && (
+          <div>
+            <h4 className="text-lg font-medium text-gray-900 mb-2">
+              {streetName} Cards ({streetName === 'Flop' ? '3 cards' : '1 card'})
+            </h4>
+            <CardSelector
+              selectedCards={street.board || []}
+              maxCards={streetName === 'Flop' ? 3 : 1}
+              onCardSelect={handleBoardCards}
+              usedCards={usedCards}
+            />
+          </div>
+        )}
+        
+        {/* Previous cards display */}
+        {(streetName === 'Turn' || streetName === 'River') && (
+          <div className="mt-4">
+            <h4 className="text-lg font-medium text-gray-900 mb-2">
+              {streetName === 'Turn' ? 'Flop:' : 'Flop + Turn:'}
+            </h4>
+            <div className="flex gap-2">
+              {streetName === 'Turn' && previousCards.flop && previousCards.flop.map((card, idx) => (
+                <div key={`flop-${idx}`} className="w-12 h-16 sm:w-16 sm:h-20 flex items-center justify-center rounded-lg border text-xl sm:text-2xl font-medium bg-white border-gray-200">
+                  <span style={{ color: card.suit === 'hearts' || card.suit === 'diamonds' ? 'rgb(220, 38, 38)' : 'rgb(17, 24, 39)' }}>
+                    {card.rank}
+                    {card.suit === 'hearts' ? '♥' : card.suit === 'diamonds' ? '♦' : card.suit === 'clubs' ? '♣' : '♠'}
+                  </span>
+                </div>
+              ))}
+              
+              {streetName === 'River' && (
+                <>
+                  {previousCards.flop && previousCards.flop.map((card, idx) => (
+                    <div key={`flop-${idx}`} className="w-12 h-16 sm:w-16 sm:h-20 flex items-center justify-center rounded-lg border text-xl sm:text-2xl font-medium bg-white border-gray-200">
+                      <span style={{ color: card.suit === 'hearts' || card.suit === 'diamonds' ? 'rgb(220, 38, 38)' : 'rgb(17, 24, 39)' }}>
+                        {card.rank}
+                        {card.suit === 'hearts' ? '♥' : card.suit === 'diamonds' ? '♦' : card.suit === 'clubs' ? '♣' : '♠'}
+                      </span>
+                    </div>
+                  ))}
+                  {previousCards.turn && previousCards.turn.map((card, idx) => (
+                    <div key={`turn-${idx}`} className="w-12 h-16 sm:w-16 sm:h-20 flex items-center justify-center rounded-lg border text-xl sm:text-2xl font-medium bg-white border-gray-200">
+                      <span style={{ color: card.suit === 'hearts' || card.suit === 'diamonds' ? 'rgb(220, 38, 38)' : 'rgb(17, 24, 39)' }}>
+                        {card.rank}
+                        {card.suit === 'hearts' ? '♥' : card.suit === 'diamonds' ? '♦' : card.suit === 'clubs' ? '♣' : '♠'}
+                      </span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 1. First, let's define the missing removeAction function (add around line 400)
+  const removeAction = (index: number) => {
+    const newActions = [...(street.actions || [])];
+    newActions.splice(index, 1);
+    onUpdate({
+      ...street,
+      actions: newActions.length > 0 ? newActions : []
+    });
+  };
+
   return (
     <div className="w-full space-y-4 pt-4 pb-4 border-t border-gray-200 rounded-b-xl"
          style={{ 
@@ -626,7 +640,7 @@ export default function StreetActions({
           <h3 className="text-lg font-semibold text-gray-900">{streetName}</h3>
           {isStreetComplete && !playersNeedingToRespond && (
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              {getActingPlayers(players, street, previousStreet).length === 0 && getActivePlayers(players, street, previousStreet).some(p => isPlayerAllIn(p.position, street, previousStreet)) ? 'All-in' : 'Complete'}
+              {gameState.getActingPlayers(streetName.toLowerCase() as PokerStreet).length === 0 && gameState.getActivePlayers(streetName.toLowerCase() as PokerStreet).some(p => gameState.isPlayerAllIn(p.position, streetName.toLowerCase() as PokerStreet)) ? 'All-in' : 'Complete'}
             </span>
           )}
           {playersNeedingToRespond && (
@@ -641,7 +655,9 @@ export default function StreetActions({
           )}
         </div>
         <span className="text-base font-medium text-gray-900">
-          Total Pot: ${calculateCurrentPot()}
+          {/* Change label based on street */}
+          {streetName === 'Preflop' ? 'Pot: ' : 'Pot entering street: '} 
+          ${calculateCurrentPot()}
         </span>
       </div>
       
@@ -724,23 +740,40 @@ export default function StreetActions({
       )}
 
       {/* Summary view for completed street action */}
-      {isStreetComplete && !shouldHideActionUI && !playersNeedingToRespond && (
+      {(isStreetComplete && street.actions && street.actions.length > 0) && !shouldHideActionUI && !playersNeedingToRespond && (
         <div className="bg-white rounded-lg p-4 border border-green-200">
           <div className="space-y-2">
             {street.actions?.map((action, index) => (
-              <div key={index} className="text-base text-gray-900">
-                {action.player} - {action.type.charAt(0).toUpperCase() + action.type.slice(1)}
-                {action.amount ? ` $${action.amount}` : ''}
+              <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100">
+                {/* Improve font readability */}
+                <div className="text-base font-medium text-gray-900"> 
+                  {action.player} - {action.type.charAt(0).toUpperCase() + action.type.slice(1)}
+                  {action.amount ? ` $${action.amount}` : ''}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => removeAction(index)}
+                    className="text-red-500 hover:text-red-700"
+                    aria-label="Remove action"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18"></path>
+                      <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"></path>
+                      <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
           {streetName !== 'Preflop' && street.board && (
             <div className="mt-3 pt-3 border-t border-gray-200">
-              <div className="text-base font-medium text-gray-900">Board:</div>
+              {/* Improve font readability */}
+              <div className="text-base font-semibold text-gray-900">Board:</div>
               <div className="flex gap-2 mt-1">
                 {street.board.map((card, index) => (
                   <span key={index} 
-                        className={`text-lg ${
+                        className={`text-lg font-medium ${ // Added font-medium
                           card.suit === 'hearts' || card.suit === 'diamonds' 
                             ? 'text-red-600' 
                             : 'text-gray-900'
@@ -757,8 +790,13 @@ export default function StreetActions({
         </div>
       )}
 
-      {/* Only show action UI if we should based on our logic AND actions are not disabled */}
-      {!actionsDisabledDueToAllIn && (!isStreetComplete || playersNeedingToRespond) && (
+      {/* Action UI */}
+      {!actionsDisabledDueToAllIn && (
+        !isStreetComplete || 
+        playersNeedingToRespond || 
+        !street.actions || 
+        street.actions.length === 0
+      ) && (
         <>
           {/* Show regular action UI for normal cases */}
           <>
@@ -779,26 +817,38 @@ export default function StreetActions({
                   className={`mt-1 block w-full rounded-lg ${playersNeedingToRespond ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'} shadow-sm text-lg font-medium text-gray-900`}
                 >
                   <option value="">Select player</option>
-                  {players.map((player) => {
-                    const hasFolded = street.actions?.some(
-                      action => action.player === player.position && action.type === 'fold'
-                    ) || previousStreet?.actions?.some(
-                      action => action.player === player.position && action.type === 'fold'
-                    );
-                    const isAllIn = isPlayerAllIn(player.position, street, previousStreet);
-                    const mustRespondToAllIn = needsToRespondToAllIn(player.position);
-                    if (hasFolded || (isAllIn && !mustRespondToAllIn)) {
-                      return null;
-                    }
-                    return (
-                      <option key={player.position} value={player.position}>
-                        {player.position} - ${player.stack}
-                        {player.isHero && ' (Hero)'}
-                        {isAllIn && ' (All-in)'}
-                        {mustRespondToAllIn && ' - Needs to respond to all-in'}
+                  {getPlayersInActionOrder()
+                    .filter(player => {
+                      // If responding to all-in, allow players to act
+                      if (playersNeedingToRespond && needsToRespondToAllIn(player.position)) {
+                        return true;
+                      }
+                      
+                      // Exclude folded players
+                      if (street.actions?.some(a => a.player === player.position && a.type === 'fold')) {
+                        return false;
+                      }
+                      
+                      // Exclude all-in players 
+                      if (street.actions?.some(a => a.player === player.position && a.type === 'all-in')) {
+                        return false;
+                      }
+                      
+                      // For betting rounds logic, keep existing code...
+                      // ...
+                      
+                      return true;
+                    })
+                    .map(player => (
+                      <option 
+                        key={player.position} 
+                        value={player.position}
+                        className="text-base"
+                      >
+                        {player.position} - ${getEffectiveRemainingStack(player.position)} 
+                        {player.isHero ? ' (Hero)' : ''}
                       </option>
-                    );
-                  })}
+                    ))}
                 </select>
               </div>
 
@@ -823,7 +873,7 @@ export default function StreetActions({
                     }
                      // If selecting call, set the correct call amount
                     else if (newActionType === 'call') {
-                       let callAmount = getCurrentBetToCall(street);
+                       let callAmount = gameState.getCurrentBetToCall(currentPokerStreet);
                        if (streetName === 'Preflop' && callAmount === 0) {
                          callAmount = straddleAmount > 0 ? straddleAmount : blinds.bb;
                        }
@@ -831,12 +881,12 @@ export default function StreetActions({
                     } 
                     // NEW: If selecting raise, set the minimum raise amount
                     else if (newActionType === 'raise') {
-                      const minRaiseAmount = getMinRaise(street, blinds, straddleAmount);
+                      const minRaiseAmount = gameState.getMinRaise(currentPokerStreet);
                       setActionAmount(minRaiseAmount.toString());
                     }
                     // NEW: If selecting bet, set the minimum bet amount
                     else if (newActionType === 'bet') {
-                      const minBetAmount = getMinBet(streetName, street, blinds, straddleAmount);
+                      const minBetAmount = gameState.getMinBet(currentPokerStreet);
                       setActionAmount(minBetAmount.toString());
                     }
                   }}
@@ -845,63 +895,64 @@ export default function StreetActions({
                 >
                   {(() => {
                     // Check if there's any all-in action
-                    if (!street.actions?.some(a => a.type === 'all-in')) {
-                      // No all-in case - show regular options
+                    const hasAllIn = street.actions?.some(a => a.type === 'all-in');
+                    
+                    // If there's an all-in, always show fold, call and all-in options
+                    if (hasAllIn && selectedPlayer) {
+                      // Get current bet to call
+                      const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
+                      const effectiveStack = calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet);
+                      
                       return (
                         <>
-                          {/* Check */}
-                          {(streetName !== 'Preflop' || 
-                            (streetName === 'Preflop' && 
-                              (selectedPlayer === 'BB' || 
-                              (straddleAmount > 0 && selectedPlayer === 'BTN')))
-                          ) && (
-                            <option value="check">Check</option>
-                          )}
-                          {/* Bet */}
-                          {!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
-                            <option value="bet">
-                              {actionType === 'bet' && actionAmount ? `Bet $${actionAmount}` : `Bet (min $${getMinBet(streetName, street, blinds, straddleAmount)})`}
-                            </option>
-                          )}
-                          {/* Raise */}
-                          {street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
-                            <option value="raise">
-                              {actionType === 'raise' && actionAmount ? `Raise to $${actionAmount}` : `Raise (min $${getMinRaise(street, blinds, straddleAmount)})`}
-                            </option>
-                          )}
-                          {/* Call */}
-                          <option value="call" disabled={!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && streetName !== 'Preflop'}>
-                            {actionType === 'call' ? `Call $${
-                              streetName === 'Preflop' && getCurrentBetToCall(street) === 0
-                                ? (straddleAmount > 0 ? straddleAmount : blinds.bb)
-                                : getCurrentBetToCall(street)
-                            }` : 'Call'}
+                          <option value="fold">Fold</option>
+                          <option value="call">
+                            {`Call $${currentBet}`}
                           </option>
-                          {/* All-in */}
                           <option value="all-in">
-                            {`All-in $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'}`}
+                            {`All-in $${effectiveStack}`}
                           </option>
                         </>
                       );
-                    } else {
-                      // If there's an all-in, check if this player needs to respond
-                      if (needsToRespondToAllIn(selectedPlayer)) {
-                        // Player needs to respond to all-in - only show fold, call, and all-in options
-                        return (
-                          <>
-                            <option value="fold">Fold</option>
-                            <option value="call">
-                              {`Call $${getCurrentBetToCall(street)}`}
-                            </option>
-                            <option value="all-in">
-                              {`All-in $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'}`}
-                            </option>
-                          </>);
-                      } else {
-                        // Player doesn't need to respond to all-in, hide action selection (already handled by parent conditional)
-                        return null; 
-                      }
                     }
+                    
+                    // No all-in case - show regular options as before
+                    return (
+                      <>
+                        {/* Check */}
+                        {(streetName !== 'Preflop' || 
+                          (streetName === 'Preflop' && 
+                            (selectedPlayer === 'BB' || 
+                            (straddleAmount > 0 && selectedPlayer === 'BTN')))
+                        ) && (
+                          <option value="check">Check</option>
+                        )}
+                        {/* Bet */}
+                        {!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
+                          <option value="bet">
+                            {actionType === 'bet' && actionAmount ? `Bet $${actionAmount}` : `Bet (min $${gameState.getMinBet(currentPokerStreet)})`}
+                          </option>
+                        )}
+                        {/* Raise */}
+                        {street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
+                          <option value="raise">
+                            {actionType === 'raise' && actionAmount ? `Raise to $${actionAmount}` : `Raise (min $${gameState.getMinRaise(currentPokerStreet)})`}
+                          </option>
+                        )}
+                        {/* Call */}
+                        <option value="call" disabled={!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && streetName !== 'Preflop'}>
+                          {actionType === 'call' ? `Call $${
+                            streetName === 'Preflop' && gameState.getCurrentBetToCall(currentPokerStreet) === 0
+                              ? (straddleAmount > 0 ? straddleAmount : blinds.bb)
+                              : gameState.getCurrentBetToCall(currentPokerStreet)
+                          }` : 'Call'}
+                        </option>
+                        {/* All-in */}
+                        <option value="all-in">
+                          {`All-in $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'}`}
+                        </option>
+                      </>
+                    );
                   })()}
                 </select>
               </div>
@@ -914,15 +965,10 @@ export default function StreetActions({
                   type="number"
                   value={actionAmount}
                   onChange={(e) => handleAmountChange(e.target.value)}
-                  placeholder={`Enter amount (min $${getBetLimits(
-                    actionType,
+                  placeholder={`Enter amount (min $${gameState.getBetLimits(
+                    actionType as ActionType,
                     selectedPlayer,
-                    players,
-                    street,
-                    streetName,
-                    previousStreet,
-                    blinds,
-                    straddleAmount
+                    currentPokerStreet
                   ).min}, max $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'})`}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium"
                 />
@@ -949,9 +995,9 @@ export default function StreetActions({
                     `${actionType.charAt(0).toUpperCase() + actionType.slice(1)} ${actionAmount ? `$${actionAmount}` : ''}` : 
                   actionType === 'call' ? 
                     `Call $${
-                      streetName === 'Preflop' && getCurrentBetToCall(street) === 0 
+                      streetName === 'Preflop' && gameState.getCurrentBetToCall(currentPokerStreet) === 0 
                         ? (straddleAmount > 0 ? straddleAmount : blinds.bb) 
-                        : getCurrentBetToCall(street)
+                        : gameState.getCurrentBetToCall(currentPokerStreet)
                     }` : 
                   actionType === 'all-in' ? 
                     `All-in $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'}` : 
