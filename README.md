@@ -1,31 +1,19 @@
 # 4betorfold
 
-A poker hand history recorder built with Next.js and Tailwind CSS.
+A modern poker hand history recorder built with Next.js and Tailwind CSS.
 
-## Features
+## ♠️ Features
 
-- Record poker hand histories
-- Track player positions and stacks
-- Record actions on all streets
-- Visual card selection
-- Real-time pot calculation
+- 📝 Record detailed poker hand histories
+- 👥 Track player positions and stacks
+- 📊 Document actions across all streets (preflop, flop, turn, river)
+- 🃏 Interactive card selection
+- 💰 Real-time pot calculation
+- 📱 Responsive design for mobile and desktop
 
-## Getting Started
+## 🛠️ Built With
 
-1. Install dependencies:
-```bash
-npm install
-```
+- **Next.js** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
 
-2. Run the development server:
-```bash
-npm run dev
-```
-
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Tech Stack
-
-- Next.js
-- TypeScript
-- Tailwind CSS

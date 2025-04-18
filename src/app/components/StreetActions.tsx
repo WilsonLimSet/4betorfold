@@ -107,11 +107,11 @@ export default function StreetActions({
         if (playersWhoHaventActedOnAllIn.length > 0) {
           const nextPlayer = playersWhoHaventActedOnAllIn[0].position;
           setSelectedPlayer(nextPlayer);
-          // Set the default amount to the call amount, but don't force the action type
-          const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
-          setActionAmount(currentBet.toString()); 
-          // Set default action type to Fold when responding to all-in
-          setActionType('fold');
+          // Set the default action type to All-in when responding to all-in
+          setActionType('all-in');
+          // Set the amount to the player's effective stack
+          const effectiveStack = calculateEffectiveStack(nextPlayer, streetName.toLowerCase() as PokerStreet);
+          setActionAmount(effectiveStack.toString());
           return;
         }
       }
@@ -216,27 +216,40 @@ export default function StreetActions({
     setActionAmount(value);
   };
 
-  const handleAddAction = () => {
-    // Validate player selection
-    if (!selectedPlayer) {
-      // setError('Please select a player'); // Removed setError call
-      return;
+  // Helper to adjust effective stack for players who've already acted in this street
+  const getAdjustedEffectiveStack = (playerPosition: string): number => {
+    const effectiveStack = calculateEffectiveStack(playerPosition, currentPokerStreet);
+    
+    // Find if the player has already acted in this street
+    let previousActionAmount = 0;
+    if (street.actions) {
+      // Look for the player's most recent action in this street
+      for (let i = street.actions.length - 1; i >= 0; i--) {
+        const action = street.actions[i];
+        if (action.player === playerPosition && action.amount !== undefined && 
+            (action.type === 'bet' || action.type === 'raise' || action.type === 'call')) {
+          previousActionAmount = action.amount;
+          break;
+        }
+      }
     }
     
+    // If the player has already acted, we need to subtract their previous bet from the all-in amount
+    return previousActionAmount > 0 ? effectiveStack + previousActionAmount : effectiveStack;
+  };
+
+  // Update the handleAddAction function to use the adjusted effective stack
+  const handleAddAction = () => {
+    if (!selectedPlayer) return;
+
     // Validate amount for bet/raise actions
     if ((actionType === 'bet' || actionType === 'raise') && !actionAmount) {
       // setError('Please enter an amount'); // Removed setError call
       return;
     }
     
-    // Get effective stack for the selected player
-    const player = players.find(p => p.position === selectedPlayer);
-    if (!player) {
-      // setError('Player not found'); // Removed setError call
-      return;
-    }
-    
-    const effectiveStack = calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet);
+    // Get the player's adjusted effective stack
+    const effectiveStack = getAdjustedEffectiveStack(selectedPlayer);
     let finalAmount = 0;
     const finalActionType = actionType;
     let isActuallyAllIn = false; // Track if this is effectively an all-in
@@ -654,11 +667,11 @@ export default function StreetActions({
             </span>
           )}
         </div>
-        <span className="text-base font-medium text-gray-900">
-          {/* Change label based on street */}
-          {streetName === 'Preflop' ? 'Pot: ' : 'Pot entering street: '} 
-          ${calculateCurrentPot()}
-        </span>
+        {streetName !== 'Preflop' && (
+          <span className="text-base font-medium text-gray-900">
+            Pot entering street: ${calculateCurrentPot()}
+          </span>
+        )}
       </div>
       
       {/* MOVED Notification for all-in response needed HERE */}
@@ -864,8 +877,8 @@ export default function StreetActions({
                     setActionType(newActionType);
                     // If selecting all-in, automatically set the amount using passed function
                     if (newActionType === 'all-in' && selectedPlayer) {
-                      const effectiveStack = calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet);
-                      setActionAmount(effectiveStack.toString());
+                      const adjustedEffectiveStack = getAdjustedEffectiveStack(selectedPlayer);
+                      setActionAmount(adjustedEffectiveStack.toString());
                     }
                      // If selecting check or fold, clear the amount
                     else if (newActionType === 'check' || newActionType === 'fold') {
@@ -893,67 +906,59 @@ export default function StreetActions({
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base text-gray-900"
                   disabled={isStreetComplete} 
                 >
-                  {(() => {
-                    // Check if there's any all-in action
-                    const hasAllIn = street.actions?.some(a => a.type === 'all-in');
-                    
-                    // If there's an all-in, always show fold, call and all-in options
-                    if (hasAllIn && selectedPlayer) {
-                      // Get current bet to call
-                      const currentBet = gameState.getCurrentBetToCall(currentPokerStreet);
-                      const effectiveStack = calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet);
+                  {/* Simplified options for facing all-in situation */}
+                  {selectedPlayer && street.actions?.some(a => a.type === 'all-in') ? (
+                    <>
+                      <option value="fold">Fold</option>
+                      <option value="all-in">All-in ${getAdjustedEffectiveStack(selectedPlayer)}</option>
+                    </>
+                  ) : (
+                    <>
+                      {/* Default options for normal situations */}
+                      <option value="fold">Fold</option>
                       
-                      return (
-                        <>
-                          <option value="fold">Fold</option>
-                          <option value="call">
-                            {`Call $${currentBet}`}
-                          </option>
-                          <option value="all-in">
-                            {`All-in $${effectiveStack}`}
-                          </option>
-                        </>
-                      );
-                    }
-                    
-                    // No all-in case - show regular options as before
-                    return (
-                      <>
-                        {/* Check */}
-                        {(streetName !== 'Preflop' || 
-                          (streetName === 'Preflop' && 
-                            (selectedPlayer === 'BB' || 
-                            (straddleAmount > 0 && selectedPlayer === 'BTN')))
-                        ) && (
-                          <option value="check">Check</option>
-                        )}
-                        {/* Bet */}
-                        {!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
-                          <option value="bet">
-                            {actionType === 'bet' && actionAmount ? `Bet $${actionAmount}` : `Bet (min $${gameState.getMinBet(currentPokerStreet)})`}
-                          </option>
-                        )}
-                        {/* Raise */}
-                        {street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
-                          <option value="raise">
-                            {actionType === 'raise' && actionAmount ? `Raise to $${actionAmount}` : `Raise (min $${gameState.getMinRaise(currentPokerStreet)})`}
-                          </option>
-                        )}
-                        {/* Call */}
-                        <option value="call" disabled={!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && streetName !== 'Preflop'}>
-                          {actionType === 'call' ? `Call $${
+                      {/* Check - only available in specific situations */}
+                      {(streetName !== 'Preflop' || 
+                        (streetName === 'Preflop' && 
+                          (selectedPlayer === 'BB' || 
+                          (straddleAmount > 0 && selectedPlayer === 'BTN')))
+                      ) && !street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
+                        <option value="check">Check</option>
+                      )}
+                      
+                      {/* Call - available when there's a bet/raise to call */}
+                      {(street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') || streetName === 'Preflop') && (
+                        <option value="call">
+                          Call ${
                             streetName === 'Preflop' && gameState.getCurrentBetToCall(currentPokerStreet) === 0
                               ? (straddleAmount > 0 ? straddleAmount : blinds.bb)
                               : gameState.getCurrentBetToCall(currentPokerStreet)
-                          }` : 'Call'}
+                          }
                         </option>
-                        {/* All-in */}
+                      )}
+                      
+                      {/* Bet - only available when no one has bet yet */}
+                      {!street.actions?.some(a => a.type === 'bet' || a.type === 'raise' || a.type === 'all-in') && (
+                        <option value="bet">
+                          Bet ${gameState.getMinBet(currentPokerStreet)}
+                        </option>
+                      )}
+                      
+                      {/* Raise - only available when someone has already bet */}
+                      {street.actions?.some(a => a.type === 'bet' || a.type === 'raise') && (
+                        <option value="raise">
+                          Raise to ${gameState.getMinRaise(currentPokerStreet)}
+                        </option>
+                      )}
+                      
+                      {/* All-in - always available */}
+                      {selectedPlayer && (
                         <option value="all-in">
-                          {`All-in $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'}`}
+                          All-in ${getAdjustedEffectiveStack(selectedPlayer)}
                         </option>
-                      </>
-                    );
-                  })()}
+                      )}
+                    </>
+                  )}
                 </select>
               </div>
             </div>
@@ -969,7 +974,7 @@ export default function StreetActions({
                     actionType as ActionType,
                     selectedPlayer,
                     currentPokerStreet
-                  ).min}, max $${selectedPlayer ? calculateEffectiveStack(selectedPlayer, streetName.toLowerCase() as PokerStreet) : '0'})`}
+                  ).min}, max $${selectedPlayer ? getAdjustedEffectiveStack(selectedPlayer) : '0'})`}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium"
                 />
               </div>
