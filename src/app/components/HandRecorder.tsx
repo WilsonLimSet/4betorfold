@@ -213,9 +213,17 @@ export const HandRecorder: React.FC = () => {
       return true;
     }
     
+    // Show showdown if the river street has any actions or cards
+    if (handHistory.river && (
+        (handHistory.river.actions && handHistory.river.actions.length > 0) || 
+        (handHistory.river.board && handHistory.river.board.length > 0)
+      )) {
+      return true;
+    }
+    
     // Show showdown if the river street itself is complete
     if (gameState.isStreetComplete('river')) {
-        return true;
+      return true;
     }
     
     return false;
@@ -224,10 +232,12 @@ export const HandRecorder: React.FC = () => {
   // Updated function to handle stage transitions (River is final)
   const goToNextStage = () => {
     // Check if there's an all-in on the current street
-    // If so, we stay on the current street but the UI should reflect completion
     if (gameState.isAllPlayersAllIn(activeStage as PokerStreet)) {
-      // No state change needed, action UI should disable via StreetActions props
-      return; 
+      // For all-in situations, we need to still progress to the next street
+      if (activeStage === 'preflop') setActiveStage('flop');
+      else if (activeStage === 'flop') setActiveStage('turn');
+      else if (activeStage === 'turn') setActiveStage('river');
+      return;
     }
     
     // Normal progression
@@ -266,11 +276,6 @@ export const HandRecorder: React.FC = () => {
     
     // Reset to preflop stage
     setActiveStage('preflop');
-    
-    // Reset date and location if needed
-    // Uncomment if you want to clear these too
-    // setHandDate('');
-    // setHandLocation('');
   };
 
   // Update game state when hand history changes
@@ -299,14 +304,14 @@ export const HandRecorder: React.FC = () => {
   }, [players, stakes, straddle, straddleAmount, handHistory]);
 
   return (
-    <div className="max-w-6xl mx-auto p-1 sm:p-2 md:p-4">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
+    <div className="max-w-6xl mx-auto p-0 sm:p-1 md:p-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
         {/* Form Panel */}
-        <div className="lg:col-span-3 rounded-xl shadow-lg p-3 sm:p-6 md:p-8 bg-white">
-          <h2 className="text-3xl font-bold mb-4 sm:mb-6 text-gray-900">Record Hand History</h2>
-          <div className="space-y-8">
+        <div className="lg:col-span-3 rounded-xl shadow-lg p-3 sm:p-4 md:p-6 bg-white">
+          <h2 className="text-2xl font-medium mb-4 sm:mb-5 text-gray-900">Record Hand History</h2>
+          <div className="space-y-6">
             {/* Date and Location Section */}
-            <div className="mb-8 grid grid-cols-2 gap-4">
+            <div className="mb-6 grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Date (optional)
@@ -335,8 +340,8 @@ export const HandRecorder: React.FC = () => {
             </div>
 
             {/* Stakes Section */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgb(31, 41, 55)' }}>Stakes</h3>
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-3" style={{ color: 'rgb(31, 41, 55)' }}>Stakes</h3>
               <StakeSelector 
                 onStakeSelect={handleStakeChange}
                 onGameTypeChange={(isCash) => {
@@ -356,11 +361,11 @@ export const HandRecorder: React.FC = () => {
             </div>
 
             {/* Straddle and Display Amounts Section */}
-            <div className="mb-8">
-              <div className="flex items-center gap-8"> {/* Increased gap */}
+            <div className="mb-6">
+              <div className="flex items-center gap-6">
                 {/* Straddle Toggle */}
                 <div>
-                  <h3 className="text-xl font-semibold mb-2" style={{ color: 'rgb(31, 41, 55)' }}>Straddle</h3>
+                  <h3 className="text-lg font-medium mb-2" style={{ color: 'rgb(31, 41, 55)' }}>Straddle</h3>
                   <label className="inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -369,7 +374,7 @@ export const HandRecorder: React.FC = () => {
                       className="sr-only peer"
                     />
                     <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    <span className="ml-3 text-lg font-medium text-gray-900">
+                    <span className="ml-3 text-base font-medium text-gray-900">
                       {straddle ? `$${straddleAmount} (2x BB)` : 'Off'}
                     </span>
                   </label>
@@ -377,10 +382,10 @@ export const HandRecorder: React.FC = () => {
 
                 {/* Display Amounts Toggle */}
                 <div>
-                  <h3 className="text-xl font-semibold mb-2 invisible">Display</h3> {/* Invisible placeholder for alignment */}
+                  <h3 className="text-lg font-medium mb-2 invisible">Display</h3>
                   <button
                     onClick={toggleDollars}
-                    className="px-4 py-2 bg-white border border-blue-500 text-blue-500 rounded hover:bg-blue-50 text-m"
+                    className="px-3 py-1.5 bg-white border border-blue-500 text-blue-500 rounded hover:bg-blue-50 text-sm"
                   >
                     Show amounts in: {useDollars ? 'BB' : '$'}
                   </button>
@@ -389,20 +394,20 @@ export const HandRecorder: React.FC = () => {
             </div>
 
             {/* Players Section */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold" style={{ color: 'rgb(31, 41, 55)' }}>Players</h3>
+                <h3 className="text-lg font-medium" style={{ color: 'rgb(31, 41, 55)' }}>Players</h3>
                 <button
                   type="button"
                   onClick={addPlayer}
-                  className="font-medium text-lg"
+                  className="font-medium text-base"
                   style={{ color: 'rgb(37, 99, 235)' }}
                 >
                   + Add Player
                 </button>
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {players.map((player, index) => (
                   <PlayerInput
                     key={index}
@@ -431,21 +436,21 @@ export const HandRecorder: React.FC = () => {
                 <button
                   onClick={() => setActiveStage('flop')}
                   className={`px-4 py-2 text-base font-medium ${activeStage === 'flop' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
-                  disabled={!handHistory.preflop?.actions || handHistory.preflop.actions.length === 0}
+                  disabled={(!handHistory.preflop?.actions || handHistory.preflop.actions.length === 0) && !gameState.isAllPlayersAllIn('preflop')}
                 >
                   Flop
                 </button>
                 <button
                   onClick={() => setActiveStage('turn')}
                   className={`px-4 py-2 text-base font-medium ${activeStage === 'turn' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
-                  disabled={!handHistory.flop?.board || !handHistory.flop.board.length}
+                  disabled={(!handHistory.flop?.board || handHistory.flop.board.length !== 3) && !gameState.isAllPlayersAllIn('flop') && !gameState.isAllPlayersAllIn('preflop')}
                 >
                   Turn
                 </button>
                 <button
                   onClick={() => setActiveStage('river')}
                   className={`px-4 py-2 text-base font-medium ${activeStage === 'river' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
-                  disabled={!handHistory.turn?.board || !handHistory.turn.board.length}
+                  disabled={(!handHistory.turn?.board || handHistory.turn.board.length !== 1) && !gameState.isAllPlayersAllIn('turn') && !gameState.isAllPlayersAllIn('flop') && !gameState.isAllPlayersAllIn('preflop')}
                 >
                   River
                 </button>
@@ -476,7 +481,7 @@ export const HandRecorder: React.FC = () => {
                     </button>
                     <button
                       onClick={goToNextStage}
-                      disabled={!handHistory.preflop?.actions || handHistory.preflop.actions.length === 0}
+                      disabled={(!handHistory.preflop?.actions || handHistory.preflop.actions.length === 0) && !gameState.isAllPlayersAllIn('preflop')}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                       Next: Flop
@@ -512,7 +517,7 @@ export const HandRecorder: React.FC = () => {
                     </button>
                     <button
                       onClick={goToNextStage}
-                      disabled={(!handHistory.flop?.board || handHistory.flop.board.length !== 3) && !gameState.isAllPlayersAllIn('flop')}
+                      disabled={(!handHistory.flop?.board || handHistory.flop.board.length !== 3) && !gameState.isAllPlayersAllIn('flop') && !gameState.isAllPlayersAllIn('preflop')}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                       Next: Turn
@@ -552,7 +557,7 @@ export const HandRecorder: React.FC = () => {
                     </button>
                     <button
                       onClick={goToNextStage}
-                      disabled={(!handHistory.turn?.board || handHistory.turn.board.length !== 1) && !gameState.isAllPlayersAllIn('turn')}
+                      disabled={(!handHistory.turn?.board || handHistory.turn.board.length !== 1) && !gameState.isAllPlayersAllIn('turn') && !gameState.isAllPlayersAllIn('flop') && !gameState.isAllPlayersAllIn('preflop')}
                       className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                       Next: River
@@ -599,19 +604,19 @@ export const HandRecorder: React.FC = () => {
         </div>
 
         {/* Preview Panel */}
-        <div ref={previewRef} className="lg:col-span-2 bg-white rounded-xl shadow-lg p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Hand History</h2>
-            <div className="flex items-center gap-4">
+        <div ref={previewRef} className="lg:col-span-2 bg-white rounded-xl shadow-lg p-4 sm:p-5 md:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-medium text-gray-900">Hand History</h2>
+            <div className="flex items-center gap-3">
               <button
                 onClick={resetHand}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-blue-500 text-blue-500 hover:bg-blue-50 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-blue-500 text-blue-500 hover:bg-blue-50 transition-colors text-sm"
               >
                 <span>New Hand</span>
               </button>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors text-sm"
               >
                 <span>Copy</span>
               </button>
@@ -619,20 +624,25 @@ export const HandRecorder: React.FC = () => {
           </div>
 
           {/* Hand History Content - only this content will be copied */}
-          <div className="whitespace-pre-wrap text-sm leading-6 text-gray-900 hand-history-content">
+          <div className="whitespace-pre-wrap text-sm leading-5 text-gray-900 hand-history-content">
             {(handDate || handLocation) && (
               <div className="mb-2">
-                {handDate && <div>{handDate}</div>}
-                {handLocation && <div>{handLocation}</div>}
-                {(handDate || handLocation) && <div className="mt-2"></div>}
+                {handDate && handLocation ? (
+                  <div>{handDate} - {handLocation}</div>
+                ) : (
+                  <>
+                    {handDate && <div>{handDate}</div>}
+                    {handLocation && <div>{handLocation}</div>}
+                  </>
+                )}
               </div>
             )}
-            <div className="font-semibold text-base">Blinds: ${stakes.sb}/${stakes.bb}</div>
+            <div className="font-medium">Blinds: ${stakes.sb}/${stakes.bb}</div>
             {straddle && (
-              <div className="font-semibold text-base">Straddle: ${straddleAmount}</div>
+              <div className="font-medium">Straddle: ${straddleAmount}</div>
             )}
             <div className="mt-1">
-              <span className="font-semibold">Hero:</span> {players.find(p => p.isHero)?.position} 
+              <span className="font-medium">Hero:</span> {players.find(p => p.isHero)?.position} 
               {players.find(p => p.isHero)?.holeCards && (
                 <span>
                   {' ('}
@@ -656,16 +666,16 @@ export const HandRecorder: React.FC = () => {
               )}
             </div>
             <div className="mt-1">
-              <span className="font-semibold">Villain{players.filter(p => !p.isHero).length > 1 ? 's' : ''}:</span> {players.filter(p => !p.isHero).map(p => p.position).join(', ')}
+              <span className="font-medium">Villain{players.filter(p => !p.isHero).length > 1 ? 's' : ''}:</span> {players.filter(p => !p.isHero).map(p => p.position).join(', ')}
             </div>
-            <div className="mt-1"><span className="font-semibold">Effective Stack:</span> ${Math.min(...players.map(p => p.stack))}</div>
+            <div className="mt-1"><span className="font-medium">Effective Stack:</span> ${Math.min(...players.map(p => p.stack))}</div>
             
             {handHistory.preflop.actions.length > 0 && (
-              <div className="mt-4">
-                <div className="font-semibold">Preflop ({useDollars ? '$' : ''}{calculatePotForStreet('preflop')}{!useDollars ? 'BB' : ''}):</div>
-                <div className="pl-4">
+              <div className="mt-3">
+                <div className="font-medium">Preflop ({useDollars ? '$' : ''}{calculatePotForStreet('preflop')}{!useDollars ? 'BB' : ''}):</div>
+                <div className="pl-3">
                   {handHistory.preflop.actions.map((action, idx) => (
-                    <div key={idx} className="ml-4 -indent-4">
+                    <div key={idx} className="ml-3 -indent-3">
                       {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
                       {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
@@ -675,8 +685,8 @@ export const HandRecorder: React.FC = () => {
             )}
             
             {handHistory.flop?.board && handHistory.flop.board.length > 0 && (
-              <div className="mt-4">
-                <div className="font-semibold">
+              <div className="mt-3">
+                <div className="font-medium">
                   Flop ({useDollars ? '$' : ''}{calculatePotForStreet('flop')}{!useDollars ? 'BB' : ''}): {' '}
                   {handHistory.flop.board.map((card, idx) => (
                     <span key={idx} className={card.suit === 'hearts' || card.suit === 'diamonds' ? 'text-red-600' : 'text-gray-900'}>
@@ -687,9 +697,9 @@ export const HandRecorder: React.FC = () => {
                     </span>
                   ))}
                 </div>
-                <div className="pl-4">
+                <div className="pl-3">
                   {handHistory.flop.actions.map((action, idx) => (
-                    <div key={idx} className="ml-4 -indent-4">
+                    <div key={idx} className="ml-3 -indent-3">
                       {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
                       {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
@@ -699,8 +709,8 @@ export const HandRecorder: React.FC = () => {
             )}
             
             {handHistory.turn?.board && handHistory.turn.board.length > 0 && (
-              <div className="mt-4">
-                <div className="font-semibold">
+              <div className="mt-3">
+                <div className="font-medium">
                   Turn ({useDollars ? '$' : ''}{calculatePotForStreet('turn')}{!useDollars ? 'BB' : ''}): {' '}
                   {/* Show flop cards first */}
                   {handHistory.flop?.board && handHistory.flop.board.map((card, idx) => (
@@ -721,9 +731,9 @@ export const HandRecorder: React.FC = () => {
                      handHistory.turn.board[0].suit === 'clubs' ? '♣' : '♠'}
                   </span>
                 </div>
-                <div className="pl-4">
+                <div className="pl-3">
                   {handHistory.turn.actions.map((action, idx) => (
-                    <div key={idx} className="ml-4 -indent-4">
+                    <div key={idx} className="ml-3 -indent-3">
                       {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
                       {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
@@ -733,8 +743,8 @@ export const HandRecorder: React.FC = () => {
             )}
             
             {handHistory.river?.board && handHistory.river.board.length > 0 && (
-              <div className="mt-4">
-                <div className="font-semibold">
+              <div className="mt-3">
+                <div className="font-medium">
                   River ({useDollars ? '$' : ''}{calculatePotForStreet('river')}{!useDollars ? 'BB' : ''}): {' '}
                   {/* All previous cards */}
                   {handHistory.flop?.board && handHistory.flop.board.map((card, idx) => (
@@ -764,9 +774,9 @@ export const HandRecorder: React.FC = () => {
                      handHistory.river.board[0].suit === 'clubs' ? '♣' : '♠'}
                   </span>
                 </div>
-                <div className="pl-4">
+                <div className="pl-3">
                   {handHistory.river.actions.map((action, idx) => (
-                    <div key={idx} className="ml-4 -indent-4">
+                    <div key={idx} className="ml-3 -indent-3">
                       {action.player} {action.type === 'raise' ? 'raises to' : action.type} 
                       {action.amount ? ` ${useDollars ? '$' : ''}${action.amount}${!useDollars ? 'BB' : ''}` : ''}
                     </div>
@@ -775,15 +785,15 @@ export const HandRecorder: React.FC = () => {
               </div>
             )}
             
-            <div className="mt-4 font-semibold">Total pot: {useDollars ? '$' : ''}{gameState.calculateTotalPot('river')}{!useDollars ? 'BB' : ''}</div>
+            <div className="mt-3 font-medium">Total pot: {useDollars ? '$' : ''}{gameState.calculateTotalPot('river')}{!useDollars ? 'BB' : ''}</div>
             
             {/* Show showdown when river is complete or players are all-in */}
             {shouldShowShowdown() && (
-              <div className="mt-4">
-                <div className="font-semibold">Showdown:</div>
-                <div className="pl-4">
+              <div className="mt-3">
+                <div className="font-medium">Showdown:</div>
+                <div className="pl-3">
                   {/* Hero's cards */}
-                  <div className="ml-4 -indent-4">
+                  <div className="ml-3 -indent-3">
                     {players.find(p => p.isHero)?.position} shows
                     {players.find(p => p.isHero)?.holeCards && (
                       <span>
@@ -809,7 +819,7 @@ export const HandRecorder: React.FC = () => {
                   </div>
                   {/* Villains' cards */}
                   {players.filter(p => !p.isHero).map(villain => (
-                    <div key={villain.position} className="ml-4 -indent-4">
+                    <div key={villain.position} className="ml-3 -indent-3">
                       {villain.position} {villain.holeCards ? 'shows' : 'mucks'} 
                       {villain.holeCards && (
                         <span>
@@ -838,7 +848,7 @@ export const HandRecorder: React.FC = () => {
               </div>
             )}
             
-            <div className="mt-4 text-gray-500 text-xs">Generated by 4betorfold.com</div>
+            <div className="mt-3 text-gray-500 text-xs">Generated with 4betorfold.com</div>
           </div>
         </div>
       </div>

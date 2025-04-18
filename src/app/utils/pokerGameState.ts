@@ -140,31 +140,164 @@ export default class PokerGameState {
   }
 
   /**
+   * Core pot calculation function - the single source of truth
+   * Calculates all player contributions up to a specific street
+   */
+  private calculatePotContributions(upToStreet: PokerStreet): Map<string, number> {
+    const playerContributions = new Map<string, number>();
+    
+    // Add blinds and straddle to the initial contributions
+    // Only set SB blind if they haven't acted yet
+    const sbHasAction = this.streets.preflop.actions?.some(action => action.player === 'SB');
+    if (!sbHasAction) {
+      playerContributions.set('SB', this.blinds.sb);
+    }
+
+    // Only set BB's blind if they haven't acted yet
+    const bbHasAction = this.streets.preflop.actions?.some(action => action.player === 'BB');
+    if (!bbHasAction) {
+      playerContributions.set('BB', this.blinds.bb);
+    }
+
+    // Check if UTG has any actions (for straddle)
+    const utgHasAction = this.streets.preflop.actions?.some(action => action.player === 'UTG');
+    if (this.straddleAmount > 0 && !utgHasAction) {
+      playerContributions.set('UTG', this.straddleAmount);
+    }
+    
+    // Process all streets up to the specified one
+    const streets: PokerStreet[] = ['preflop', 'flop', 'turn', 'river'];
+    const targetStreetIndex = streets.indexOf(upToStreet);
+    
+    // Iterate through each street up to the target
+    for (let i = 0; i <= targetStreetIndex; i++) {
+      const currentStreet = streets[i];
+      const street = this.getStreet(currentStreet);
+      
+      // Process all actions for this street
+      if (street.actions) {
+        for (const action of street.actions) {
+          // Skip actions without amounts or fold/check actions
+          if (action.amount === undefined || action.type === 'fold' || action.type === 'check') continue;
+          
+          // For bet/call/raise/all-in, update the player's contribution
+          if (action.type === 'bet' || action.type === 'call' || action.type === 'raise' || action.type === 'all-in') {
+            // The amount represents the total commitment for this street
+            playerContributions.set(action.player, action.amount);
+          }
+        }
+      }
+    }
+    
+    return playerContributions;
+  }
+
+  /**
+   * Calculate the total pot size up to and including a specific street
+   */
+  calculateTotalPot(upToStreet: PokerStreet): number {
+    // Sum all player contributions for this street
+    const contributions = this.calculatePotContributions(upToStreet);
+    let totalPot = 0;
+    
+    for (const amount of contributions.values()) {
+      totalPot += amount;
+    }
+    
+    return totalPot;
+  }
+
+  /**
+   * Calculate the pot size entering a specific street (before any actions on this street)
+   */
+  calculatePotEnteringStreet(streetName: PokerStreet): number {
+    if (streetName === 'preflop') {
+      // For preflop, just return the SB + BB + straddle as starting pot
+      // WITHOUT counting any actions
+      let pot = this.blinds.sb + this.blinds.bb;
+      if (this.straddleAmount > 0) {
+        pot += this.straddleAmount;
+      }
+      return pot;
+    }
+
+    // For other streets, get the pot from all actions in the previous street
+    const previousStreet = this.getPreviousStreet(streetName);
+    if (!previousStreet) return 0;
+
+    // For flop, calculate preflop pot accurately by summing all contributions
+    if (streetName === 'flop') {
+      let pot = 0;
+      
+      // Calculate based on all positions and their final contributions
+      const contributions = this.calculatePotContributions('preflop');
+      
+      // Sum all contributions
+      for (const amount of contributions.values()) {
+        pot += amount;
+      }
+      
+      return pot;
+    }
+
+    const previousStreetName = streetName === 'turn' ? 'flop' : 'turn';
+    return this.calculateTotalPot(previousStreetName);
+  }
+
+  /**
+   * Calculate pot for a specific street (for display purposes)
+   * This is a compatibility wrapper for the new pot calculation functions
+   */
+  calculateDisplayPot(streetName: PokerStreet): number {
+    // This function now uses calculatePotEnteringStreet to maintain backward compatibility
+    return this.calculatePotEnteringStreet(streetName);
+  }
+
+  /**
    * Get the effective stack for a player (remaining stack after previous actions)
    */
   getEffectiveStack(playerPosition: string, streetName: PokerStreet): number {
     const player = this.players.find(p => p.position === playerPosition);
     if (!player) return 0;
 
+    // Start with the player's full stack
     let effectiveStack = player.stack;
+    
+    // Get the player's total contributions up to this street
+    const contributions = this.calculatePotContributions(streetName);
+    const playerContribution = contributions.get(playerPosition) || 0;
+    
+    // Subtract the player's total contribution from their stack
+    effectiveStack -= playerContribution;
+    
+    return Math.max(0, effectiveStack);
+  }
 
-    // Subtract all previous actions from all streets
-    for (const [name, street] of Object.entries(this.streets)) {
-      // Skip streets after the current one
-      if (this.getStreetOrder(name as PokerStreet) > this.getStreetOrder(streetName)) {
-        continue;
-      }
-      
-      if (street.actions) {
-        for (const action of street.actions) {
-          if (action.player === player.position) {
-            effectiveStack -= action.amount || 0;
-          }
+  /**
+   * Get the player's previous contribution for a street up to a specific action index
+   */
+  private getPreviousContributionForStreet(playerPosition: string, streetName: PokerStreet, upToActionIndex: number): number {
+    const street = this.getStreet(streetName);
+    let contribution = 0;
+    
+    // Add blinds/straddle for preflop
+    if (streetName === 'preflop') {
+      if (playerPosition === 'SB') contribution = this.blinds.sb;
+      if (playerPosition === 'BB') contribution = this.blinds.bb;
+      if (playerPosition === 'UTG' && this.straddleAmount > 0) contribution = this.straddleAmount;
+    }
+    
+    // Add previous action amounts
+    if (street.actions) {
+      for (let i = 0; i < upToActionIndex; i++) {
+        const action = street.actions[i];
+        if (action.player === playerPosition && action.amount) {
+          contribution = action.amount; // Use the full amount as this represents the total so far
         }
       }
     }
-
-    return effectiveStack;
+    
+    return contribution;
   }
 
   /**
@@ -460,61 +593,25 @@ export default class PokerGameState {
     const street = this.getStreet(streetName);
     const playerContributions = new Map<string, number>();
     
+    // Add blinds and straddle for preflop
+    if (streetName === 'preflop') {
+      playerContributions.set('SB', this.blinds.sb);
+      playerContributions.set('BB', this.blinds.bb);
+      if (this.straddleAmount > 0) {
+        playerContributions.set('UTG', this.straddleAmount);
+      }
+    }
+    
     if (!street.actions) return playerContributions;
     
     for (const action of street.actions) {
       if (action.type === 'fold' || action.amount === undefined) continue;
       
-      // Only count the amount if it's higher than what we've seen for this player
-      const currentContribution = playerContributions.get(action.player) || 0;
-      if (action.amount > currentContribution) {
-        playerContributions.set(action.player, action.amount);
-      }
+      // Update with the latest contribution for this player
+      playerContributions.set(action.player, action.amount);
     }
     
     return playerContributions;
-  }
-
-  /**
-   * Calculate the total pot size including previous streets
-   */
-  calculateTotalPot(streetName: PokerStreet): number {
-    let totalPot = 0;
-    
-    // Add blinds and straddle to the pot
-    totalPot += this.blinds.sb + this.blinds.bb;
-    if (this.straddleAmount > 0) {
-      totalPot += this.straddleAmount;
-    }
-    
-    // For preflop, just return blinds + straddle + preflop actions
-    if (streetName === 'preflop') {
-      // Get highest contributions from each player
-      const playerContributions = this.getPlayerContributions('preflop');
-      
-      // Add all contributions
-      for (const amount of playerContributions.values()) {
-        totalPot += amount;
-      }
-      
-      return totalPot;
-    }
-    
-    // For postflop streets, we need to handle a bit differently
-    // Add actions from all previous streets
-    const streets: PokerStreet[] = ['preflop', 'flop', 'turn', 'river'];
-    const currentStreetIndex = streets.indexOf(streetName);
-    
-    for (let i = 0; i <= currentStreetIndex; i++) {
-      const streetName = streets[i];
-      const playerContributions = this.getPlayerContributions(streetName);
-      
-      for (const amount of playerContributions.values()) {
-        totalPot += amount;
-      }
-    }
-    
-    return totalPot;
   }
 
   /**
@@ -734,65 +831,6 @@ export default class PokerGameState {
     const positions = PokerGameState.VALID_POSITIONS;
     const currentIndex = positions.indexOf(currentPosition);
     return positions[(currentIndex + 1) % positions.length];
-  }
-
-  /**
-   * Calculate pot for a specific street (for display purposes)
-   */
-  calculateDisplayPot(streetName: PokerStreet): number {
-    // For "pot entering street" display
-    if (streetName === 'preflop') {
-      // Start with blinds + straddle
-      let pot = this.blinds.sb + this.blinds.bb + this.straddleAmount;
-      
-      // Add preflop action contributions
-      const preflopStreet = this.getStreet('preflop');
-      if (preflopStreet.actions && preflopStreet.actions.length > 0) {
-        const contributions = new Map<string, number>();
-        
-        // Track forced bets
-        contributions.set('SB', this.blinds.sb);
-        contributions.set('BB', this.blinds.bb);
-        if (this.straddleAmount > 0) {
-          contributions.set('UTG', this.straddleAmount);
-        }
-        
-        // Process actions
-        for (const action of preflopStreet.actions) {
-          // Skip folds and checks as they don't contribute to pot size calculation here
-          if (action.type === 'fold' || action.type === 'check') continue; 
-          
-          // Ensure amount exists for betting/calling/raising actions
-          if (action.amount !== undefined && action.amount >= 0) {
-            const currentContribution = contributions.get(action.player) || 0;
-            // The amount to add is the difference between this action's amount 
-            // and what the player had already contributed.
-            // Use action.amount directly, as it represents the total bet/call/raise amount TO.
-            const totalContributionTarget = action.amount; 
-            
-            // Only update if this action increases their contribution
-            if (totalContributionTarget > currentContribution) {
-                contributions.set(action.player, totalContributionTarget);
-            }
-          }
-        }
-        
-        // Recalculate total pot by summing final contributions
-        pot = 0;
-        for (const amount of contributions.values()) {
-          pot += amount;
-        }
-      }
-      
-      return pot;
-    } else {
-      // For postflop streets, return the pot carried over from previous street
-      const previousStreet = this.getPreviousStreet(streetName);
-      if (!previousStreet) return 0;
-      
-      // Calculate pot from previous street
-      return this.calculateTotalPot(previousStreet);
-    }
   }
 
   /**
