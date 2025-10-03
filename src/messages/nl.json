@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Gratis poker thuisspel tracker met automatische saldoverificatie",
+    "startNewGame": "Start nieuw spel",
+    "startNewGameDescription": "Maak een nieuwe spelsessie en deel de code met andere spelers",
+    "createNewGameButton": "Maak nieuw spel",
+    "joinExistingGame": "Doe mee aan bestaand spel",
+    "joinGameDescription": "Voer een spelcode in om deel te nemen aan een actieve sessie",
+    "gameCodePlaceholder": "Voer spelcode in",
+    "joinGameButton": "Doe mee aan spel",
+    "recentGames": "Recente spellen",
+    "players": "spelers",
+    "resume": "Hervatten →",
+    "description": "Volg buy-ins en cash-outs van je poker thuisspellen met automatische saldoverificatie. Geen inloggen vereist.",
+    "madeBy": "Gemaakt door"
+  },
+  "game": {
+    "back": "← Terug",
+    "gameCode": "Code:",
+    "copyLink": "Link kopiëren",
+    "copied": "Gekopieerd!",
+    "exportCSV": "Exporteer CSV",
+    "totalIn": "Totaal in",
+    "totalOut": "Totaal uit",
+    "balance": "Saldo",
+    "onTable": "Op tafel",
+    "overPaid": "Te veel betaald",
+    "balanced": "✓ In balans",
+    "potNotBalanced": "Pot is niet in balans.",
+    "missingCashOuts": "Ontbrekende cash-outs",
+    "cashOutsExceed": "Cash-outs overschrijden buy-ins",
+    "addPlayer": "+ Speler toevoegen",
+    "noPlayers": "Nog geen spelers. Voeg spelers toe om buy-ins te volgen.",
+    "addFirstPlayer": "Eerste speler toevoegen",
+    "loading": "Spel laden..."
+  },
+  "player": {
+    "remove": "Verwijderen",
+    "confirm": "Bevestigen",
+    "cancel": "Annuleren",
+    "totalBuyIns": "Totaal buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Toevoegen",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Uitgecasht:",
+    "profitLoss": "Winst/Verlies:",
+    "resetPlayer": "Speler resetten",
+    "buyInHistory": "Buy-in geschiedenis:"
+  },
+  "addPlayer": {
+    "title": "Nieuwe speler toevoegen",
+    "namePlaceholder": "Naam speler",
+    "addButton": "Speler toevoegen",
+    "cancel": "Annuleren"
+  }
+}

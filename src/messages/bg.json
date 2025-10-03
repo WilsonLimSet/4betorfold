@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Безплатен тракер за домашни покер игри с автоматична проверка на баланса",
+    "startNewGame": "Започни нова игра",
+    "startNewGameDescription": "Създайте нова игрова сесия и споделете кода с други играчи",
+    "createNewGameButton": "Създай нова игра",
+    "joinExistingGame": "Присъедини се към съществуваща игра",
+    "joinGameDescription": "Въведете код на игра, за да се присъедините към активна сесия",
+    "gameCodePlaceholder": "Въведете код на игра",
+    "joinGameButton": "Присъедини се към игра",
+    "recentGames": "Последни игри",
+    "players": "играчи",
+    "resume": "Продължи →",
+    "description": "Следете buy-in-ове и cash-out-ове за вашите домашни покер игри с автоматична проверка на баланса. Не се изисква вход.",
+    "madeBy": "Създадено от"
+  },
+  "game": {
+    "back": "← Назад",
+    "gameCode": "Код:",
+    "copyLink": "Копирай връзка",
+    "copied": "Копирано!",
+    "exportCSV": "Експортирай CSV",
+    "totalIn": "Общо вложено",
+    "totalOut": "Общо изплатено",
+    "balance": "Баланс",
+    "onTable": "На масата",
+    "overPaid": "Преплатено",
+    "balanced": "✓ Балансирано",
+    "potNotBalanced": "Потът не е балансиран.",
+    "missingCashOuts": "Липсващи cash-out-ове",
+    "cashOutsExceed": "Cash-out-овете надвишават buy-in-овете",
+    "addPlayer": "+ Добави играч",
+    "noPlayers": "Все още няма играчи. Добавете играчи, за да започнете проследяването на buy-in-ове.",
+    "addFirstPlayer": "Добави първи играч",
+    "loading": "Зареждане на игра..."
+  },
+  "player": {
+    "remove": "Премахни",
+    "confirm": "Потвърди",
+    "cancel": "Отмени",
+    "totalBuyIns": "Общо buy-in-ове",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Добави",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Изплатено:",
+    "profitLoss": "Печалба/Загуба:",
+    "resetPlayer": "Нулирай играч",
+    "buyInHistory": "История на buy-in-ове:"
+  },
+  "addPlayer": {
+    "title": "Добави нов играч",
+    "namePlaceholder": "Име на играч",
+    "addButton": "Добави играч",
+    "cancel": "Отмени"
+  }
+}

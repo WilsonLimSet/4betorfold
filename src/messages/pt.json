@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Rastreador gratuito de jogos de pôquer com verificação automática de saldo",
+    "startNewGame": "Iniciar Novo Jogo",
+    "startNewGameDescription": "Crie uma nova sessão de jogo e compartilhe o código com outros jogadores",
+    "createNewGameButton": "Criar Novo Jogo",
+    "joinExistingGame": "Entrar em Jogo Existente",
+    "joinGameDescription": "Digite um código de jogo para entrar em uma sessão ativa",
+    "gameCodePlaceholder": "Digite o código do jogo",
+    "joinGameButton": "Entrar no Jogo",
+    "recentGames": "Jogos Recentes",
+    "players": "jogadores",
+    "resume": "Continuar →",
+    "description": "Rastreie buy-ins e cash-outs dos seus jogos de pôquer com verificação automática de saldo. Sem necessidade de login.",
+    "madeBy": "Feito por"
+  },
+  "game": {
+    "back": "← Voltar",
+    "gameCode": "Código:",
+    "copyLink": "Copiar Link",
+    "copied": "Copiado!",
+    "exportCSV": "Exportar CSV",
+    "totalIn": "Total Entrada",
+    "totalOut": "Total Saída",
+    "balance": "Saldo",
+    "onTable": "Na Mesa",
+    "overPaid": "Pago a Mais",
+    "balanced": "✓ Balanceado",
+    "potNotBalanced": "O pote não está balanceado.",
+    "missingCashOuts": "Faltam cash-outs",
+    "cashOutsExceed": "Cash-outs excedem buy-ins",
+    "addPlayer": "+ Adicionar Jogador",
+    "noPlayers": "Ainda não há jogadores. Adicione jogadores para começar a rastrear buy-ins.",
+    "addFirstPlayer": "Adicionar Primeiro Jogador",
+    "loading": "Carregando jogo..."
+  },
+  "player": {
+    "remove": "Remover",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "totalBuyIns": "Total Buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Adicionar",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Cash-out:",
+    "profitLoss": "Lucro/Perda:",
+    "resetPlayer": "Resetar Jogador",
+    "buyInHistory": "Histórico de buy-ins:"
+  },
+  "addPlayer": {
+    "title": "Adicionar Novo Jogador",
+    "namePlaceholder": "Nome do jogador",
+    "addButton": "Adicionar Jogador",
+    "cancel": "Cancelar"
+  }
+}

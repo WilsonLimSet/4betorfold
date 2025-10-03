@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Libreng poker home game tracker na may awtomatikong pagpapatunay ng balanse",
+    "startNewGame": "Magsimula ng Bagong Laro",
+    "startNewGameDescription": "Gumawa ng bagong game session at ibahagi ang code sa ibang mga manlalaro",
+    "createNewGameButton": "Gumawa ng Bagong Laro",
+    "joinExistingGame": "Sumali sa Umiiral na Laro",
+    "joinGameDescription": "Ilagay ang game code upang sumali sa aktibong session",
+    "gameCodePlaceholder": "Ilagay ang game code",
+    "joinGameButton": "Sumali sa Laro",
+    "recentGames": "Kamakailang Laro",
+    "players": "manlalaro",
+    "resume": "Ituloy →",
+    "description": "Subaybayan ang mga buy-in at cash-out ng iyong poker home games na may awtomatikong pagpapatunay ng balanse. Walang kinakailangang pag-login.",
+    "madeBy": "Ginawa ni"
+  },
+  "game": {
+    "back": "← Bumalik",
+    "gameCode": "Code:",
+    "copyLink": "Kopyahin ang Link",
+    "copied": "Nakopya na!",
+    "exportCSV": "I-export ang CSV",
+    "totalIn": "Kabuuang Pumasok",
+    "totalOut": "Kabuuang Lumabas",
+    "balance": "Balanse",
+    "onTable": "Sa Mesa",
+    "overPaid": "Sobrang Bayad",
+    "balanced": "✓ Balansyado",
+    "potNotBalanced": "Ang pot ay hindi balansyado.",
+    "missingCashOuts": "Kulang ang mga cash-out",
+    "cashOutsExceed": "Ang mga cash-out ay lumampas sa mga buy-in",
+    "addPlayer": "+ Magdagdag ng Manlalaro",
+    "noPlayers": "Wala pang mga manlalaro. Magdagdag ng mga manlalaro upang magsimulang subaybayan ang mga buy-in.",
+    "addFirstPlayer": "Magdagdag ng Unang Manlalaro",
+    "loading": "Naglo-load ang laro..."
+  },
+  "player": {
+    "remove": "Tanggalin",
+    "confirm": "Kumpirmahin",
+    "cancel": "Kanselahin",
+    "totalBuyIns": "Kabuuang Buy-in",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Idagdag",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Na-cash out:",
+    "profitLoss": "Kita/Talo:",
+    "resetPlayer": "I-reset ang Manlalaro",
+    "buyInHistory": "Kasaysayan ng buy-in:"
+  },
+  "addPlayer": {
+    "title": "Magdagdag ng Bagong Manlalaro",
+    "namePlaceholder": "Pangalan ng manlalaro",
+    "addButton": "Idagdag ang Manlalaro",
+    "cancel": "Kanselahin"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "免费扑克家庭游戏追踪器，自动验证余额",
+    "startNewGame": "开始新游戏",
+    "startNewGameDescription": "创建新游戏并与其他玩家分享代码",
+    "createNewGameButton": "创建新游戏",
+    "joinExistingGame": "加入现有游戏",
+    "joinGameDescription": "输入游戏代码加入活动会话",
+    "gameCodePlaceholder": "输入游戏代码",
+    "joinGameButton": "加入游戏",
+    "recentGames": "最近的游戏",
+    "players": "玩家",
+    "resume": "继续 →",
+    "description": "追踪扑克家庭游戏的买入和兑现，自动验证余额。无需登录。",
+    "madeBy": "制作者"
+  },
+  "game": {
+    "back": "← 返回",
+    "gameCode": "代码：",
+    "copyLink": "复制链接",
+    "copied": "已复制！",
+    "exportCSV": "导出CSV",
+    "totalIn": "总买入",
+    "totalOut": "总兑现",
+    "balance": "余额",
+    "onTable": "桌上",
+    "overPaid": "超付",
+    "balanced": "✓ 已平衡",
+    "potNotBalanced": "底池未平衡。",
+    "missingCashOuts": "缺少兑现",
+    "cashOutsExceed": "兑现超过买入",
+    "addPlayer": "+ 添加玩家",
+    "noPlayers": "还没有玩家。添加玩家开始追踪买入。",
+    "addFirstPlayer": "添加第一位玩家",
+    "loading": "加载游戏中..."
+  },
+  "player": {
+    "remove": "删除",
+    "confirm": "确认",
+    "cancel": "取消",
+    "totalBuyIns": "总买入",
+    "buyInPlaceholder": "买入",
+    "add": "添加",
+    "cashOutPlaceholder": "兑现",
+    "cashOut": "兑现",
+    "cashedOut": "已兑现：",
+    "profitLoss": "盈亏：",
+    "resetPlayer": "重置玩家",
+    "buyInHistory": "买入历史："
+  },
+  "addPlayer": {
+    "title": "添加新玩家",
+    "namePlaceholder": "玩家姓名",
+    "addButton": "添加玩家",
+    "cancel": "取消"
+  }
+}

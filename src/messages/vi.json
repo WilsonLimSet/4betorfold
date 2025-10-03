@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Công cụ theo dõi trò chơi poker tại nhà miễn phí với xác minh số dư tự động",
+    "startNewGame": "Bắt đầu trò chơi mới",
+    "startNewGameDescription": "Tạo phiên chơi mới và chia sẻ mã với người chơi khác",
+    "createNewGameButton": "Tạo trò chơi mới",
+    "joinExistingGame": "Tham gia trò chơi hiện có",
+    "joinGameDescription": "Nhập mã trò chơi để tham gia phiên hoạt động",
+    "gameCodePlaceholder": "Nhập mã trò chơi",
+    "joinGameButton": "Tham gia trò chơi",
+    "recentGames": "Trò chơi gần đây",
+    "players": "người chơi",
+    "resume": "Tiếp tục →",
+    "description": "Theo dõi mua chip và rút tiền của trò chơi poker tại nhà với xác minh số dư tự động. Không cần đăng nhập.",
+    "madeBy": "Được tạo bởi"
+  },
+  "game": {
+    "back": "← Quay lại",
+    "gameCode": "Mã:",
+    "copyLink": "Sao chép liên kết",
+    "copied": "Đã sao chép!",
+    "exportCSV": "Xuất CSV",
+    "totalIn": "Tổng mua chip",
+    "totalOut": "Tổng rút tiền",
+    "balance": "Số dư",
+    "onTable": "Trên bàn",
+    "overPaid": "Trả thừa",
+    "balanced": "✓ Cân bằng",
+    "potNotBalanced": "Pot không cân bằng.",
+    "missingCashOuts": "Thiếu rút tiền",
+    "cashOutsExceed": "Rút tiền vượt quá mua chip",
+    "addPlayer": "+ Thêm người chơi",
+    "noPlayers": "Chưa có người chơi. Thêm người chơi để bắt đầu theo dõi mua chip.",
+    "addFirstPlayer": "Thêm người chơi đầu tiên",
+    "loading": "Đang tải trò chơi..."
+  },
+  "player": {
+    "remove": "Xóa",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "totalBuyIns": "Tổng mua chip",
+    "buyInPlaceholder": "Mua chip",
+    "add": "Thêm",
+    "cashOutPlaceholder": "Rút tiền",
+    "cashOut": "Rút tiền",
+    "cashedOut": "Đã rút tiền:",
+    "profitLoss": "Lãi/Lỗ:",
+    "resetPlayer": "Đặt lại người chơi",
+    "buyInHistory": "Lịch sử mua chip:"
+  },
+  "addPlayer": {
+    "title": "Thêm người chơi mới",
+    "namePlaceholder": "Tên người chơi",
+    "addButton": "Thêm người chơi",
+    "cancel": "Hủy"
+  }
+}

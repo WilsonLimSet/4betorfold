@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Otomatik bakiye doğrulamalı ücretsiz poker ev oyunu takipçisi",
+    "startNewGame": "Yeni oyun başlat",
+    "startNewGameDescription": "Yeni bir oyun oturumu oluşturun ve kodu diğer oyuncularla paylaşın",
+    "createNewGameButton": "Yeni oyun oluştur",
+    "joinExistingGame": "Mevcut oyuna katıl",
+    "joinGameDescription": "Aktif bir oturuma katılmak için oyun kodunu girin",
+    "gameCodePlaceholder": "Oyun kodunu girin",
+    "joinGameButton": "Oyuna katıl",
+    "recentGames": "Son oyunlar",
+    "players": "oyuncular",
+    "resume": "Devam et →",
+    "description": "Otomatik bakiye doğrulamasıyla poker ev oyunlarınızın buy-in ve cash-out işlemlerini takip edin. Giriş gerekmez.",
+    "madeBy": "Yapımcı"
+  },
+  "game": {
+    "back": "← Geri",
+    "gameCode": "Kod:",
+    "copyLink": "Bağlantıyı kopyala",
+    "copied": "Kopyalandı!",
+    "exportCSV": "CSV'ye aktar",
+    "totalIn": "Toplam giriş",
+    "totalOut": "Toplam çıkış",
+    "balance": "Bakiye",
+    "onTable": "Masada",
+    "overPaid": "Fazla ödeme",
+    "balanced": "✓ Dengeli",
+    "potNotBalanced": "Pot dengeli değil.",
+    "missingCashOuts": "Eksik cash-out'lar",
+    "cashOutsExceed": "Cash-out'lar buy-in'leri aşıyor",
+    "addPlayer": "+ Oyuncu ekle",
+    "noPlayers": "Henüz oyuncu yok. Buy-in takibini başlatmak için oyuncu ekleyin.",
+    "addFirstPlayer": "İlk oyuncuyu ekle",
+    "loading": "Oyun yükleniyor..."
+  },
+  "player": {
+    "remove": "Kaldır",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "totalBuyIns": "Toplam buy-in",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Ekle",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Cash-out yapıldı:",
+    "profitLoss": "Kâr/Zarar:",
+    "resetPlayer": "Oyuncuyu sıfırla",
+    "buyInHistory": "Buy-in geçmişi:"
+  },
+  "addPlayer": {
+    "title": "Yeni oyuncu ekle",
+    "namePlaceholder": "Oyuncu adı",
+    "addButton": "Oyuncu ekle",
+    "cancel": "İptal"
+  }
+}

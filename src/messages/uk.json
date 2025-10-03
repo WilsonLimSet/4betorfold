@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Безкоштовний трекер домашніх покерних ігор з автоматичною перевіркою балансу",
+    "startNewGame": "Почати нову гру",
+    "startNewGameDescription": "Створіть нову ігрову сесію та поділіться кодом з іншими гравцями",
+    "createNewGameButton": "Створити нову гру",
+    "joinExistingGame": "Приєднатися до існуючої гри",
+    "joinGameDescription": "Введіть код гри для приєднання до активної сесії",
+    "gameCodePlaceholder": "Введіть код гри",
+    "joinGameButton": "Приєднатися до гри",
+    "recentGames": "Останні ігри",
+    "players": "гравців",
+    "resume": "Продовжити →",
+    "description": "Відстежуйте бай-іни та кеш-аути ваших домашніх покерних ігор з автоматичною перевіркою балансу. Реєстрація не потрібна.",
+    "madeBy": "Створено"
+  },
+  "game": {
+    "back": "← Назад",
+    "gameCode": "Код:",
+    "copyLink": "Копіювати посилання",
+    "copied": "Скопійовано!",
+    "exportCSV": "Експорт CSV",
+    "totalIn": "Всього внесено",
+    "totalOut": "Всього виведено",
+    "balance": "Баланс",
+    "onTable": "На столі",
+    "overPaid": "Переплачено",
+    "balanced": "✓ Збалансовано",
+    "potNotBalanced": "Банк не збалансовано.",
+    "missingCashOuts": "Відсутні кеш-аути",
+    "cashOutsExceed": "Кеш-аути перевищують бай-іни",
+    "addPlayer": "+ Додати гравця",
+    "noPlayers": "Поки немає гравців. Додайте гравців для відстеження бай-інів.",
+    "addFirstPlayer": "Додати першого гравця",
+    "loading": "Завантаження гри..."
+  },
+  "player": {
+    "remove": "Видалити",
+    "confirm": "Підтвердити",
+    "cancel": "Скасувати",
+    "totalBuyIns": "Всього бай-інів",
+    "buyInPlaceholder": "Бай-ін",
+    "add": "Додати",
+    "cashOutPlaceholder": "Кеш-аут",
+    "cashOut": "Кеш-аут",
+    "cashedOut": "Виведено:",
+    "profitLoss": "Прибуток/Збиток:",
+    "resetPlayer": "Скинути гравця",
+    "buyInHistory": "Історія бай-інів:"
+  },
+  "addPlayer": {
+    "title": "Додати нового гравця",
+    "namePlaceholder": "Ім'я гравця",
+    "addButton": "Додати гравця",
+    "cancel": "Скасувати"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Bezplatný sledovač domácich pokerových hier s automatickým overením zostatku",
+    "startNewGame": "Spustiť novú hru",
+    "startNewGameDescription": "Vytvorte novú hernú reláciu a zdieľajte kód s inými hráčmi",
+    "createNewGameButton": "Vytvoriť novú hru",
+    "joinExistingGame": "Pripojiť sa k existujúcej hre",
+    "joinGameDescription": "Zadajte herný kód pre pripojenie k aktívnej relácii",
+    "gameCodePlaceholder": "Zadajte herný kód",
+    "joinGameButton": "Pripojiť sa k hre",
+    "recentGames": "Nedávne hry",
+    "players": "hráčov",
+    "resume": "Pokračovať →",
+    "description": "Sledujte buy-iny a cash-outy vašich domácich pokerových hier s automatickým overením zostatku. Nie je potrebné prihlásenie.",
+    "madeBy": "Vytvoril"
+  },
+  "game": {
+    "back": "← Späť",
+    "gameCode": "Kód:",
+    "copyLink": "Kopírovať odkaz",
+    "copied": "Skopírované!",
+    "exportCSV": "Exportovať CSV",
+    "totalIn": "Celkom vložené",
+    "totalOut": "Celkom vybraté",
+    "balance": "Zostatok",
+    "onTable": "Na stole",
+    "overPaid": "Preplatené",
+    "balanced": "✓ Vyvážené",
+    "potNotBalanced": "Pot nie je vyvážený.",
+    "missingCashOuts": "Chýbajúce cash-outy",
+    "cashOutsExceed": "Cash-outy presahujú buy-iny",
+    "addPlayer": "+ Pridať hráča",
+    "noPlayers": "Zatiaľ žiadni hráči. Pridajte hráčov pre sledovanie buy-inov.",
+    "addFirstPlayer": "Pridať prvého hráča",
+    "loading": "Načítava sa hra..."
+  },
+  "player": {
+    "remove": "Odstrániť",
+    "confirm": "Potvrdiť",
+    "cancel": "Zrušiť",
+    "totalBuyIns": "Celkovo buy-inov",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Pridať",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Vybraté:",
+    "profitLoss": "Zisk/Strata:",
+    "resetPlayer": "Resetovať hráča",
+    "buyInHistory": "História buy-inov:"
+  },
+  "addPlayer": {
+    "title": "Pridať nového hráča",
+    "namePlaceholder": "Meno hráča",
+    "addButton": "Pridať hráča",
+    "cancel": "Zrušiť"
+  }
+}

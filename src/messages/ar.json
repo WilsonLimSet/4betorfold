@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "متتبع مجاني لألعاب البوكر المنزلية مع التحقق التلقائي من الرصيد",
+    "startNewGame": "بدء لعبة جديدة",
+    "startNewGameDescription": "إنشاء جلسة لعبة جديدة ومشاركة الرمز مع لاعبين آخرين",
+    "createNewGameButton": "إنشاء لعبة جديدة",
+    "joinExistingGame": "الانضمام إلى لعبة موجودة",
+    "joinGameDescription": "أدخل رمز اللعبة للانضمام إلى جلسة نشطة",
+    "gameCodePlaceholder": "أدخل رمز اللعبة",
+    "joinGameButton": "الانضمام إلى اللعبة",
+    "recentGames": "الألعاب الأخيرة",
+    "players": "لاعبين",
+    "resume": "متابعة ←",
+    "description": "تتبع عمليات الشراء والسحب النقدي لألعاب البوكر المنزلية مع التحقق التلقائي من الرصيد. لا يلزم تسجيل الدخول.",
+    "madeBy": "من إنشاء"
+  },
+  "game": {
+    "back": "→ رجوع",
+    "gameCode": "الرمز:",
+    "copyLink": "نسخ الرابط",
+    "copied": "تم النسخ!",
+    "exportCSV": "تصدير CSV",
+    "totalIn": "إجمالي الإيداع",
+    "totalOut": "إجمالي السحب",
+    "balance": "الرصيد",
+    "onTable": "على الطاولة",
+    "overPaid": "مدفوع زائد",
+    "balanced": "✓ متوازن",
+    "potNotBalanced": "القدر غير متوازن.",
+    "missingCashOuts": "سحوبات نقدية مفقودة",
+    "cashOutsExceed": "السحوبات النقدية تتجاوز عمليات الشراء",
+    "addPlayer": "+ إضافة لاعب",
+    "noPlayers": "لا يوجد لاعبون بعد. أضف لاعبين لبدء تتبع عمليات الشراء.",
+    "addFirstPlayer": "إضافة أول لاعب",
+    "loading": "جاري تحميل اللعبة..."
+  },
+  "player": {
+    "remove": "إزالة",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "totalBuyIns": "إجمالي عمليات الشراء",
+    "buyInPlaceholder": "شراء",
+    "add": "إضافة",
+    "cashOutPlaceholder": "سحب نقدي",
+    "cashOut": "سحب نقدي",
+    "cashedOut": "تم السحب:",
+    "profitLoss": "الربح/الخسارة:",
+    "resetPlayer": "إعادة تعيين اللاعب",
+    "buyInHistory": "سجل عمليات الشراء:"
+  },
+  "addPlayer": {
+    "title": "إضافة لاعب جديد",
+    "namePlaceholder": "اسم اللاعب",
+    "addButton": "إضافة لاعب",
+    "cancel": "إلغاء"
+  }
+}

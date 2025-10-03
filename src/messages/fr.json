@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Suivi gratuit de parties de poker avec vérification automatique du solde",
+    "startNewGame": "Commencer une nouvelle partie",
+    "startNewGameDescription": "Créez une nouvelle session de jeu et partagez le code avec d'autres joueurs",
+    "createNewGameButton": "Créer une nouvelle partie",
+    "joinExistingGame": "Rejoindre une partie existante",
+    "joinGameDescription": "Entrez un code de partie pour rejoindre une session active",
+    "gameCodePlaceholder": "Entrer le code de partie",
+    "joinGameButton": "Rejoindre la partie",
+    "recentGames": "Parties récentes",
+    "players": "joueurs",
+    "resume": "Reprendre →",
+    "description": "Suivez les buy-ins et les cash-outs de vos parties de poker avec vérification automatique du solde. Aucune connexion requise.",
+    "madeBy": "Créé par"
+  },
+  "game": {
+    "back": "← Retour",
+    "gameCode": "Code :",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !",
+    "exportCSV": "Exporter CSV",
+    "totalIn": "Total entré",
+    "totalOut": "Total sorti",
+    "balance": "Solde",
+    "onTable": "Sur la table",
+    "overPaid": "Trop payé",
+    "balanced": "✓ Équilibré",
+    "potNotBalanced": "Le pot n'est pas équilibré.",
+    "missingCashOuts": "Cash-outs manquants",
+    "cashOutsExceed": "Les cash-outs dépassent les buy-ins",
+    "addPlayer": "+ Ajouter un joueur",
+    "noPlayers": "Pas encore de joueurs. Ajoutez des joueurs pour commencer à suivre les buy-ins.",
+    "addFirstPlayer": "Ajouter le premier joueur",
+    "loading": "Chargement de la partie..."
+  },
+  "player": {
+    "remove": "Supprimer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "totalBuyIns": "Total buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Ajouter",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Cash-out :",
+    "profitLoss": "Profit/Perte :",
+    "resetPlayer": "Réinitialiser le joueur",
+    "buyInHistory": "Historique des buy-ins :"
+  },
+  "addPlayer": {
+    "title": "Ajouter un nouveau joueur",
+    "namePlaceholder": "Nom du joueur",
+    "addButton": "Ajouter le joueur",
+    "cancel": "Annuler"
+  }
+}

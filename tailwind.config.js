@@ -6,29 +6,7 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      gridTemplateColumns: {
-        '13': 'repeat(13, minmax(0, 1fr))',
-      },
-      colors: {
-        primary: {
-          red: '#dc2626',  // red-600
-          blue: '#2563eb', // blue-600
-          black: '#111827', // gray-900
-        }
-      },
-      screens: {
-        'xs': '480px',
-      },
-      fontFamily: {
-        inter: ['var(--font-inter)'],
-      },
-    },
+    extend: {},
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-  future: {
-    disableColorOpacityUtilitiesByDefault: true,
-  },
-} 
+  plugins: [],
+}

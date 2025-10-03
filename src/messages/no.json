@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Gratis poker hjemmespill-sporer med automatisk saldoverifisering",
+    "startNewGame": "Start nytt spill",
+    "startNewGameDescription": "Opprett en ny spilløkt og del koden med andre spillere",
+    "createNewGameButton": "Opprett nytt spill",
+    "joinExistingGame": "Bli med i eksisterende spill",
+    "joinGameDescription": "Skriv inn en spillkode for å bli med i en aktiv økt",
+    "gameCodePlaceholder": "Skriv inn spillkode",
+    "joinGameButton": "Bli med i spill",
+    "recentGames": "Nylige spill",
+    "players": "spillere",
+    "resume": "Fortsett →",
+    "description": "Spor buy-ins og cash-outs for dine poker hjemmespill med automatisk saldoverifisering. Ingen innlogging kreves.",
+    "madeBy": "Laget av"
+  },
+  "game": {
+    "back": "← Tilbake",
+    "gameCode": "Kode:",
+    "copyLink": "Kopier lenke",
+    "copied": "Kopiert!",
+    "exportCSV": "Eksporter CSV",
+    "totalIn": "Totalt inn",
+    "totalOut": "Totalt ut",
+    "balance": "Saldo",
+    "onTable": "På bordet",
+    "overPaid": "Overbetalt",
+    "balanced": "✓ Balansert",
+    "potNotBalanced": "Potten er ikke balansert.",
+    "missingCashOuts": "Manglende cash-outs",
+    "cashOutsExceed": "Cash-outs overstiger buy-ins",
+    "addPlayer": "+ Legg til spiller",
+    "noPlayers": "Ingen spillere ennå. Legg til spillere for å begynne å spore buy-ins.",
+    "addFirstPlayer": "Legg til første spiller",
+    "loading": "Laster spill..."
+  },
+  "player": {
+    "remove": "Fjern",
+    "confirm": "Bekreft",
+    "cancel": "Avbryt",
+    "totalBuyIns": "Totalt buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Legg til",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Utbetalt:",
+    "profitLoss": "Fortjeneste/Tap:",
+    "resetPlayer": "Tilbakestill spiller",
+    "buyInHistory": "Buy-in historikk:"
+  },
+  "addPlayer": {
+    "title": "Legg til ny spiller",
+    "namePlaceholder": "Spillernavn",
+    "addButton": "Legg til spiller",
+    "cancel": "Avbryt"
+  }
+}

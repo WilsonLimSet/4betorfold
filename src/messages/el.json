@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Δωρεάν tracker παιχνιδιών πόκερ με αυτόματη επαλήθευση υπολοίπου",
+    "startNewGame": "Ξεκινήστε νέο παιχνίδι",
+    "startNewGameDescription": "Δημιουργήστε μια νέα συνεδρία παιχνιδιού και μοιραστείτε τον κωδικό με άλλους παίκτες",
+    "createNewGameButton": "Δημιουργία νέου παιχνιδιού",
+    "joinExistingGame": "Συμμετοχή σε υπάρχον παιχνίδι",
+    "joinGameDescription": "Εισαγάγετε έναν κωδικό παιχνιδιού για να συμμετάσχετε σε μια ενεργή συνεδρία",
+    "gameCodePlaceholder": "Εισαγάγετε κωδικό παιχνιδιού",
+    "joinGameButton": "Συμμετοχή στο παιχνίδι",
+    "recentGames": "Πρόσφατα παιχνίδια",
+    "players": "παίκτες",
+    "resume": "Συνέχεια →",
+    "description": "Παρακολουθήστε buy-ins και cash-outs για τα οικιακά σας παιχνίδια πόκερ με αυτόματη επαλήθευση υπολοίπου. Δεν απαιτείται σύνδεση.",
+    "madeBy": "Δημιουργήθηκε από"
+  },
+  "game": {
+    "back": "← Πίσω",
+    "gameCode": "Κωδικός:",
+    "copyLink": "Αντιγραφή συνδέσμου",
+    "copied": "Αντιγράφηκε!",
+    "exportCSV": "Εξαγωγή CSV",
+    "totalIn": "Σύνολο εισόδων",
+    "totalOut": "Σύνολο εξόδων",
+    "balance": "Υπόλοιπο",
+    "onTable": "Στο τραπέζι",
+    "overPaid": "Υπερπληρωμή",
+    "balanced": "✓ Ισορροπημένο",
+    "potNotBalanced": "Το pot δεν είναι ισορροπημένο.",
+    "missingCashOuts": "Λείπουν cash-outs",
+    "cashOutsExceed": "Τα cash-outs υπερβαίνουν τα buy-ins",
+    "addPlayer": "+ Προσθήκη παίκτη",
+    "noPlayers": "Δεν υπάρχουν ακόμα παίκτες. Προσθέστε παίκτες για να ξεκινήσετε την παρακολούθηση buy-ins.",
+    "addFirstPlayer": "Προσθήκη πρώτου παίκτη",
+    "loading": "Φόρτωση παιχνιδιού..."
+  },
+  "player": {
+    "remove": "Αφαίρεση",
+    "confirm": "Επιβεβαίωση",
+    "cancel": "Ακύρωση",
+    "totalBuyIns": "Σύνολο buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Προσθήκη",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Έγινε cash-out:",
+    "profitLoss": "Κέρδος/Ζημία:",
+    "resetPlayer": "Επαναφορά παίκτη",
+    "buyInHistory": "Ιστορικό buy-in:"
+  },
+  "addPlayer": {
+    "title": "Προσθήκη νέου παίκτη",
+    "namePlaceholder": "Όνομα παίκτη",
+    "addButton": "Προσθήκη παίκτη",
+    "cancel": "Ακύρωση"
+  }
+}

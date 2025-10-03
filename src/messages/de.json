@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Kostenloser Poker-Heimspiel-Tracker mit automatischer Saldoprüfung",
+    "startNewGame": "Neues Spiel starten",
+    "startNewGameDescription": "Erstellen Sie eine neue Spielsitzung und teilen Sie den Code mit anderen Spielern",
+    "createNewGameButton": "Neues Spiel erstellen",
+    "joinExistingGame": "Bestehendem Spiel beitreten",
+    "joinGameDescription": "Geben Sie einen Spielcode ein, um einer aktiven Sitzung beizutreten",
+    "gameCodePlaceholder": "Spielcode eingeben",
+    "joinGameButton": "Spiel beitreten",
+    "recentGames": "Letzte Spiele",
+    "players": "Spieler",
+    "resume": "Fortsetzen →",
+    "description": "Verfolgen Sie Buy-ins und Cash-outs Ihrer Poker-Heimspiele mit automatischer Saldoprüfung. Keine Anmeldung erforderlich.",
+    "madeBy": "Erstellt von"
+  },
+  "game": {
+    "back": "← Zurück",
+    "gameCode": "Code:",
+    "copyLink": "Link kopieren",
+    "copied": "Kopiert!",
+    "exportCSV": "CSV exportieren",
+    "totalIn": "Gesamt eingezahlt",
+    "totalOut": "Gesamt ausgezahlt",
+    "balance": "Saldo",
+    "onTable": "Auf dem Tisch",
+    "overPaid": "Überbezahlt",
+    "balanced": "✓ Ausgeglichen",
+    "potNotBalanced": "Der Pot ist nicht ausgeglichen.",
+    "missingCashOuts": "Fehlende Cash-outs",
+    "cashOutsExceed": "Cash-outs übersteigen Buy-ins",
+    "addPlayer": "+ Spieler hinzufügen",
+    "noPlayers": "Noch keine Spieler. Fügen Sie Spieler hinzu, um Buy-ins zu verfolgen.",
+    "addFirstPlayer": "Ersten Spieler hinzufügen",
+    "loading": "Spiel wird geladen..."
+  },
+  "player": {
+    "remove": "Entfernen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "totalBuyIns": "Gesamt Buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Hinzufügen",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Ausgezahlt:",
+    "profitLoss": "Gewinn/Verlust:",
+    "resetPlayer": "Spieler zurücksetzen",
+    "buyInHistory": "Buy-in-Verlauf:"
+  },
+  "addPlayer": {
+    "title": "Neuen Spieler hinzufügen",
+    "namePlaceholder": "Spielername",
+    "addButton": "Spieler hinzufügen",
+    "cancel": "Abbrechen"
+  }
+}

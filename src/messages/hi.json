@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "स्वचालित बैलेंस सत्यापन के साथ मुफ्त पोकर होम गेम ट्रैकर",
+    "startNewGame": "नया गेम शुरू करें",
+    "startNewGameDescription": "एक नया गेम सत्र बनाएं और अन्य खिलाड़ियों के साथ कोड साझा करें",
+    "createNewGameButton": "नया गेम बनाएं",
+    "joinExistingGame": "मौजूदा गेम में शामिल हों",
+    "joinGameDescription": "सक्रिय सत्र में शामिल होने के लिए गेम कोड दर्ज करें",
+    "gameCodePlaceholder": "गेम कोड दर्ज करें",
+    "joinGameButton": "गेम में शामिल हों",
+    "recentGames": "हाल के गेम",
+    "players": "खिलाड़ी",
+    "resume": "जारी रखें →",
+    "description": "स्वचालित बैलेंस सत्यापन के साथ अपने पोकर होम गेम के लिए बाय-इन और कैश-आउट को ट्रैक करें। लॉगिन की आवश्यकता नहीं।",
+    "madeBy": "निर्माता"
+  },
+  "game": {
+    "back": "← वापस",
+    "gameCode": "कोड:",
+    "copyLink": "लिंक कॉपी करें",
+    "copied": "कॉपी किया गया!",
+    "exportCSV": "CSV निर्यात करें",
+    "totalIn": "कुल बाय-इन",
+    "totalOut": "कुल कैश-आउट",
+    "balance": "बैलेंस",
+    "onTable": "टेबल पर",
+    "overPaid": "अधिक भुगतान",
+    "balanced": "✓ संतुलित",
+    "potNotBalanced": "पॉट संतुलित नहीं है।",
+    "missingCashOuts": "कैश-आउट गायब हैं",
+    "cashOutsExceed": "कैश-आउट बाय-इन से अधिक हैं",
+    "addPlayer": "+ खिलाड़ी जोड़ें",
+    "noPlayers": "अभी तक कोई खिलाड़ी नहीं। बाय-इन ट्रैकिंग शुरू करने के लिए खिलाड़ी जोड़ें।",
+    "addFirstPlayer": "पहला खिलाड़ी जोड़ें",
+    "loading": "गेम लोड हो रहा है..."
+  },
+  "player": {
+    "remove": "हटाएं",
+    "confirm": "पुष्टि करें",
+    "cancel": "रद्द करें",
+    "totalBuyIns": "कुल बाय-इन",
+    "buyInPlaceholder": "बाय-इन",
+    "add": "जोड़ें",
+    "cashOutPlaceholder": "कैश-आउट",
+    "cashOut": "कैश-आउट",
+    "cashedOut": "कैश-आउट किया:",
+    "profitLoss": "लाभ/हानि:",
+    "resetPlayer": "खिलाड़ी रीसेट करें",
+    "buyInHistory": "बाय-इन इतिहास:"
+  },
+  "addPlayer": {
+    "title": "नया खिलाड़ी जोड़ें",
+    "namePlaceholder": "खिलाड़ी का नाम",
+    "addButton": "खिलाड़ी जोड़ें",
+    "cancel": "रद्द करें"
+  }
+}

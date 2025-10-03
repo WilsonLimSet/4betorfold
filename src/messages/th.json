@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "เครื่องมือติดตามเกมโป๊กเกอร์ที่บ้านฟรีพร้อมการตรวจสอบยอดเงินอัตโนมัติ",
+    "startNewGame": "เริ่มเกมใหม่",
+    "startNewGameDescription": "สร้างเซสชันเกมใหม่และแชร์รหัสกับผู้เล่นคนอื่น",
+    "createNewGameButton": "สร้างเกมใหม่",
+    "joinExistingGame": "เข้าร่วมเกมที่มีอยู่",
+    "joinGameDescription": "ใส่รหัสเกมเพื่อเข้าร่วมเซสชันที่ใช้งานอยู่",
+    "gameCodePlaceholder": "ใส่รหัสเกม",
+    "joinGameButton": "เข้าร่วมเกม",
+    "recentGames": "เกมล่าสุด",
+    "players": "ผู้เล่น",
+    "resume": "ดำเนินการต่อ →",
+    "description": "ติดตามการซื้อชิปและเบิกเงินของเกมโป๊กเกอร์ที่บ้านด้วยการตรวจสอบยอดเงินอัตโนมัติ ไม่ต้องเข้าสู่ระบบ",
+    "madeBy": "สร้างโดย"
+  },
+  "game": {
+    "back": "← กลับ",
+    "gameCode": "รหัส:",
+    "copyLink": "คัดลอกลิงก์",
+    "copied": "คัดลอกแล้ว!",
+    "exportCSV": "ส่งออก CSV",
+    "totalIn": "ซื้อชิปทั้งหมด",
+    "totalOut": "เบิกเงินทั้งหมด",
+    "balance": "ยอดเงิน",
+    "onTable": "บนโต๊ะ",
+    "overPaid": "จ่ายเกิน",
+    "balanced": "✓ สมดุล",
+    "potNotBalanced": "พอทไม่สมดุล",
+    "missingCashOuts": "ขาดการเบิกเงิน",
+    "cashOutsExceed": "การเบิกเงินเกินการซื้อชิป",
+    "addPlayer": "+ เพิ่มผู้เล่น",
+    "noPlayers": "ยังไม่มีผู้เล่น เพิ่มผู้เล่นเพื่อเริ่มติดตามการซื้อชิป",
+    "addFirstPlayer": "เพิ่มผู้เล่นคนแรก",
+    "loading": "กำลังโหลดเกม..."
+  },
+  "player": {
+    "remove": "ลบ",
+    "confirm": "ยืนยัน",
+    "cancel": "ยกเลิก",
+    "totalBuyIns": "ซื้อชิปทั้งหมด",
+    "buyInPlaceholder": "ซื้อชิป",
+    "add": "เพิ่ม",
+    "cashOutPlaceholder": "เบิกเงิน",
+    "cashOut": "เบิกเงิน",
+    "cashedOut": "เบิกเงินแล้ว:",
+    "profitLoss": "กำไร/ขาดทุน:",
+    "resetPlayer": "รีเซ็ตผู้เล่น",
+    "buyInHistory": "ประวัติการซื้อชิป:"
+  },
+  "addPlayer": {
+    "title": "เพิ่มผู้เล่นใหม่",
+    "namePlaceholder": "ชื่อผู้เล่น",
+    "addButton": "เพิ่มผู้เล่น",
+    "cancel": "ยกเลิก"
+  }
+}

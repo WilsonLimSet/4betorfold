@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Seguiment gratuït de partides de pòquer amb verificació automàtica del saldo",
+    "startNewGame": "Iniciar nova partida",
+    "startNewGameDescription": "Crea una nova sessió de joc i comparteix el codi amb altres jugadors",
+    "createNewGameButton": "Crear nova partida",
+    "joinExistingGame": "Unir-se a una partida existent",
+    "joinGameDescription": "Introdueix un codi de partida per unir-te a una sessió activa",
+    "gameCodePlaceholder": "Introdueix el codi de partida",
+    "joinGameButton": "Unir-se a la partida",
+    "recentGames": "Partides recents",
+    "players": "jugadors",
+    "resume": "Continuar →",
+    "description": "Segueix els buy-ins i cash-outs de les teves partides de pòquer amb verificació automàtica del saldo. No cal iniciar sessió.",
+    "madeBy": "Creat per"
+  },
+  "game": {
+    "back": "← Enrere",
+    "gameCode": "Codi:",
+    "copyLink": "Copiar enllaç",
+    "copied": "Copiat!",
+    "exportCSV": "Exportar CSV",
+    "totalIn": "Total entrades",
+    "totalOut": "Total sortides",
+    "balance": "Saldo",
+    "onTable": "A la taula",
+    "overPaid": "Sobrepagat",
+    "balanced": "✓ Equilibrat",
+    "potNotBalanced": "El pot no està equilibrat.",
+    "missingCashOuts": "Falten cash-outs",
+    "cashOutsExceed": "Els cash-outs superen els buy-ins",
+    "addPlayer": "+ Afegir jugador",
+    "noPlayers": "Encara no hi ha jugadors. Afegeix jugadors per començar a fer seguiment dels buy-ins.",
+    "addFirstPlayer": "Afegir primer jugador",
+    "loading": "Carregant partida..."
+  },
+  "player": {
+    "remove": "Eliminar",
+    "confirm": "Confirmar",
+    "cancel": "Cancel·lar",
+    "totalBuyIns": "Total buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Afegir",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Cobrat:",
+    "profitLoss": "Benefici/Pèrdua:",
+    "resetPlayer": "Reiniciar jugador",
+    "buyInHistory": "Historial de buy-ins:"
+  },
+  "addPlayer": {
+    "title": "Afegir nou jugador",
+    "namePlaceholder": "Nom del jugador",
+    "addButton": "Afegir jugador",
+    "cancel": "Cancel·lar"
+  }
+}

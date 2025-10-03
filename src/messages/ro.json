@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Tracker gratuit pentru jocuri de poker acasă cu verificare automată a soldului",
+    "startNewGame": "Începe joc nou",
+    "startNewGameDescription": "Creează o sesiune de joc nouă și distribuie codul cu alți jucători",
+    "createNewGameButton": "Creează joc nou",
+    "joinExistingGame": "Alătură-te unui joc existent",
+    "joinGameDescription": "Introdu un cod de joc pentru a te alătura unei sesiuni active",
+    "gameCodePlaceholder": "Introdu codul jocului",
+    "joinGameButton": "Alătură-te jocului",
+    "recentGames": "Jocuri recente",
+    "players": "jucători",
+    "resume": "Continuă →",
+    "description": "Urmărește buy-in-uri și cash-out-uri pentru jocurile tale de poker de acasă cu verificare automată a soldului. Nu necesită autentificare.",
+    "madeBy": "Creat de"
+  },
+  "game": {
+    "back": "← Înapoi",
+    "gameCode": "Cod:",
+    "copyLink": "Copiază link",
+    "copied": "Copiat!",
+    "exportCSV": "Exportă CSV",
+    "totalIn": "Total intrări",
+    "totalOut": "Total ieșiri",
+    "balance": "Sold",
+    "onTable": "Pe masă",
+    "overPaid": "Plătit în plus",
+    "balanced": "✓ Echilibrat",
+    "potNotBalanced": "Potul nu este echilibrat.",
+    "missingCashOuts": "Cash-out-uri lipsă",
+    "cashOutsExceed": "Cash-out-urile depășesc buy-in-urile",
+    "addPlayer": "+ Adaugă jucător",
+    "noPlayers": "Încă nu există jucători. Adaugă jucători pentru a începe urmărirea buy-in-urilor.",
+    "addFirstPlayer": "Adaugă primul jucător",
+    "loading": "Se încarcă jocul..."
+  },
+  "player": {
+    "remove": "Elimină",
+    "confirm": "Confirmă",
+    "cancel": "Anulează",
+    "totalBuyIns": "Total buy-in-uri",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Adaugă",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Încasat:",
+    "profitLoss": "Profit/Pierdere:",
+    "resetPlayer": "Resetează jucător",
+    "buyInHistory": "Istoric buy-in:"
+  },
+  "addPlayer": {
+    "title": "Adaugă jucător nou",
+    "namePlaceholder": "Nume jucător",
+    "addButton": "Adaugă jucător",
+    "cancel": "Anulează"
+  }
+}

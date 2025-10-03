@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "自動残高確認機能付き無料ポーカーホームゲームトラッカー",
+    "startNewGame": "新規ゲーム開始",
+    "startNewGameDescription": "新しいゲームセッションを作成し、他のプレイヤーとコードを共有",
+    "createNewGameButton": "新規ゲーム作成",
+    "joinExistingGame": "既存のゲームに参加",
+    "joinGameDescription": "ゲームコードを入力してアクティブセッションに参加",
+    "gameCodePlaceholder": "ゲームコードを入力",
+    "joinGameButton": "ゲームに参加",
+    "recentGames": "最近のゲーム",
+    "players": "プレイヤー",
+    "resume": "続行 →",
+    "description": "自動残高確認機能でポーカーホームゲームのバイインとキャッシュアウトを追跡。ログイン不要。",
+    "madeBy": "制作者"
+  },
+  "game": {
+    "back": "← 戻る",
+    "gameCode": "コード：",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました！",
+    "exportCSV": "CSV出力",
+    "totalIn": "合計バイイン",
+    "totalOut": "合計キャッシュアウト",
+    "balance": "残高",
+    "onTable": "テーブル上",
+    "overPaid": "過払い",
+    "balanced": "✓ バランス済み",
+    "potNotBalanced": "ポットがバランスされていません。",
+    "missingCashOuts": "キャッシュアウト不足",
+    "cashOutsExceed": "キャッシュアウトがバイインを超えています",
+    "addPlayer": "+ プレイヤー追加",
+    "noPlayers": "まだプレイヤーがいません。プレイヤーを追加してバイインの追跡を開始してください。",
+    "addFirstPlayer": "最初のプレイヤーを追加",
+    "loading": "ゲーム読み込み中..."
+  },
+  "player": {
+    "remove": "削除",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "totalBuyIns": "合計バイイン",
+    "buyInPlaceholder": "バイイン",
+    "add": "追加",
+    "cashOutPlaceholder": "キャッシュアウト",
+    "cashOut": "キャッシュアウト",
+    "cashedOut": "キャッシュアウト済み：",
+    "profitLoss": "損益：",
+    "resetPlayer": "プレイヤーリセット",
+    "buyInHistory": "バイイン履歴："
+  },
+  "addPlayer": {
+    "title": "新しいプレイヤーを追加",
+    "namePlaceholder": "プレイヤー名",
+    "addButton": "プレイヤー追加",
+    "cancel": "キャンセル"
+  }
+}

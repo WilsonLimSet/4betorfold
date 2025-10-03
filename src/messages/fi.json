@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Ilmainen kotipelien pokerin seuranta automaattisella saldotarkistuksella",
+    "startNewGame": "Aloita uusi peli",
+    "startNewGameDescription": "Luo uusi pelisessio ja jaa koodi muiden pelaajien kanssa",
+    "createNewGameButton": "Luo uusi peli",
+    "joinExistingGame": "Liity olemassa olevaan peliin",
+    "joinGameDescription": "Anna pelikoodi liittyäksesi aktiiviseen sessioon",
+    "gameCodePlaceholder": "Anna pelikoodi",
+    "joinGameButton": "Liity peliin",
+    "recentGames": "Viimeisimmät pelit",
+    "players": "pelaajaa",
+    "resume": "Jatka →",
+    "description": "Seuraa kotipelien pokerin buy-ineja ja cash-outeja automaattisella saldotarkistuksella. Kirjautumista ei tarvita.",
+    "madeBy": "Tehnyt"
+  },
+  "game": {
+    "back": "← Takaisin",
+    "gameCode": "Koodi:",
+    "copyLink": "Kopioi linkki",
+    "copied": "Kopioitu!",
+    "exportCSV": "Vie CSV",
+    "totalIn": "Yhteensä sisään",
+    "totalOut": "Yhteensä ulos",
+    "balance": "Saldo",
+    "onTable": "Pöydällä",
+    "overPaid": "Ylimaksettu",
+    "balanced": "✓ Tasapainossa",
+    "potNotBalanced": "Potti ei ole tasapainossa.",
+    "missingCashOuts": "Puuttuvat cash-outit",
+    "cashOutsExceed": "Cash-outit ylittävät buy-init",
+    "addPlayer": "+ Lisää pelaaja",
+    "noPlayers": "Ei vielä pelaajia. Lisää pelaajia aloittaaksesi buy-inien seurannan.",
+    "addFirstPlayer": "Lisää ensimmäinen pelaaja",
+    "loading": "Ladataan peliä..."
+  },
+  "player": {
+    "remove": "Poista",
+    "confirm": "Vahvista",
+    "cancel": "Peruuta",
+    "totalBuyIns": "Buy-init yhteensä",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Lisää",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Nostettu:",
+    "profitLoss": "Voitto/Tappio:",
+    "resetPlayer": "Nollaa pelaaja",
+    "buyInHistory": "Buy-in historia:"
+  },
+  "addPlayer": {
+    "title": "Lisää uusi pelaaja",
+    "namePlaceholder": "Pelaajan nimi",
+    "addButton": "Lisää pelaaja",
+    "cancel": "Peruuta"
+  }
+}

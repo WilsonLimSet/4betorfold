@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "ردیاب رایگان بازی‌های پوکر خانگی با تأیید خودکار موجودی",
+    "startNewGame": "شروع بازی جدید",
+    "startNewGameDescription": "یک جلسه بازی جدید ایجاد کنید و کد را با بازیکنان دیگر به اشتراک بگذارید",
+    "createNewGameButton": "ایجاد بازی جدید",
+    "joinExistingGame": "پیوستن به بازی موجود",
+    "joinGameDescription": "کد بازی را وارد کنید تا به جلسه فعال بپیوندید",
+    "gameCodePlaceholder": "کد بازی را وارد کنید",
+    "joinGameButton": "پیوستن به بازی",
+    "recentGames": "بازی‌های اخیر",
+    "players": "بازیکن",
+    "resume": "ادامه ←",
+    "description": "خرید و برداشت‌های بازی‌های پوکر خانگی خود را با تأیید خودکار موجودی پیگیری کنید. نیازی به ورود نیست.",
+    "madeBy": "ساخته شده توسط"
+  },
+  "game": {
+    "back": "→ بازگشت",
+    "gameCode": "کد:",
+    "copyLink": "کپی لینک",
+    "copied": "کپی شد!",
+    "exportCSV": "صادرات CSV",
+    "totalIn": "کل ورودی",
+    "totalOut": "کل خروجی",
+    "balance": "موجودی",
+    "onTable": "روی میز",
+    "overPaid": "پرداخت بیش از حد",
+    "balanced": "✓ متعادل",
+    "potNotBalanced": "پات متعادل نیست.",
+    "missingCashOuts": "برداشت‌های گم‌شده",
+    "cashOutsExceed": "برداشت‌ها بیشتر از خرید است",
+    "addPlayer": "+ افزودن بازیکن",
+    "noPlayers": "هنوز بازیکنی وجود ندارد. بازیکنان را اضافه کنید تا پیگیری خریدها را شروع کنید.",
+    "addFirstPlayer": "افزودن اولین بازیکن",
+    "loading": "در حال بارگذاری بازی..."
+  },
+  "player": {
+    "remove": "حذف",
+    "confirm": "تأیید",
+    "cancel": "لغو",
+    "totalBuyIns": "کل خریدها",
+    "buyInPlaceholder": "خرید",
+    "add": "افزودن",
+    "cashOutPlaceholder": "برداشت",
+    "cashOut": "برداشت",
+    "cashedOut": "برداشت شده:",
+    "profitLoss": "سود/زیان:",
+    "resetPlayer": "بازنشانی بازیکن",
+    "buyInHistory": "تاریخچه خرید:"
+  },
+  "addPlayer": {
+    "title": "افزودن بازیکن جدید",
+    "namePlaceholder": "نام بازیکن",
+    "addButton": "افزودن بازیکن",
+    "cancel": "لغو"
+  }
+}

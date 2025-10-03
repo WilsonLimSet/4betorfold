@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Free poker home game tracker with automatic balance verification",
+    "startNewGame": "Start New Game",
+    "startNewGameDescription": "Create a new game session and share the code with other players",
+    "createNewGameButton": "Create New Game",
+    "joinExistingGame": "Join Existing Game",
+    "joinGameDescription": "Enter a game code to join an active session",
+    "gameCodePlaceholder": "Enter game code",
+    "joinGameButton": "Join Game",
+    "recentGames": "Recent Games",
+    "players": "players",
+    "resume": "Resume →",
+    "description": "Track buy-ins and cash-outs for your poker home games with automatic balance verification. No login required.",
+    "madeBy": "Made by"
+  },
+  "game": {
+    "back": "← Back",
+    "gameCode": "Code:",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "exportCSV": "Export CSV",
+    "totalIn": "Total In",
+    "totalOut": "Total Out",
+    "balance": "Balance",
+    "onTable": "On Table",
+    "overPaid": "Over Paid",
+    "balanced": "✓ Balanced",
+    "potNotBalanced": "Pot is not balanced.",
+    "missingCashOuts": "Missing cash outs",
+    "cashOutsExceed": "Cash outs exceed buy-ins",
+    "addPlayer": "+ Add Player",
+    "noPlayers": "No players yet. Add players to start tracking buy-ins.",
+    "addFirstPlayer": "Add First Player",
+    "loading": "Loading game..."
+  },
+  "player": {
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "totalBuyIns": "Total Buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Add",
+    "cashOutPlaceholder": "Cash out",
+    "cashOut": "Cash Out",
+    "cashedOut": "Cashed out:",
+    "profitLoss": "Profit/Loss:",
+    "resetPlayer": "Reset Player",
+    "buyInHistory": "Buy-in history:"
+  },
+  "addPlayer": {
+    "title": "Add New Player",
+    "namePlaceholder": "Player name",
+    "addButton": "Add Player",
+    "cancel": "Cancel"
+  }
+}

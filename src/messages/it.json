@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Tracker gratuito per partite di poker con verifica automatica del saldo",
+    "startNewGame": "Inizia nuova partita",
+    "startNewGameDescription": "Crea una nuova sessione di gioco e condividi il codice con altri giocatori",
+    "createNewGameButton": "Crea nuova partita",
+    "joinExistingGame": "Unisciti a partita esistente",
+    "joinGameDescription": "Inserisci un codice di gioco per unirti a una sessione attiva",
+    "gameCodePlaceholder": "Inserisci codice partita",
+    "joinGameButton": "Unisciti alla partita",
+    "recentGames": "Partite recenti",
+    "players": "giocatori",
+    "resume": "Riprendi →",
+    "description": "Traccia i buy-in e i cash-out delle tue partite di poker con verifica automatica del saldo. Nessun login richiesto.",
+    "madeBy": "Creato da"
+  },
+  "game": {
+    "back": "← Indietro",
+    "gameCode": "Codice:",
+    "copyLink": "Copia link",
+    "copied": "Copiato!",
+    "exportCSV": "Esporta CSV",
+    "totalIn": "Totale entrate",
+    "totalOut": "Totale uscite",
+    "balance": "Saldo",
+    "onTable": "Sul tavolo",
+    "overPaid": "Pagato in eccesso",
+    "balanced": "✓ Bilanciato",
+    "potNotBalanced": "Il piatto non è bilanciato.",
+    "missingCashOuts": "Cash-out mancanti",
+    "cashOutsExceed": "I cash-out superano i buy-in",
+    "addPlayer": "+ Aggiungi giocatore",
+    "noPlayers": "Ancora nessun giocatore. Aggiungi giocatori per iniziare a tracciare i buy-in.",
+    "addFirstPlayer": "Aggiungi primo giocatore",
+    "loading": "Caricamento partita..."
+  },
+  "player": {
+    "remove": "Rimuovi",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "totalBuyIns": "Totale buy-in",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Aggiungi",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Cash-out:",
+    "profitLoss": "Profitto/Perdita:",
+    "resetPlayer": "Reimposta giocatore",
+    "buyInHistory": "Storico buy-in:"
+  },
+  "addPlayer": {
+    "title": "Aggiungi nuovo giocatore",
+    "namePlaceholder": "Nome giocatore",
+    "addButton": "Aggiungi giocatore",
+    "cancel": "Annulla"
+  }
+}

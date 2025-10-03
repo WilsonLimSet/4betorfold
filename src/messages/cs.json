@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Bezplatný sledovač domácích pokerových her s automatickým ověřením zůstatku",
+    "startNewGame": "Spustit novou hru",
+    "startNewGameDescription": "Vytvořte novou herní relaci a sdílejte kód s ostatními hráči",
+    "createNewGameButton": "Vytvořit novou hru",
+    "joinExistingGame": "Připojit se k existující hře",
+    "joinGameDescription": "Zadejte herní kód pro připojení k aktivní relaci",
+    "gameCodePlaceholder": "Zadejte herní kód",
+    "joinGameButton": "Připojit se ke hře",
+    "recentGames": "Nedávné hry",
+    "players": "hráčů",
+    "resume": "Pokračovat →",
+    "description": "Sledujte buy-iny a cash-outy vašich domácích pokerových her s automatickým ověřením zůstatku. Není vyžadováno přihlášení.",
+    "madeBy": "Vytvořil"
+  },
+  "game": {
+    "back": "← Zpět",
+    "gameCode": "Kód:",
+    "copyLink": "Kopírovat odkaz",
+    "copied": "Zkopírováno!",
+    "exportCSV": "Exportovat CSV",
+    "totalIn": "Celkem vloženo",
+    "totalOut": "Celkem vyplaceno",
+    "balance": "Zůstatek",
+    "onTable": "Na stole",
+    "overPaid": "Přeplaceno",
+    "balanced": "✓ Vyrovnáno",
+    "potNotBalanced": "Pot není vyrovnán.",
+    "missingCashOuts": "Chybějící cash-outy",
+    "cashOutsExceed": "Cash-outy převyšují buy-iny",
+    "addPlayer": "+ Přidat hráče",
+    "noPlayers": "Zatím žádní hráči. Přidejte hráče pro sledování buy-inů.",
+    "addFirstPlayer": "Přidat prvního hráče",
+    "loading": "Načítání hry..."
+  },
+  "player": {
+    "remove": "Odebrat",
+    "confirm": "Potvrdit",
+    "cancel": "Zrušit",
+    "totalBuyIns": "Celkem buy-inů",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Přidat",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Vyplaceno:",
+    "profitLoss": "Zisk/Ztráta:",
+    "resetPlayer": "Resetovat hráče",
+    "buyInHistory": "Historie buy-inů:"
+  },
+  "addPlayer": {
+    "title": "Přidat nového hráče",
+    "namePlaceholder": "Jméno hráče",
+    "addButton": "Přidat hráče",
+    "cancel": "Zrušit"
+  }
+}

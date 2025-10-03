@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Gratis poker hemspel-spårare med automatisk saldoverifiering",
+    "startNewGame": "Starta nytt spel",
+    "startNewGameDescription": "Skapa en ny spelsession och dela koden med andra spelare",
+    "createNewGameButton": "Skapa nytt spel",
+    "joinExistingGame": "Gå med i befintligt spel",
+    "joinGameDescription": "Ange en spelkod för att gå med i en aktiv session",
+    "gameCodePlaceholder": "Ange spelkod",
+    "joinGameButton": "Gå med i spel",
+    "recentGames": "Senaste spelen",
+    "players": "spelare",
+    "resume": "Fortsätt →",
+    "description": "Spåra buy-ins och cash-outs för dina poker hemspel med automatisk saldoverifiering. Ingen inloggning krävs.",
+    "madeBy": "Skapad av"
+  },
+  "game": {
+    "back": "← Tillbaka",
+    "gameCode": "Kod:",
+    "copyLink": "Kopiera länk",
+    "copied": "Kopierad!",
+    "exportCSV": "Exportera CSV",
+    "totalIn": "Totalt in",
+    "totalOut": "Totalt ut",
+    "balance": "Saldo",
+    "onTable": "På bordet",
+    "overPaid": "Överbetalat",
+    "balanced": "✓ Balanserad",
+    "potNotBalanced": "Potten är inte balanserad.",
+    "missingCashOuts": "Saknade cash-outs",
+    "cashOutsExceed": "Cash-outs överstiger buy-ins",
+    "addPlayer": "+ Lägg till spelare",
+    "noPlayers": "Inga spelare än. Lägg till spelare för att börja spåra buy-ins.",
+    "addFirstPlayer": "Lägg till första spelare",
+    "loading": "Laddar spel..."
+  },
+  "player": {
+    "remove": "Ta bort",
+    "confirm": "Bekräfta",
+    "cancel": "Avbryt",
+    "totalBuyIns": "Totalt buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Lägg till",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Utbetalt:",
+    "profitLoss": "Vinst/Förlust:",
+    "resetPlayer": "Återställ spelare",
+    "buyInHistory": "Buy-in historik:"
+  },
+  "addPlayer": {
+    "title": "Lägg till ny spelare",
+    "namePlaceholder": "Spelarnamn",
+    "addButton": "Lägg till spelare",
+    "cancel": "Avbryt"
+  }
+}

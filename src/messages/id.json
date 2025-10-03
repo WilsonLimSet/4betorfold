@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Pelacak permainan poker rumahan gratis dengan verifikasi saldo otomatis",
+    "startNewGame": "Mulai permainan baru",
+    "startNewGameDescription": "Buat sesi permainan baru dan bagikan kode dengan pemain lain",
+    "createNewGameButton": "Buat permainan baru",
+    "joinExistingGame": "Bergabung dengan permainan yang ada",
+    "joinGameDescription": "Masukkan kode permainan untuk bergabung dengan sesi aktif",
+    "gameCodePlaceholder": "Masukkan kode permainan",
+    "joinGameButton": "Bergabung dengan permainan",
+    "recentGames": "Permainan terkini",
+    "players": "pemain",
+    "resume": "Lanjutkan →",
+    "description": "Lacak buy-in dan cash-out permainan poker rumahan Anda dengan verifikasi saldo otomatis. Tidak perlu login.",
+    "madeBy": "Dibuat oleh"
+  },
+  "game": {
+    "back": "← Kembali",
+    "gameCode": "Kode:",
+    "copyLink": "Salin tautan",
+    "copied": "Tersalin!",
+    "exportCSV": "Ekspor CSV",
+    "totalIn": "Total masuk",
+    "totalOut": "Total keluar",
+    "balance": "Saldo",
+    "onTable": "Di meja",
+    "overPaid": "Kelebihan bayar",
+    "balanced": "✓ Seimbang",
+    "potNotBalanced": "Pot tidak seimbang.",
+    "missingCashOuts": "Cash-out kurang",
+    "cashOutsExceed": "Cash-out melebihi buy-in",
+    "addPlayer": "+ Tambah pemain",
+    "noPlayers": "Belum ada pemain. Tambahkan pemain untuk mulai melacak buy-in.",
+    "addFirstPlayer": "Tambah pemain pertama",
+    "loading": "Memuat permainan..."
+  },
+  "player": {
+    "remove": "Hapus",
+    "confirm": "Konfirmasi",
+    "cancel": "Batal",
+    "totalBuyIns": "Total buy-in",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Tambah",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Cash-out:",
+    "profitLoss": "Untung/Rugi:",
+    "resetPlayer": "Atur ulang pemain",
+    "buyInHistory": "Riwayat buy-in:"
+  },
+  "addPlayer": {
+    "title": "Tambah pemain baru",
+    "namePlaceholder": "Nama pemain",
+    "addButton": "Tambah pemain",
+    "cancel": "Batal"
+  }
+}

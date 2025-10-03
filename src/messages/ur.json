@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "خودکار بیلنس کی تصدیق کے ساتھ مفت پوکر ہوم گیم ٹریکر",
+    "startNewGame": "نیا گیم شروع کریں",
+    "startNewGameDescription": "ایک نیا گیم سیشن بنائیں اور کوڈ دوسرے کھلاڑیوں کے ساتھ شیئر کریں",
+    "createNewGameButton": "نیا گیم بنائیں",
+    "joinExistingGame": "موجودہ گیم میں شامل ہوں",
+    "joinGameDescription": "فعال سیشن میں شامل ہونے کے لیے گیم کوڈ درج کریں",
+    "gameCodePlaceholder": "گیم کوڈ درج کریں",
+    "joinGameButton": "گیم میں شامل ہوں",
+    "recentGames": "حالیہ گیمز",
+    "players": "کھلاڑی",
+    "resume": "جاری رکھیں ←",
+    "description": "خودکار بیلنس کی تصدیق کے ساتھ اپنے پوکر ہوم گیمز کے لیے بائی انز اور کیش آؤٹس کو ٹریک کریں۔ لاگ ان کی ضرورت نہیں۔",
+    "madeBy": "بنایا گیا بذریعہ"
+  },
+  "game": {
+    "back": "→ واپس",
+    "gameCode": "کوڈ:",
+    "copyLink": "لنک کاپی کریں",
+    "copied": "کاپی ہو گیا!",
+    "exportCSV": "CSV ایکسپورٹ کریں",
+    "totalIn": "کل داخلہ",
+    "totalOut": "کل اخراج",
+    "balance": "بیلنس",
+    "onTable": "میز پر",
+    "overPaid": "زیادہ ادا کیا گیا",
+    "balanced": "✓ متوازن",
+    "potNotBalanced": "پاٹ متوازن نہیں ہے۔",
+    "missingCashOuts": "کیش آؤٹس غائب ہیں",
+    "cashOutsExceed": "کیش آؤٹس بائی انز سے زیادہ ہیں",
+    "addPlayer": "+ کھلاڑی شامل کریں",
+    "noPlayers": "ابھی تک کوئی کھلاڑی نہیں۔ بائی انز کو ٹریک کرنا شروع کرنے کے لیے کھلاڑی شامل کریں۔",
+    "addFirstPlayer": "پہلا کھلاڑی شامل کریں",
+    "loading": "گیم لوڈ ہو رہا ہے..."
+  },
+  "player": {
+    "remove": "ہٹائیں",
+    "confirm": "تصدیق کریں",
+    "cancel": "منسوخ کریں",
+    "totalBuyIns": "کل بائی انز",
+    "buyInPlaceholder": "بائی ان",
+    "add": "شامل کریں",
+    "cashOutPlaceholder": "کیش آؤٹ",
+    "cashOut": "کیش آؤٹ",
+    "cashedOut": "کیش آؤٹ ہو گیا:",
+    "profitLoss": "منافع/نقصان:",
+    "resetPlayer": "کھلاڑی کو ری سیٹ کریں",
+    "buyInHistory": "بائی ان کی تاریخ:"
+  },
+  "addPlayer": {
+    "title": "نیا کھلاڑی شامل کریں",
+    "namePlaceholder": "کھلاڑی کا نام",
+    "addButton": "کھلاڑی شامل کریں",
+    "cancel": "منسوخ کریں"
+  }
+}

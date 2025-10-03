@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Gratis poker tuisspeletjie-naspeurder met outomatiese balansverifikasie",
+    "startNewGame": "Begin nuwe speletjie",
+    "startNewGameDescription": "Skep 'n nuwe spelsessie en deel die kode met ander spelers",
+    "createNewGameButton": "Skep nuwe speletjie",
+    "joinExistingGame": "Sluit aan by bestaande speletjie",
+    "joinGameDescription": "Voer 'n spelkode in om by 'n aktiewe sessie aan te sluit",
+    "gameCodePlaceholder": "Voer spelkode in",
+    "joinGameButton": "Sluit aan by speletjie",
+    "recentGames": "Onlangse speletjies",
+    "players": "spelers",
+    "resume": "Gaan voort →",
+    "description": "Hou die buy-ins en cash-outs vir jou poker tuisspeletjies dop met outomatiese balansverifikasie. Geen aanmelding nodig nie.",
+    "madeBy": "Gemaak deur"
+  },
+  "game": {
+    "back": "← Terug",
+    "gameCode": "Kode:",
+    "copyLink": "Kopieer skakel",
+    "copied": "Gekopieer!",
+    "exportCSV": "Voer CSV uit",
+    "totalIn": "Totaal in",
+    "totalOut": "Totaal uit",
+    "balance": "Balans",
+    "onTable": "Op die tafel",
+    "overPaid": "Oorbetaal",
+    "balanced": "✓ Gebalanseerd",
+    "potNotBalanced": "Die pot is nie gebalanseerd nie.",
+    "missingCashOuts": "Vermiste cash-outs",
+    "cashOutsExceed": "Cash-outs oorskry buy-ins",
+    "addPlayer": "+ Voeg speler by",
+    "noPlayers": "Nog geen spelers nie. Voeg spelers by om buy-ins te begin opspoor.",
+    "addFirstPlayer": "Voeg eerste speler by",
+    "loading": "Laai speletjie..."
+  },
+  "player": {
+    "remove": "Verwyder",
+    "confirm": "Bevestig",
+    "cancel": "Kanselleer",
+    "totalBuyIns": "Totale buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Voeg by",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Uitbetaal:",
+    "profitLoss": "Wins/Verlies:",
+    "resetPlayer": "Herstel speler",
+    "buyInHistory": "Buy-in geskiedenis:"
+  },
+  "addPlayer": {
+    "title": "Voeg nuwe speler by",
+    "namePlaceholder": "Speler se naam",
+    "addButton": "Voeg speler by",
+    "cancel": "Kanselleer"
+  }
+}

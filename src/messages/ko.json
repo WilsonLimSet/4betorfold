@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "자동 잔액 확인 기능을 갖춘 무료 포커 홈게임 추적기",
+    "startNewGame": "새 게임 시작",
+    "startNewGameDescription": "새 게임 세션을 만들고 다른 플레이어와 코드 공유",
+    "createNewGameButton": "새 게임 만들기",
+    "joinExistingGame": "기존 게임 참여",
+    "joinGameDescription": "게임 코드를 입력하여 활성 세션에 참여",
+    "gameCodePlaceholder": "게임 코드 입력",
+    "joinGameButton": "게임 참여",
+    "recentGames": "최근 게임",
+    "players": "플레이어",
+    "resume": "계속 →",
+    "description": "자동 잔액 확인 기능으로 포커 홈게임의 바이인 및 캐시아웃 추적. 로그인 불필요.",
+    "madeBy": "제작자"
+  },
+  "game": {
+    "back": "← 뒤로",
+    "gameCode": "코드：",
+    "copyLink": "링크 복사",
+    "copied": "복사됨!",
+    "exportCSV": "CSV 내보내기",
+    "totalIn": "총 바이인",
+    "totalOut": "총 캐시아웃",
+    "balance": "잔액",
+    "onTable": "테이블 위",
+    "overPaid": "초과 지급",
+    "balanced": "✓ 균형",
+    "potNotBalanced": "팟이 균형을 이루지 못했습니다.",
+    "missingCashOuts": "캐시아웃 누락",
+    "cashOutsExceed": "캐시아웃이 바이인을 초과합니다",
+    "addPlayer": "+ 플레이어 추가",
+    "noPlayers": "아직 플레이어가 없습니다. 플레이어를 추가하여 바이인 추적을 시작하세요.",
+    "addFirstPlayer": "첫 플레이어 추가",
+    "loading": "게임 로딩 중..."
+  },
+  "player": {
+    "remove": "제거",
+    "confirm": "확인",
+    "cancel": "취소",
+    "totalBuyIns": "총 바이인",
+    "buyInPlaceholder": "바이인",
+    "add": "추가",
+    "cashOutPlaceholder": "캐시아웃",
+    "cashOut": "캐시아웃",
+    "cashedOut": "캐시아웃 완료：",
+    "profitLoss": "손익：",
+    "resetPlayer": "플레이어 재설정",
+    "buyInHistory": "바이인 기록："
+  },
+  "addPlayer": {
+    "title": "새 플레이어 추가",
+    "namePlaceholder": "플레이어 이름",
+    "addButton": "플레이어 추가",
+    "cancel": "취소"
+  }
+}

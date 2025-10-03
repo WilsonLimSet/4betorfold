@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "עוקב משחקי פוקר ביתיים בחינם עם אימות יתרה אוטומטי",
+    "startNewGame": "התחל משחק חדש",
+    "startNewGameDescription": "צור סשן משחק חדש ושתף את הקוד עם שחקנים אחרים",
+    "createNewGameButton": "צור משחק חדש",
+    "joinExistingGame": "הצטרף למשחק קיים",
+    "joinGameDescription": "הזן קוד משחק כדי להצטרף לסשן פעיל",
+    "gameCodePlaceholder": "הזן קוד משחק",
+    "joinGameButton": "הצטרף למשחק",
+    "recentGames": "משחקים אחרונים",
+    "players": "שחקנים",
+    "resume": "המשך →",
+    "description": "עקוב אחר buy-ins ו-cash-outs של משחקי הפוקר הביתיים שלך עם אימות יתרה אוטומטי. אין צורך בהתחברות.",
+    "madeBy": "נוצר על ידי"
+  },
+  "game": {
+    "back": "→ חזור",
+    "gameCode": "קוד:",
+    "copyLink": "העתק קישור",
+    "copied": "הועתק!",
+    "exportCSV": "ייצא CSV",
+    "totalIn": "סה\"כ הכנסות",
+    "totalOut": "סה\"כ יציאות",
+    "balance": "יתרה",
+    "onTable": "על השולחן",
+    "overPaid": "שולם יתר על המידה",
+    "balanced": "✓ מאוזן",
+    "potNotBalanced": "הקופה אינה מאוזנת.",
+    "missingCashOuts": "חסרים cash-outs",
+    "cashOutsExceed": "cash-outs עולים על buy-ins",
+    "addPlayer": "+ הוסף שחקן",
+    "noPlayers": "אין עדיין שחקנים. הוסף שחקנים כדי להתחיל לעקוב אחר buy-ins.",
+    "addFirstPlayer": "הוסף שחקן ראשון",
+    "loading": "טוען משחק..."
+  },
+  "player": {
+    "remove": "הסר",
+    "confirm": "אשר",
+    "cancel": "בטל",
+    "totalBuyIns": "סה\"כ buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "הוסף",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "הוצא מזומן:",
+    "profitLoss": "רווח/הפסד:",
+    "resetPlayer": "אפס שחקן",
+    "buyInHistory": "היסטוריית buy-in:"
+  },
+  "addPlayer": {
+    "title": "הוסף שחקן חדש",
+    "namePlaceholder": "שם השחקן",
+    "addButton": "הוסף שחקן",
+    "cancel": "בטל"
+  }
+}

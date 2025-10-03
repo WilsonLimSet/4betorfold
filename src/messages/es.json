@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Rastreador gratuito de partidas de póquer con verificación automática de saldo",
+    "startNewGame": "Iniciar Nueva Partida",
+    "startNewGameDescription": "Crea una nueva sesión de juego y comparte el código con otros jugadores",
+    "createNewGameButton": "Crear Nueva Partida",
+    "joinExistingGame": "Unirse a Partida Existente",
+    "joinGameDescription": "Ingresa un código de juego para unirte a una sesión activa",
+    "gameCodePlaceholder": "Ingresar código de juego",
+    "joinGameButton": "Unirse a Partida",
+    "recentGames": "Partidas Recientes",
+    "players": "jugadores",
+    "resume": "Continuar →",
+    "description": "Rastrea las compras y retiros de tus partidas de póquer con verificación automática de saldo. No se requiere inicio de sesión.",
+    "madeBy": "Hecho por"
+  },
+  "game": {
+    "back": "← Atrás",
+    "gameCode": "Código:",
+    "copyLink": "Copiar Enlace",
+    "copied": "¡Copiado!",
+    "exportCSV": "Exportar CSV",
+    "totalIn": "Total Entrada",
+    "totalOut": "Total Salida",
+    "balance": "Saldo",
+    "onTable": "En Mesa",
+    "overPaid": "Sobrepagado",
+    "balanced": "✓ Balanceado",
+    "potNotBalanced": "El bote no está balanceado.",
+    "missingCashOuts": "Faltan retiros",
+    "cashOutsExceed": "Los retiros exceden las compras",
+    "addPlayer": "+ Agregar Jugador",
+    "noPlayers": "Aún no hay jugadores. Agrega jugadores para comenzar a rastrear las compras.",
+    "addFirstPlayer": "Agregar Primer Jugador",
+    "loading": "Cargando partida..."
+  },
+  "player": {
+    "remove": "Eliminar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "totalBuyIns": "Total Compras",
+    "buyInPlaceholder": "Compra",
+    "add": "Agregar",
+    "cashOutPlaceholder": "Retiro",
+    "cashOut": "Retirar",
+    "cashedOut": "Retirado:",
+    "profitLoss": "Ganancia/Pérdida:",
+    "resetPlayer": "Reiniciar Jugador",
+    "buyInHistory": "Historial de compras:"
+  },
+  "addPlayer": {
+    "title": "Agregar Nuevo Jugador",
+    "namePlaceholder": "Nombre del jugador",
+    "addButton": "Agregar Jugador",
+    "cancel": "Cancelar"
+  }
+}

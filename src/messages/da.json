@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Gratis poker hjemmespil tracker med automatisk saldoverifikation",
+    "startNewGame": "Start nyt spil",
+    "startNewGameDescription": "Opret en ny spilsession og del koden med andre spillere",
+    "createNewGameButton": "Opret nyt spil",
+    "joinExistingGame": "Deltag i eksisterende spil",
+    "joinGameDescription": "Indtast en spilkode for at deltage i en aktiv session",
+    "gameCodePlaceholder": "Indtast spilkode",
+    "joinGameButton": "Deltag i spil",
+    "recentGames": "Seneste spil",
+    "players": "spillere",
+    "resume": "Fortsæt →",
+    "description": "Spor buy-ins og cash-outs for dine poker hjemmespil med automatisk saldoverifikation. Ingen login påkrævet.",
+    "madeBy": "Lavet af"
+  },
+  "game": {
+    "back": "← Tilbage",
+    "gameCode": "Kode:",
+    "copyLink": "Kopier link",
+    "copied": "Kopieret!",
+    "exportCSV": "Eksporter CSV",
+    "totalIn": "I alt ind",
+    "totalOut": "I alt ud",
+    "balance": "Saldo",
+    "onTable": "På bordet",
+    "overPaid": "Overbetalt",
+    "balanced": "✓ Balanceret",
+    "potNotBalanced": "Puljen er ikke balanceret.",
+    "missingCashOuts": "Manglende cash-outs",
+    "cashOutsExceed": "Cash-outs overstiger buy-ins",
+    "addPlayer": "+ Tilføj spiller",
+    "noPlayers": "Ingen spillere endnu. Tilføj spillere for at begynde at spore buy-ins.",
+    "addFirstPlayer": "Tilføj første spiller",
+    "loading": "Indlæser spil..."
+  },
+  "player": {
+    "remove": "Fjern",
+    "confirm": "Bekræft",
+    "cancel": "Annuller",
+    "totalBuyIns": "Samlede buy-ins",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Tilføj",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Udbetalt:",
+    "profitLoss": "Fortjeneste/Tab:",
+    "resetPlayer": "Nulstil spiller",
+    "buyInHistory": "Buy-in historik:"
+  },
+  "addPlayer": {
+    "title": "Tilføj ny spiller",
+    "namePlaceholder": "Spillernavn",
+    "addButton": "Tilføj spiller",
+    "cancel": "Annuller"
+  }
+}

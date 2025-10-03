@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Ingyenes házi póker játék követő automatikus egyenleg ellenőrzéssel",
+    "startNewGame": "Új játék indítása",
+    "startNewGameDescription": "Hozz létre egy új játék munkamenetet és oszd meg a kódot más játékosokkal",
+    "createNewGameButton": "Új játék létrehozása",
+    "joinExistingGame": "Csatlakozás meglévő játékhoz",
+    "joinGameDescription": "Add meg a játék kódját egy aktív munkamenethez való csatlakozáshoz",
+    "gameCodePlaceholder": "Add meg a játék kódját",
+    "joinGameButton": "Csatlakozás játékhoz",
+    "recentGames": "Legutóbbi játékok",
+    "players": "játékosok",
+    "resume": "Folytatás →",
+    "description": "Kövesd a buy-in-okat és cash-out-okat a házi póker játékaidhoz automatikus egyenleg ellenőrzéssel. Nincs szükség bejelentkezésre.",
+    "madeBy": "Készítette"
+  },
+  "game": {
+    "back": "← Vissza",
+    "gameCode": "Kód:",
+    "copyLink": "Link másolása",
+    "copied": "Másolva!",
+    "exportCSV": "CSV exportálása",
+    "totalIn": "Összes befizetés",
+    "totalOut": "Összes kifizetés",
+    "balance": "Egyenleg",
+    "onTable": "Az asztalon",
+    "overPaid": "Túlfizetés",
+    "balanced": "✓ Kiegyensúlyozott",
+    "potNotBalanced": "A pot nincs kiegyensúlyozva.",
+    "missingCashOuts": "Hiányzó cash-out-ok",
+    "cashOutsExceed": "A cash-out-ok meghaladják a buy-in-okat",
+    "addPlayer": "+ Játékos hozzáadása",
+    "noPlayers": "Még nincsenek játékosok. Adj hozzá játékosokat a buy-in-ok követésének megkezdéséhez.",
+    "addFirstPlayer": "Első játékos hozzáadása",
+    "loading": "Játék betöltése..."
+  },
+  "player": {
+    "remove": "Eltávolítás",
+    "confirm": "Megerősítés",
+    "cancel": "Mégse",
+    "totalBuyIns": "Összes buy-in",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Hozzáadás",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Kifizetve:",
+    "profitLoss": "Nyereség/Veszteség:",
+    "resetPlayer": "Játékos visszaállítása",
+    "buyInHistory": "Buy-in történet:"
+  },
+  "addPlayer": {
+    "title": "Új játékos hozzáadása",
+    "namePlaceholder": "Játékos neve",
+    "addButton": "Játékos hozzáadása",
+    "cancel": "Mégse"
+  }
+}

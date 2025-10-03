@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Besplatni praćenje kućnih poker igara s automatskom provjerom stanja",
+    "startNewGame": "Započni novu igru",
+    "startNewGameDescription": "Stvorite novu sesiju igre i podijelite kod s drugim igračima",
+    "createNewGameButton": "Stvori novu igru",
+    "joinExistingGame": "Pridruži se postojećoj igri",
+    "joinGameDescription": "Unesite kod igre kako biste se pridružili aktivnoj sesiji",
+    "gameCodePlaceholder": "Unesite kod igre",
+    "joinGameButton": "Pridruži se igri",
+    "recentGames": "Nedavne igre",
+    "players": "igrača",
+    "resume": "Nastavi →",
+    "description": "Pratite buy-in-ove i cash-out-ove za vaše kućne poker igre s automatskom provjerom stanja. Nije potrebna prijava.",
+    "madeBy": "Napravio"
+  },
+  "game": {
+    "back": "← Natrag",
+    "gameCode": "Kod:",
+    "copyLink": "Kopiraj link",
+    "copied": "Kopirano!",
+    "exportCSV": "Izvezi CSV",
+    "totalIn": "Ukupno uloženo",
+    "totalOut": "Ukupno isplaćeno",
+    "balance": "Stanje",
+    "onTable": "Na stolu",
+    "overPaid": "Preplaćeno",
+    "balanced": "✓ Balansirano",
+    "potNotBalanced": "Pot nije balansiran.",
+    "missingCashOuts": "Nedostaju cash-out-ovi",
+    "cashOutsExceed": "Cash-out-ovi prelaze buy-in-ove",
+    "addPlayer": "+ Dodaj igrača",
+    "noPlayers": "Još nema igrača. Dodajte igrače kako biste započeli praćenje buy-in-ova.",
+    "addFirstPlayer": "Dodaj prvog igrača",
+    "loading": "Učitavanje igre..."
+  },
+  "player": {
+    "remove": "Ukloni",
+    "confirm": "Potvrdi",
+    "cancel": "Odustani",
+    "totalBuyIns": "Ukupno buy-in-ova",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Dodaj",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Isplaćeno:",
+    "profitLoss": "Profit/Gubitak:",
+    "resetPlayer": "Resetiraj igrača",
+    "buyInHistory": "Povijest buy-in-ova:"
+  },
+  "addPlayer": {
+    "title": "Dodaj novog igrača",
+    "namePlaceholder": "Ime igrača",
+    "addButton": "Dodaj igrača",
+    "cancel": "Odustani"
+  }
+}

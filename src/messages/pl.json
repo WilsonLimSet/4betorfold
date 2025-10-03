@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Darmowy tracker gier pokerowych z automatyczną weryfikacją salda",
+    "startNewGame": "Rozpocznij nową grę",
+    "startNewGameDescription": "Utwórz nową sesję gry i udostępnij kod innym graczom",
+    "createNewGameButton": "Utwórz nową grę",
+    "joinExistingGame": "Dołącz do istniejącej gry",
+    "joinGameDescription": "Wprowadź kod gry, aby dołączyć do aktywnej sesji",
+    "gameCodePlaceholder": "Wprowadź kod gry",
+    "joinGameButton": "Dołącz do gry",
+    "recentGames": "Ostatnie gry",
+    "players": "graczy",
+    "resume": "Kontynuuj →",
+    "description": "Śledź buy-iny i cash-outy swoich domowych gier pokerowych z automatyczną weryfikacją salda. Nie wymaga logowania.",
+    "madeBy": "Wykonane przez"
+  },
+  "game": {
+    "back": "← Wstecz",
+    "gameCode": "Kod:",
+    "copyLink": "Kopiuj link",
+    "copied": "Skopiowano!",
+    "exportCSV": "Eksportuj CSV",
+    "totalIn": "Suma wpłat",
+    "totalOut": "Suma wypłat",
+    "balance": "Saldo",
+    "onTable": "Na stole",
+    "overPaid": "Przepłacono",
+    "balanced": "✓ Zrównoważone",
+    "potNotBalanced": "Pula nie jest zrównoważona.",
+    "missingCashOuts": "Brakujące cash-outy",
+    "cashOutsExceed": "Cash-outy przekraczają buy-iny",
+    "addPlayer": "+ Dodaj gracza",
+    "noPlayers": "Jeszcze brak graczy. Dodaj graczy, aby rozpocząć śledzenie buy-inów.",
+    "addFirstPlayer": "Dodaj pierwszego gracza",
+    "loading": "Ładowanie gry..."
+  },
+  "player": {
+    "remove": "Usuń",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "totalBuyIns": "Suma buy-inów",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Dodaj",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Wypłacono:",
+    "profitLoss": "Zysk/Strata:",
+    "resetPlayer": "Zresetuj gracza",
+    "buyInHistory": "Historia buy-inów:"
+  },
+  "addPlayer": {
+    "title": "Dodaj nowego gracza",
+    "namePlaceholder": "Imię gracza",
+    "addButton": "Dodaj gracza",
+    "cancel": "Anuluj"
+  }
+}

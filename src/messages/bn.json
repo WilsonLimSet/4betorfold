@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "স্বয়ংক্রিয় ব্যালেন্স যাচাইকরণ সহ বিনামূল্যে পোকার হোম গেম ট্র্যাকার",
+    "startNewGame": "নতুন গেম শুরু করুন",
+    "startNewGameDescription": "একটি নতুন গেম সেশন তৈরি করুন এবং অন্যান্য খেলোয়াড়দের সাথে কোড শেয়ার করুন",
+    "createNewGameButton": "নতুন গেম তৈরি করুন",
+    "joinExistingGame": "বিদ্যমান গেমে যোগ দিন",
+    "joinGameDescription": "একটি সক্রিয় সেশনে যোগ দিতে একটি গেম কোড লিখুন",
+    "gameCodePlaceholder": "গেম কোড লিখুন",
+    "joinGameButton": "গেমে যোগ দিন",
+    "recentGames": "সাম্প্রতিক গেম",
+    "players": "খেলোয়াড়",
+    "resume": "পুনরায় শুরু করুন →",
+    "description": "স্বয়ংক্রিয় ব্যালেন্স যাচাইকরণ সহ আপনার পোকার হোম গেমের জন্য বাই-ইন এবং ক্যাশ-আউট ট্র্যাক করুন। লগইন প্রয়োজন নেই।",
+    "madeBy": "তৈরি করেছেন"
+  },
+  "game": {
+    "back": "← পিছনে",
+    "gameCode": "কোড:",
+    "copyLink": "লিঙ্ক কপি করুন",
+    "copied": "কপি হয়েছে!",
+    "exportCSV": "CSV রপ্তানি করুন",
+    "totalIn": "মোট প্রবেশ",
+    "totalOut": "মোট বহির্গমন",
+    "balance": "ব্যালেন্স",
+    "onTable": "টেবিলে",
+    "overPaid": "অতিরিক্ত পরিশোধিত",
+    "balanced": "✓ সুষম",
+    "potNotBalanced": "পট সুষম নয়।",
+    "missingCashOuts": "ক্যাশ-আউট অনুপস্থিত",
+    "cashOutsExceed": "ক্যাশ-আউট বাই-ইন অতিক্রম করেছে",
+    "addPlayer": "+ খেলোয়াড় যোগ করুন",
+    "noPlayers": "এখনো কোনো খেলোয়াড় নেই। বাই-ইন ট্র্যাক করা শুরু করতে খেলোয়াড় যোগ করুন।",
+    "addFirstPlayer": "প্রথম খেলোয়াড় যোগ করুন",
+    "loading": "গেম লোড হচ্ছে..."
+  },
+  "player": {
+    "remove": "সরান",
+    "confirm": "নিশ্চিত করুন",
+    "cancel": "বাতিল করুন",
+    "totalBuyIns": "মোট বাই-ইন",
+    "buyInPlaceholder": "বাই-ইন",
+    "add": "যোগ করুন",
+    "cashOutPlaceholder": "ক্যাশ-আউট",
+    "cashOut": "ক্যাশ-আউট",
+    "cashedOut": "ক্যাশ-আউট হয়েছে:",
+    "profitLoss": "লাভ/ক্ষতি:",
+    "resetPlayer": "খেলোয়াড় রিসেট করুন",
+    "buyInHistory": "বাই-ইন ইতিহাস:"
+  },
+  "addPlayer": {
+    "title": "নতুন খেলোয়াড় যোগ করুন",
+    "namePlaceholder": "খেলোয়াড়ের নাম",
+    "addButton": "খেলোয়াড় যোগ করুন",
+    "cancel": "বাতিল করুন"
+  }
+}

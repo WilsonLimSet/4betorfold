@@ -1,0 +1,58 @@
+{
+  "home": {
+    "title": "4 Bet or Fold",
+    "subtitle": "Nemokamas namų pokerio žaidimų sekimas su automatiniu balanso patikrinimu",
+    "startNewGame": "Pradėti naują žaidimą",
+    "startNewGameDescription": "Sukurkite naują žaidimo sesiją ir pasidalykite kodu su kitais žaidėjais",
+    "createNewGameButton": "Sukurti naują žaidimą",
+    "joinExistingGame": "Prisijungti prie esamo žaidimo",
+    "joinGameDescription": "Įveskite žaidimo kodą, kad prisijungtumėte prie aktyvios sesijos",
+    "gameCodePlaceholder": "Įveskite žaidimo kodą",
+    "joinGameButton": "Prisijungti prie žaidimo",
+    "recentGames": "Naujausi žaidimai",
+    "players": "žaidėjų",
+    "resume": "Tęsti →",
+    "description": "Sekite buy-in-us ir cash-out-us savo namų pokerio žaidimams su automatiniu balanso patikrinimu. Prisijungti nereikia.",
+    "madeBy": "Sukūrė"
+  },
+  "game": {
+    "back": "← Atgal",
+    "gameCode": "Kodas:",
+    "copyLink": "Kopijuoti nuorodą",
+    "copied": "Nukopijuota!",
+    "exportCSV": "Eksportuoti CSV",
+    "totalIn": "Iš viso įnešta",
+    "totalOut": "Iš viso išimta",
+    "balance": "Balansas",
+    "onTable": "Ant stalo",
+    "overPaid": "Permokėta",
+    "balanced": "✓ Subalansuota",
+    "potNotBalanced": "Bankas nesubalansuotas.",
+    "missingCashOuts": "Trūksta cash-out-ų",
+    "cashOutsExceed": "Cash-out-ai viršija buy-in-us",
+    "addPlayer": "+ Pridėti žaidėją",
+    "noPlayers": "Dar nėra žaidėjų. Pridėkite žaidėjų, kad pradėtumėte sekti buy-in-us.",
+    "addFirstPlayer": "Pridėti pirmą žaidėją",
+    "loading": "Įkeliamas žaidimas..."
+  },
+  "player": {
+    "remove": "Pašalinti",
+    "confirm": "Patvirtinti",
+    "cancel": "Atšaukti",
+    "totalBuyIns": "Iš viso buy-in-ų",
+    "buyInPlaceholder": "Buy-in",
+    "add": "Pridėti",
+    "cashOutPlaceholder": "Cash-out",
+    "cashOut": "Cash-out",
+    "cashedOut": "Išimta:",
+    "profitLoss": "Pelnas/Nuostolis:",
+    "resetPlayer": "Atstatyti žaidėją",
+    "buyInHistory": "Buy-in istorija:"
+  },
+  "addPlayer": {
+    "title": "Pridėti naują žaidėją",
+    "namePlaceholder": "Žaidėjo vardas",
+    "addButton": "Pridėti žaidėją",
+    "cancel": "Atšaukti"
+  }
+}
