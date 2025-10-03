@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { locales } from '../i18n'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://homegametracker.com'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://4betorfold.com'
 
   // Create sitemap entries for all locales
   const localeEntries = locales.map((locale) => ({
