@@ -33,7 +33,8 @@
     "addPlayer": "+ Pridėti žaidėją",
     "noPlayers": "Dar nėra žaidėjų. Pridėkite žaidėjų, kad pradėtumėte sekti buy-in-us.",
     "addFirstPlayer": "Pridėti pirmą žaidėją",
-    "loading": "Įkeliamas žaidimas..."
+    "loading": "Įkeliamas žaidimas...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Pašalinti",
@@ -47,7 +48,8 @@
     "cashedOut": "Išimta:",
     "profitLoss": "Pelnas/Nuostolis:",
     "resetPlayer": "Atstatyti žaidėją",
-    "buyInHistory": "Buy-in istorija:"
+    "buyInHistory": "Buy-in istorija:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Pridėti naują žaidėją",

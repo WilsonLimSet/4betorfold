@@ -33,7 +33,8 @@
     "addPlayer": "+ Додати гравця",
     "noPlayers": "Поки немає гравців. Додайте гравців для відстеження бай-інів.",
     "addFirstPlayer": "Додати першого гравця",
-    "loading": "Завантаження гри..."
+    "loading": "Завантаження гри...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Видалити",
@@ -47,7 +48,8 @@
     "cashedOut": "Виведено:",
     "profitLoss": "Прибуток/Збиток:",
     "resetPlayer": "Скинути гравця",
-    "buyInHistory": "Історія бай-інів:"
+    "buyInHistory": "Історія бай-інів:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Додати нового гравця",

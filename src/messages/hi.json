@@ -33,7 +33,8 @@
     "addPlayer": "+ खिलाड़ी जोड़ें",
     "noPlayers": "अभी तक कोई खिलाड़ी नहीं। बाय-इन ट्रैकिंग शुरू करने के लिए खिलाड़ी जोड़ें।",
     "addFirstPlayer": "पहला खिलाड़ी जोड़ें",
-    "loading": "गेम लोड हो रहा है..."
+    "loading": "गेम लोड हो रहा है...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "हटाएं",
@@ -47,7 +48,8 @@
     "cashedOut": "कैश-आउट किया:",
     "profitLoss": "लाभ/हानि:",
     "resetPlayer": "खिलाड़ी रीसेट करें",
-    "buyInHistory": "बाय-इन इतिहास:"
+    "buyInHistory": "बाय-इन इतिहास:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "नया खिलाड़ी जोड़ें",

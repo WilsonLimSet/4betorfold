@@ -33,7 +33,8 @@
     "addPlayer": "+ Pridať hráča",
     "noPlayers": "Zatiaľ žiadni hráči. Pridajte hráčov pre sledovanie buy-inov.",
     "addFirstPlayer": "Pridať prvého hráča",
-    "loading": "Načítava sa hra..."
+    "loading": "Načítava sa hra...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Odstrániť",
@@ -47,7 +48,8 @@
     "cashedOut": "Vybraté:",
     "profitLoss": "Zisk/Strata:",
     "resetPlayer": "Resetovať hráča",
-    "buyInHistory": "História buy-inov:"
+    "buyInHistory": "História buy-inov:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Pridať nového hráča",

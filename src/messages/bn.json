@@ -33,7 +33,8 @@
     "addPlayer": "+ খেলোয়াড় যোগ করুন",
     "noPlayers": "এখনো কোনো খেলোয়াড় নেই। বাই-ইন ট্র্যাক করা শুরু করতে খেলোয়াড় যোগ করুন।",
     "addFirstPlayer": "প্রথম খেলোয়াড় যোগ করুন",
-    "loading": "গেম লোড হচ্ছে..."
+    "loading": "গেম লোড হচ্ছে...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "সরান",
@@ -47,7 +48,8 @@
     "cashedOut": "ক্যাশ-আউট হয়েছে:",
     "profitLoss": "লাভ/ক্ষতি:",
     "resetPlayer": "খেলোয়াড় রিসেট করুন",
-    "buyInHistory": "বাই-ইন ইতিহাস:"
+    "buyInHistory": "বাই-ইন ইতিহাস:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "নতুন খেলোয়াড় যোগ করুন",

@@ -33,7 +33,8 @@
     "addPlayer": "+ เพิ่มผู้เล่น",
     "noPlayers": "ยังไม่มีผู้เล่น เพิ่มผู้เล่นเพื่อเริ่มติดตามการซื้อชิป",
     "addFirstPlayer": "เพิ่มผู้เล่นคนแรก",
-    "loading": "กำลังโหลดเกม..."
+    "loading": "กำลังโหลดเกม...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "ลบ",
@@ -47,7 +48,8 @@
     "cashedOut": "เบิกเงินแล้ว:",
     "profitLoss": "กำไร/ขาดทุน:",
     "resetPlayer": "รีเซ็ตผู้เล่น",
-    "buyInHistory": "ประวัติการซื้อชิป:"
+    "buyInHistory": "ประวัติการซื้อชิป:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "เพิ่มผู้เล่นใหม่",

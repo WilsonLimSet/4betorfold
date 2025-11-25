@@ -33,7 +33,8 @@
     "addPlayer": "+ Προσθήκη παίκτη",
     "noPlayers": "Δεν υπάρχουν ακόμα παίκτες. Προσθέστε παίκτες για να ξεκινήσετε την παρακολούθηση buy-ins.",
     "addFirstPlayer": "Προσθήκη πρώτου παίκτη",
-    "loading": "Φόρτωση παιχνιδιού..."
+    "loading": "Φόρτωση παιχνιδιού...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Αφαίρεση",
@@ -47,7 +48,8 @@
     "cashedOut": "Έγινε cash-out:",
     "profitLoss": "Κέρδος/Ζημία:",
     "resetPlayer": "Επαναφορά παίκτη",
-    "buyInHistory": "Ιστορικό buy-in:"
+    "buyInHistory": "Ιστορικό buy-in:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Προσθήκη νέου παίκτη",

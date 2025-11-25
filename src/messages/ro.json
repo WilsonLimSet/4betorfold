@@ -33,7 +33,8 @@
     "addPlayer": "+ Adaugă jucător",
     "noPlayers": "Încă nu există jucători. Adaugă jucători pentru a începe urmărirea buy-in-urilor.",
     "addFirstPlayer": "Adaugă primul jucător",
-    "loading": "Se încarcă jocul..."
+    "loading": "Se încarcă jocul...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Elimină",
@@ -47,7 +48,8 @@
     "cashedOut": "Încasat:",
     "profitLoss": "Profit/Pierdere:",
     "resetPlayer": "Resetează jucător",
-    "buyInHistory": "Istoric buy-in:"
+    "buyInHistory": "Istoric buy-in:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Adaugă jucător nou",

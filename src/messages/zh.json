@@ -33,7 +33,8 @@
     "addPlayer": "+ 添加玩家",
     "noPlayers": "还没有玩家。添加玩家开始追踪买入。",
     "addFirstPlayer": "添加第一位玩家",
-    "loading": "加载游戏中..."
+    "loading": "加载游戏中...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "删除",
@@ -47,7 +48,8 @@
     "cashedOut": "已兑现：",
     "profitLoss": "盈亏：",
     "resetPlayer": "重置玩家",
-    "buyInHistory": "买入历史："
+    "buyInHistory": "买入历史：",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "添加新玩家",

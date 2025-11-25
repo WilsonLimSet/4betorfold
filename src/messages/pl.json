@@ -33,7 +33,8 @@
     "addPlayer": "+ Dodaj gracza",
     "noPlayers": "Jeszcze brak graczy. Dodaj graczy, aby rozpocząć śledzenie buy-inów.",
     "addFirstPlayer": "Dodaj pierwszego gracza",
-    "loading": "Ładowanie gry..."
+    "loading": "Ładowanie gry...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Usuń",
@@ -47,7 +48,8 @@
     "cashedOut": "Wypłacono:",
     "profitLoss": "Zysk/Strata:",
     "resetPlayer": "Zresetuj gracza",
-    "buyInHistory": "Historia buy-inów:"
+    "buyInHistory": "Historia buy-inów:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Dodaj nowego gracza",

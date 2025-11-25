@@ -33,7 +33,8 @@
     "addPlayer": "+ Afegir jugador",
     "noPlayers": "Encara no hi ha jugadors. Afegeix jugadors per començar a fer seguiment dels buy-ins.",
     "addFirstPlayer": "Afegir primer jugador",
-    "loading": "Carregant partida..."
+    "loading": "Carregant partida...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Eliminar",
@@ -47,7 +48,8 @@
     "cashedOut": "Cobrat:",
     "profitLoss": "Benefici/Pèrdua:",
     "resetPlayer": "Reiniciar jugador",
-    "buyInHistory": "Historial de buy-ins:"
+    "buyInHistory": "Historial de buy-ins:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Afegir nou jugador",

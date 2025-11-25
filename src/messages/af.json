@@ -33,7 +33,8 @@
     "addPlayer": "+ Voeg speler by",
     "noPlayers": "Nog geen spelers nie. Voeg spelers by om buy-ins te begin opspoor.",
     "addFirstPlayer": "Voeg eerste speler by",
-    "loading": "Laai speletjie..."
+    "loading": "Laai speletjie...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Verwyder",
@@ -47,7 +48,8 @@
     "cashedOut": "Uitbetaal:",
     "profitLoss": "Wins/Verlies:",
     "resetPlayer": "Herstel speler",
-    "buyInHistory": "Buy-in geskiedenis:"
+    "buyInHistory": "Buy-in geskiedenis:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Voeg nuwe speler by",

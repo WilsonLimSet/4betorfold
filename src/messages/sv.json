@@ -33,7 +33,8 @@
     "addPlayer": "+ Lägg till spelare",
     "noPlayers": "Inga spelare än. Lägg till spelare för att börja spåra buy-ins.",
     "addFirstPlayer": "Lägg till första spelare",
-    "loading": "Laddar spel..."
+    "loading": "Laddar spel...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Ta bort",
@@ -47,7 +48,8 @@
     "cashedOut": "Utbetalt:",
     "profitLoss": "Vinst/Förlust:",
     "resetPlayer": "Återställ spelare",
-    "buyInHistory": "Buy-in historik:"
+    "buyInHistory": "Buy-in historik:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Lägg till ny spelare",

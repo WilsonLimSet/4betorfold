@@ -33,7 +33,8 @@
     "addPlayer": "+ افزودن بازیکن",
     "noPlayers": "هنوز بازیکنی وجود ندارد. بازیکنان را اضافه کنید تا پیگیری خریدها را شروع کنید.",
     "addFirstPlayer": "افزودن اولین بازیکن",
-    "loading": "در حال بارگذاری بازی..."
+    "loading": "در حال بارگذاری بازی...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "حذف",
@@ -47,7 +48,8 @@
     "cashedOut": "برداشت شده:",
     "profitLoss": "سود/زیان:",
     "resetPlayer": "بازنشانی بازیکن",
-    "buyInHistory": "تاریخچه خرید:"
+    "buyInHistory": "تاریخچه خرید:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "افزودن بازیکن جدید",

@@ -33,7 +33,8 @@
     "addPlayer": "+ Lisää pelaaja",
     "noPlayers": "Ei vielä pelaajia. Lisää pelaajia aloittaaksesi buy-inien seurannan.",
     "addFirstPlayer": "Lisää ensimmäinen pelaaja",
-    "loading": "Ladataan peliä..."
+    "loading": "Ladataan peliä...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Poista",
@@ -47,7 +48,8 @@
     "cashedOut": "Nostettu:",
     "profitLoss": "Voitto/Tappio:",
     "resetPlayer": "Nollaa pelaaja",
-    "buyInHistory": "Buy-in historia:"
+    "buyInHistory": "Buy-in historia:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Lisää uusi pelaaja",

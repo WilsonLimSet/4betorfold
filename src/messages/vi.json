@@ -33,7 +33,8 @@
     "addPlayer": "+ Thêm người chơi",
     "noPlayers": "Chưa có người chơi. Thêm người chơi để bắt đầu theo dõi mua chip.",
     "addFirstPlayer": "Thêm người chơi đầu tiên",
-    "loading": "Đang tải trò chơi..."
+    "loading": "Đang tải trò chơi...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Xóa",
@@ -47,7 +48,8 @@
     "cashedOut": "Đã rút tiền:",
     "profitLoss": "Lãi/Lỗ:",
     "resetPlayer": "Đặt lại người chơi",
-    "buyInHistory": "Lịch sử mua chip:"
+    "buyInHistory": "Lịch sử mua chip:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Thêm người chơi mới",

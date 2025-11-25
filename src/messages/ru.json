@@ -33,7 +33,8 @@
     "addPlayer": "+ Добавить игрока",
     "noPlayers": "Пока нет игроков. Добавьте игроков, чтобы начать отслеживание бай-инов.",
     "addFirstPlayer": "Добавить первого игрока",
-    "loading": "Загрузка игры..."
+    "loading": "Загрузка игры...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Удалить",
@@ -47,7 +48,8 @@
     "cashedOut": "Выведено:",
     "profitLoss": "Прибыль/Убыток:",
     "resetPlayer": "Сбросить игрока",
-    "buyInHistory": "История бай-инов:"
+    "buyInHistory": "История бай-инов:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Добавить нового игрока",

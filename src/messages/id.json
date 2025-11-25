@@ -33,7 +33,8 @@
     "addPlayer": "+ Tambah pemain",
     "noPlayers": "Belum ada pemain. Tambahkan pemain untuk mulai melacak buy-in.",
     "addFirstPlayer": "Tambah pemain pertama",
-    "loading": "Memuat permainan..."
+    "loading": "Memuat permainan...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Hapus",
@@ -47,7 +48,8 @@
     "cashedOut": "Cash-out:",
     "profitLoss": "Untung/Rugi:",
     "resetPlayer": "Atur ulang pemain",
-    "buyInHistory": "Riwayat buy-in:"
+    "buyInHistory": "Riwayat buy-in:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Tambah pemain baru",

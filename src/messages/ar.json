@@ -33,7 +33,8 @@
     "addPlayer": "+ إضافة لاعب",
     "noPlayers": "لا يوجد لاعبون بعد. أضف لاعبين لبدء تتبع عمليات الشراء.",
     "addFirstPlayer": "إضافة أول لاعب",
-    "loading": "جاري تحميل اللعبة..."
+    "loading": "جاري تحميل اللعبة...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "إزالة",
@@ -47,7 +48,8 @@
     "cashedOut": "تم السحب:",
     "profitLoss": "الربح/الخسارة:",
     "resetPlayer": "إعادة تعيين اللاعب",
-    "buyInHistory": "سجل عمليات الشراء:"
+    "buyInHistory": "سجل عمليات الشراء:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "إضافة لاعب جديد",

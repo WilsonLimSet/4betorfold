@@ -33,7 +33,8 @@
     "addPlayer": "+ Dodaj igrača",
     "noPlayers": "Još nema igrača. Dodajte igrače da biste počeli praćenje buy-in-ova.",
     "addFirstPlayer": "Dodaj prvog igrača",
-    "loading": "Učitavanje igre..."
+    "loading": "Učitavanje igre...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Ukloni",
@@ -47,7 +48,8 @@
     "cashedOut": "Isplaćeno:",
     "profitLoss": "Profit/Gubitak:",
     "resetPlayer": "Resetuj igrača",
-    "buyInHistory": "Istorija buy-in-ova:"
+    "buyInHistory": "Istorija buy-in-ova:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Dodaj novog igrača",

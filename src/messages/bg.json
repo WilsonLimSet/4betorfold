@@ -33,7 +33,8 @@
     "addPlayer": "+ Добави играч",
     "noPlayers": "Все още няма играчи. Добавете играчи, за да започнете проследяването на buy-in-ове.",
     "addFirstPlayer": "Добави първи играч",
-    "loading": "Зареждане на игра..."
+    "loading": "Зареждане на игра...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Премахни",
@@ -47,7 +48,8 @@
     "cashedOut": "Изплатено:",
     "profitLoss": "Печалба/Загуба:",
     "resetPlayer": "Нулирай играч",
-    "buyInHistory": "История на buy-in-ове:"
+    "buyInHistory": "История на buy-in-ове:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Добави нов играч",

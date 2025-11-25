@@ -33,7 +33,8 @@
     "addPlayer": "+ הוסף שחקן",
     "noPlayers": "אין עדיין שחקנים. הוסף שחקנים כדי להתחיל לעקוב אחר buy-ins.",
     "addFirstPlayer": "הוסף שחקן ראשון",
-    "loading": "טוען משחק..."
+    "loading": "טוען משחק...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "הסר",
@@ -47,7 +48,8 @@
     "cashedOut": "הוצא מזומן:",
     "profitLoss": "רווח/הפסד:",
     "resetPlayer": "אפס שחקן",
-    "buyInHistory": "היסטוריית buy-in:"
+    "buyInHistory": "היסטוריית buy-in:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "הוסף שחקן חדש",

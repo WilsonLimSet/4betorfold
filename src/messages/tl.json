@@ -33,7 +33,8 @@
     "addPlayer": "+ Magdagdag ng Manlalaro",
     "noPlayers": "Wala pang mga manlalaro. Magdagdag ng mga manlalaro upang magsimulang subaybayan ang mga buy-in.",
     "addFirstPlayer": "Magdagdag ng Unang Manlalaro",
-    "loading": "Naglo-load ang laro..."
+    "loading": "Naglo-load ang laro...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Tanggalin",
@@ -47,7 +48,8 @@
     "cashedOut": "Na-cash out:",
     "profitLoss": "Kita/Talo:",
     "resetPlayer": "I-reset ang Manlalaro",
-    "buyInHistory": "Kasaysayan ng buy-in:"
+    "buyInHistory": "Kasaysayan ng buy-in:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Magdagdag ng Bagong Manlalaro",

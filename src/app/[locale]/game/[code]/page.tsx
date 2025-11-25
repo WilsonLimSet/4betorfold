@@ -27,6 +27,7 @@ export default function GamePage() {
   })
   const [showAddPlayer, setShowAddPlayer] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
+  const [copiedSummary, setCopiedSummary] = useState(false)
 
   const loadGame = useCallback(() => {
     const existingGame = storage.getGameByCode(code.toUpperCase())
@@ -129,6 +130,47 @@ export default function GamePage() {
     a.click()
   }
 
+  const shareSummary = async () => {
+    if (!game) return
+
+    const lines: string[] = []
+
+    // Sort players by profit (winners first)
+    const sortedPlayers = [...game.players].sort((a, b) => {
+      const aTotal = a.buyIns.reduce((sum, bi) => sum + bi.amount, 0)
+      const bTotal = b.buyIns.reduce((sum, bi) => sum + bi.amount, 0)
+      const aProfit = (a.cashOut || 0) - aTotal
+      const bProfit = (b.cashOut || 0) - bTotal
+      return bProfit - aProfit
+    })
+
+    sortedPlayers.forEach(player => {
+      const totalBuyIn = player.buyIns.reduce((sum, bi) => sum + bi.amount, 0)
+      const profit = (player.cashOut || 0) - totalBuyIn
+      const profitStr = profit >= 0 ? `+$${profit}` : `-$${Math.abs(profit)}`
+      lines.push(`${player.name}: ${profitStr}`)
+    })
+
+    lines.push('')
+    lines.push(`Total In: $${gameState.totalIn} | Out: $${gameState.totalOut}`)
+
+    const summary = lines.join('\n')
+
+    // Try native share first (mobile), fall back to clipboard
+    if (navigator.share) {
+      try {
+        await navigator.share({ text: summary })
+        return
+      } catch {
+        // User cancelled or share failed, fall back to clipboard
+      }
+    }
+
+    await navigator.clipboard.writeText(summary)
+    setCopiedSummary(true)
+    setTimeout(() => setCopiedSummary(false), 2000)
+  }
+
   if (!game) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -144,37 +186,65 @@ export default function GamePage() {
     <div className="min-h-screen bg-gray-50 pb-20">
       <div className="bg-white shadow-sm border-b sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => router.push(`/${locale}`)}
-                className="text-gray-600 hover:text-gray-900 shrink-0 text-sm"
+                className="p-2 -ml-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label={t('back')}
               >
-                {t('back')}
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
-              <div className="text-xs sm:text-sm font-bold text-blue-600">
-                4 Bet or Fold
+              <div>
+                <div className="font-mono font-bold text-lg">{game.code}</div>
+                <div className="text-xs text-gray-500 hidden sm:block">4 Bet or Fold</div>
               </div>
             </div>
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-gray-600">{t('gameCode')}</span>
-                <span className="font-mono font-bold text-base sm:text-lg">{game.code}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={copyLink}
-                  className="px-2.5 py-1.5 text-xs sm:text-sm border border-gray-300 rounded-lg hover:bg-gray-50 whitespace-nowrap"
-                >
-                  {copiedLink ? t('copied') : t('copyLink')}
-                </button>
-                <button
-                  onClick={downloadCSV}
-                  className="px-2.5 py-1.5 text-xs sm:text-sm border border-gray-300 rounded-lg hover:bg-gray-50 whitespace-nowrap"
-                >
-                  {t('exportCSV')}
-                </button>
-              </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button
+                onClick={copyLink}
+                className="p-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                aria-label={copiedLink ? t('copied') : t('copyLink')}
+                title={copiedLink ? t('copied') : t('copyLink')}
+              >
+                {copiedLink ? (
+                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={shareSummary}
+                className="p-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                aria-label={t('shareSummary')}
+                title={t('shareSummary')}
+              >
+                {copiedSummary ? (
+                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={downloadCSV}
+                className="hidden sm:block p-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                aria-label={t('exportCSV')}
+                title={t('exportCSV')}
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -203,7 +273,7 @@ export default function GamePage() {
             </button>
           </div>
         ) : (
-          <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {game.players.map((player) => (
               <PlayerCard
                 key={player.id}

@@ -33,7 +33,8 @@
     "addPlayer": "+ کھلاڑی شامل کریں",
     "noPlayers": "ابھی تک کوئی کھلاڑی نہیں۔ بائی انز کو ٹریک کرنا شروع کرنے کے لیے کھلاڑی شامل کریں۔",
     "addFirstPlayer": "پہلا کھلاڑی شامل کریں",
-    "loading": "گیم لوڈ ہو رہا ہے..."
+    "loading": "گیم لوڈ ہو رہا ہے...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "ہٹائیں",
@@ -47,7 +48,8 @@
     "cashedOut": "کیش آؤٹ ہو گیا:",
     "profitLoss": "منافع/نقصان:",
     "resetPlayer": "کھلاڑی کو ری سیٹ کریں",
-    "buyInHistory": "بائی ان کی تاریخ:"
+    "buyInHistory": "بائی ان کی تاریخ:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "نیا کھلاڑی شامل کریں",

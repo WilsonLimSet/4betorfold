@@ -21,6 +21,7 @@
     "copyLink": "Copy Link",
     "copied": "Copied!",
     "exportCSV": "Export CSV",
+    "shareSummary": "Share Summary",
     "totalIn": "Total In",
     "totalOut": "Total Out",
     "balance": "Balance",
@@ -47,7 +48,8 @@
     "cashedOut": "Cashed out:",
     "profitLoss": "Profit/Loss:",
     "resetPlayer": "Reset Player",
-    "buyInHistory": "Buy-in history:"
+    "buyInHistory": "Buy-in history:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Add New Player",

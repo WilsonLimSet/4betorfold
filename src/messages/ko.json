@@ -33,7 +33,8 @@
     "addPlayer": "+ 플레이어 추가",
     "noPlayers": "아직 플레이어가 없습니다. 플레이어를 추가하여 바이인 추적을 시작하세요.",
     "addFirstPlayer": "첫 플레이어 추가",
-    "loading": "게임 로딩 중..."
+    "loading": "게임 로딩 중...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "제거",
@@ -47,7 +48,8 @@
     "cashedOut": "캐시아웃 완료：",
     "profitLoss": "손익：",
     "resetPlayer": "플레이어 재설정",
-    "buyInHistory": "바이인 기록："
+    "buyInHistory": "바이인 기록：",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "새 플레이어 추가",

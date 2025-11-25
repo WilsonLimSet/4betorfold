@@ -33,7 +33,8 @@
     "addPlayer": "+ Játékos hozzáadása",
     "noPlayers": "Még nincsenek játékosok. Adj hozzá játékosokat a buy-in-ok követésének megkezdéséhez.",
     "addFirstPlayer": "Első játékos hozzáadása",
-    "loading": "Játék betöltése..."
+    "loading": "Játék betöltése...",
+    "shareSummary": "Share Summary"
   },
   "player": {
     "remove": "Eltávolítás",
@@ -47,7 +48,8 @@
     "cashedOut": "Kifizetve:",
     "profitLoss": "Nyereség/Veszteség:",
     "resetPlayer": "Játékos visszaállítása",
-    "buyInHistory": "Buy-in történet:"
+    "buyInHistory": "Buy-in történet:",
+    "fillWithBuyIn": "Fill with total buy-in"
   },
   "addPlayer": {
     "title": "Új játékos hozzáadása",
