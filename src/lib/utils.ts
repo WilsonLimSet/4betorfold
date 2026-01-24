@@ -29,7 +29,13 @@ export function formatCurrency(amount: number): string {
 }
 
 export function exportToCSV(game: Game): string {
-  const lines = ['Player,Buy-ins,Cash Out,Profit/Loss']
+  const gameDate = new Date(game.createdAt).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const lines = [`Game Date: ${gameDate}`, '', 'Player,Buy-ins,Cash Out,Profit/Loss']
 
   game.players.forEach((player: Player) => {
     const totalBuyIns = player.buyIns.reduce((sum: number, buyIn: BuyIn) => sum + buyIn.amount, 0)
