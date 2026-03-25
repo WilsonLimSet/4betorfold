@@ -1,10 +1,20 @@
 import type { NextConfig } from "next";
-import createNextIntlPlugin from 'next-intl/plugin';
-
-const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: '/:locale(en|es|zh|pt|ru|fr|de|ja|ko|it|hi|id|th|vi|tr|tl|pl|nl|sv|cs|ar|uk|he|ro|el|hu|fi|da|ms|bn|no|sk|sr|hr|bg|fa|ur|lt|af|ca)',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|es|zh|pt|ru|fr|de|ja|ko|it|hi|id|th|vi|tr|tl|pl|nl|sv|cs|ar|uk|he|ro|el|hu|fi|da|ms|bn|no|sk|sr|hr|bg|fa|ur|lt|af|ca)/:path*',
+        destination: '/:path*',
+        permanent: true,
+      },
+    ]
+  },
 };
 
-export default withNextIntl(nextConfig);
+export default nextConfig;

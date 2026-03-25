@@ -2,20 +2,16 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useTranslations, useLocale } from 'next-intl'
 import { Game, Player, GameState } from '@/types/game'
 import { storage } from '@/lib/storage'
 import { exportToCSV, generateId } from '@/lib/utils'
 import PlayerCard from '@/components/PlayerCard'
 import BalanceBar from '@/components/BalanceBar'
 import AddPlayerModal from '@/components/AddPlayerModal'
-import LanguageSelector from '@/components/LanguageSelector'
 
 export default function GamePage() {
   const params = useParams()
   const router = useRouter()
-  const locale = useLocale()
-  const t = useTranslations('game')
   const code = params.code as string
 
   const [game, setGame] = useState<Game | null>(null)
@@ -135,7 +131,6 @@ export default function GamePage() {
 
     const lines: string[] = []
 
-    // Sort players by profit (winners first)
     const sortedPlayers = [...game.players].sort((a, b) => {
       const aTotal = a.buyIns.reduce((sum, bi) => sum + bi.amount, 0)
       const bTotal = b.buyIns.reduce((sum, bi) => sum + bi.amount, 0)
@@ -156,7 +151,6 @@ export default function GamePage() {
 
     const summary = lines.join('\n')
 
-    // Try native share first (mobile), fall back to clipboard
     if (navigator.share) {
       try {
         await navigator.share({ text: summary })
@@ -176,7 +170,7 @@ export default function GamePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-gray-600">Loading game...</p>
         </div>
       </div>
     )
@@ -189,9 +183,9 @@ export default function GamePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <button
-                onClick={() => router.push(`/${locale}`)}
+                onClick={() => router.push('/')}
                 className="p-2 -ml-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                aria-label={t('back')}
+                aria-label="Back"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -206,8 +200,8 @@ export default function GamePage() {
               <button
                 onClick={copyLink}
                 className="p-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                aria-label={copiedLink ? t('copied') : t('copyLink')}
-                title={copiedLink ? t('copied') : t('copyLink')}
+                aria-label={copiedLink ? 'Copied!' : 'Copy Link'}
+                title={copiedLink ? 'Copied!' : 'Copy Link'}
               >
                 {copiedLink ? (
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,8 +216,8 @@ export default function GamePage() {
               <button
                 onClick={shareSummary}
                 className="p-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                aria-label={t('shareSummary')}
-                title={t('shareSummary')}
+                aria-label="Share Summary"
+                title="Share Summary"
               >
                 {copiedSummary ? (
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,8 +232,8 @@ export default function GamePage() {
               <button
                 onClick={downloadCSV}
                 className="hidden sm:block p-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                aria-label={t('exportCSV')}
-                title={t('exportCSV')}
+                aria-label="Export CSV"
+                title="Export CSV"
               >
                 <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -258,18 +252,18 @@ export default function GamePage() {
             onClick={() => setShowAddPlayer(true)}
             className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
-            {t('addPlayer')}
+            + Add Player
           </button>
         </div>
 
         {game.players.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-600 mb-4">{t('noPlayers')}</p>
+            <p className="text-gray-600 mb-4">No players yet. Add players to start tracking buy-ins.</p>
             <button
               onClick={() => setShowAddPlayer(true)}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
-              {t('addFirstPlayer')}
+              Add First Player
             </button>
           </div>
         ) : (
@@ -296,10 +290,6 @@ export default function GamePage() {
             ))}
           </div>
         )}
-
-        <div className="mt-12 pt-6 border-t border-gray-200 flex justify-center">
-          <LanguageSelector />
-        </div>
       </div>
 
       {showAddPlayer && (
